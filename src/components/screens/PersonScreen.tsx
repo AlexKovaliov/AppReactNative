@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   error: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 18,
     color: 'red',
   },
 });

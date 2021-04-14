@@ -12,6 +12,7 @@ export const chosenPersonTC = (id: number) => {
       .then(res => {
         dispatch(chosenPersonAC(res.data));
         dispatch(setStatusAC(false));
+        dispatch(setErrorAC(null));
       })
       .catch(error => {
         dispatch(setErrorAC(error.message));
@@ -29,6 +30,7 @@ export const getUsersTC = () => {
         if (res.data) {
           dispatch(getUsersAC(res.data));
           dispatch(setStatusAC(false));
+          dispatch(setErrorAC(null));
         }
       })
       .catch(error => {
