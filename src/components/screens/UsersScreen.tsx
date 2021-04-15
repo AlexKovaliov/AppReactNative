@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
@@ -7,6 +7,7 @@ import {RequestStatusType} from '../../reducers/app-reducer';
 import {Users} from '../Users';
 import {getUsersTC} from '../../reducers/thunks';
 import Loading from '../../utils/loadingUtils';
+import {ErrorImage} from '../../utils/errorUtils';
 
 export default function UsersScreen() {
   const users = useSelector<AppRootStateType, Array<UsersType>>(
@@ -27,7 +28,7 @@ export default function UsersScreen() {
   return (
     <View style={styles.container}>
       {isLoading ? <Loading /> : <Users users={users} />}
-      <Text style={styles.error}>{error}</Text>
+      {error ? <ErrorImage /> : null}
     </View>
   );
 }
@@ -36,12 +37,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  error: {
-    flex: 1,
-    textAlign: 'center',
-    justifyContent: 'center',
-    fontSize: 18,
-    color: 'red',
   },
 });

@@ -28,7 +28,6 @@ class Loading extends React.PureComponent<PropsType> {
     );
   }
 }
-
 export default connect(mapStateToProps)(Loading);
 
 const styles = StyleSheet.create({

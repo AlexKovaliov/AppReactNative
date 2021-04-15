@@ -1,41 +1,35 @@
 import {Dispatch} from 'redux';
-import {setErrorAC, setStatusAC} from './app-reducer';
 import {usersAPI} from '../api/users-api';
-import {chosenPersonAC} from './person-reducer';
-import {getUsersAC} from './users-reducer';
+import {chosenPersonAC, getUsersAC, setStatusSetErrorAC} from './actions';
 
 export const chosenPersonTC = (id: number) => {
   return (dispatch: Dispatch) => {
-    dispatch(setStatusAC(true));
+    dispatch(setStatusSetErrorAC(true, null));
     usersAPI
       .chosenPerson(id)
       .then(res => {
         dispatch(chosenPersonAC(res.data));
-        dispatch(setStatusAC(false));
-        dispatch(setErrorAC(null));
+        dispatch(setStatusSetErrorAC(false, null));
       })
       .catch(error => {
-        dispatch(setErrorAC(error.message));
-        dispatch(setStatusAC(false));
+        dispatch(setStatusSetErrorAC(false, error.message));
       });
   };
 };
 
 export const getUsersTC = () => {
   return (dispatch: Dispatch) => {
-    dispatch(setStatusAC(true));
+    dispatch(setStatusSetErrorAC(true, null));
     usersAPI
       .getUsers()
       .then(res => {
         if (res.data) {
           dispatch(getUsersAC(res.data));
-          dispatch(setStatusAC(false));
-          dispatch(setErrorAC(null));
+          dispatch(setStatusSetErrorAC(false, null));
         }
       })
       .catch(error => {
-        dispatch(setErrorAC(error.message));
-        dispatch(setStatusAC(false));
+        dispatch(setStatusSetErrorAC(false, error.message));
       });
   };
 };

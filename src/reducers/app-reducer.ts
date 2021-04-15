@@ -1,8 +1,8 @@
+import {SetStatusSetErrorActionType} from './actions';
+
 export type RequestStatusType = boolean;
 export type ErrorType = null | string;
-export type SetStatusActionType = ReturnType<typeof setStatusAC>;
-export type SetAppErrorActionType = ReturnType<typeof setErrorAC>;
-type ActionsType = SetStatusActionType | SetAppErrorActionType;
+type ActionsType = SetStatusSetErrorActionType;
 type InitialStateType = typeof initialState;
 
 const initialState = {
@@ -15,23 +15,9 @@ export const appReducer = (
   action: ActionsType,
 ): InitialStateType => {
   switch (action.type) {
-    case 'APP/SET-STATUS':
-      return {...state, isLoading: action.isLoading};
-    case 'APP/SET-ERROR':
-      return {...state, error: action.error};
+    case 'APP/SET-STATUS-SET-ERROR':
+      return {...state, isLoading: action.isLoading, error: action.error};
     default:
       return state;
   }
 };
-
-export const setStatusAC = (isLoading: RequestStatusType) =>
-  ({
-    type: 'APP/SET-STATUS',
-    isLoading,
-  } as const);
-
-export const setErrorAC = (error: null | string) =>
-  ({
-    type: 'APP/SET-ERROR',
-    error: error,
-  } as const);

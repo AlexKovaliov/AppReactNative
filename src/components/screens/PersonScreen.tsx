@@ -6,12 +6,12 @@ import {UsersType} from '../../api/users-api';
 import {ErrorType, RequestStatusType} from '../../reducers/app-reducer';
 import {chosenPersonTC} from '../../reducers/thunks';
 import Loading from '../../utils/loadingUtils';
+import {ErrorImage} from '../../utils/errorUtils';
 
 export const PersonScreen = React.memo(({route}: any) => {
   const isLoading = useSelector<AppRootStateType, RequestStatusType>(
     state => state.app.isLoading,
   );
-
   const error = useSelector<AppRootStateType, string | null>(
     state => state.app.error,
   );
@@ -25,7 +25,6 @@ export const PersonScreen = React.memo(({route}: any) => {
   return (
     <View style={styles.container}>
       {isLoading ? <Loading /> : <Content error={error} />}
-      <Text style={styles.error}>{error}</Text>
     </View>
   );
 });
@@ -34,24 +33,22 @@ const Content = React.memo((props: {error: ErrorType}) => {
   const person = useSelector<AppRootStateType, UsersType>(
     state => state.person,
   );
+
   return (
-    <View>
-      <View style={styles.wrap}>
-        <View style={props.error ? null : styles.wrapImg}>
-          <Image
-            style={styles.image}
-            source={
-              props.error
-                ? require('../../utils/error.svg')
-                : {uri: person.avatar}
-            }
-          />
+    <View style={styles.container}>
+      {props.error ? (
+        <ErrorImage />
+      ) : (
+        <View style={styles.wrap}>
+          <View style={styles.wrapImg}>
+            <Image style={styles.image} source={{uri: person.avatar}} />
+          </View>
+          <Text style={styles.text}>
+            {person.first_name} {person.last_name}
+          </Text>
+          <Text style={styles.email}>Email: {person.email}</Text>
         </View>
-        <Text style={styles.text}>
-          {person.first_name} {person.last_name}
-        </Text>
-        <Text style={styles.email}>Email: {person.email}</Text>
-      </View>
+      )}
     </View>
   );
 });
@@ -94,10 +91,5 @@ const styles = StyleSheet.create({
   email: {
     marginTop: 15,
     fontSize: 16,
-  },
-  error: {
-    textAlign: 'center',
-    fontSize: 18,
-    color: 'red',
   },
 });

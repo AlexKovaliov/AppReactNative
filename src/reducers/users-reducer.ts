@@ -1,9 +1,6 @@
 import {UsersType} from '../api/users-api';
+import {GetUsersActionType} from './actions';
 
-export type GetUsersActionType = {
-  type: 'GET-USERS';
-  users: Array<UsersType>;
-};
 type ActionsType = GetUsersActionType;
 
 const initialState: Array<UsersType> = [];
@@ -19,8 +16,4 @@ export const usersReducer = (
     default:
       return state;
   }
-};
-
-export const getUsersAC = (users: Array<UsersType>): GetUsersActionType => {
-  return {type: 'GET-USERS', users};
 };

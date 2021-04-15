@@ -8,15 +8,43 @@ export type UsersType = {
   avatar: string;
 };
 
+type ResponsePersonType = {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  data: UsersType;
+  support: {
+    url: string;
+    text: string;
+  };
+};
+
+type ResponseUsersType = {
+  page: number;
+  per_page: number;
+  total: number;
+  total_pages: number;
+  data: Array<UsersType>;
+  support: {
+    url: string;
+    text: string;
+  };
+};
+
 const instance = axios.create({
   baseURL: 'https://reqres.in',
 });
 
 export const usersAPI = {
   getUsers() {
-    return instance.get('/api/users?page').then(res => res.data);
+    return instance
+      .get<ResponseUsersType>('/api/users?page=1')
+      .then(res => res.data);
   },
   chosenPerson(id: number) {
-    return instance.get(`/api/users/${id}`).then(res => res.data);
+    return instance
+      .get<ResponsePersonType>(`/api/users/${id}`)
+      .then(res => res.data);
   },
 };

@@ -1,9 +1,5 @@
-import {UsersType} from '../api/users-api';
+import {ChosenPersonActionType} from './actions';
 
-export type ChosenPersonActionType = {
-  type: 'CHOSEN-PERSON';
-  person: UsersType;
-};
 type ActionsType = ChosenPersonActionType;
 export type PersonStateType = {
   id: number;
@@ -26,8 +22,4 @@ export const personReducer = (
     default:
       return state;
   }
-};
-
-export const chosenPersonAC = (person: UsersType): ChosenPersonActionType => {
-  return {type: 'CHOSEN-PERSON', person};
 };
