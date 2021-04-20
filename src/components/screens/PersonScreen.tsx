@@ -8,14 +8,21 @@ import {chosenPersonTC} from '../../reducers/thunks';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
 
-export const PersonScreen = React.memo(({route}: any) => {
+type routeType = {
+  route: {
+    params: {
+      id: number;
+    };
+  };
+};
+
+export const PersonScreen = React.memo(({route}: routeType) => {
   const isLoading = useSelector<AppRootStateType, RequestStatusType>(
-    state => state.app.isLoading,
+    state => state.appStore.isLoading,
   );
   const error = useSelector<AppRootStateType, string | null>(
-    state => state.app.error,
+    state => state.appStore.error,
   );
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,7 +38,7 @@ export const PersonScreen = React.memo(({route}: any) => {
 
 const Content = React.memo((props: {error: ErrorType}) => {
   const person = useSelector<AppRootStateType, UsersType>(
-    state => state.person,
+    state => state.personStore,
   );
 
   return (
@@ -62,7 +69,7 @@ const styles = StyleSheet.create({
   },
   wrap: {
     alignItems: 'center',
-    marginTop: 30,
+    marginTop: 20,
   },
   wrapImg: {
     height: 150,

@@ -20,11 +20,11 @@ type ResponsePersonType = {
   };
 };
 
-type ResponseUsersType = {
+export type ResponseUsersType = {
   page: number;
   per_page: number;
   total: number;
-  total_pages: number;
+  total_pages: number | null;
   data: Array<UsersType>;
   support: {
     url: string;
@@ -37,10 +37,8 @@ const instance = axios.create({
 });
 
 export const usersAPI = {
-  getUsers() {
-    return instance
-      .get<ResponseUsersType>('/api/users?page=1')
-      .then(res => res.data);
+  getUsers(page: number) {
+    return instance.get<ResponseUsersType>(`/api/users?page=${page}`);
   },
   chosenPerson(id: number) {
     return instance

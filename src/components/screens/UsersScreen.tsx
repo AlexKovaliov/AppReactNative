@@ -3,31 +3,27 @@ import {StyleSheet, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
-import {RequestStatusType} from '../../reducers/app-reducer';
 import {Users} from '../Users';
 import {getUsersTC} from '../../reducers/thunks';
-import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
 
 export default function UsersScreen() {
   const users = useSelector<AppRootStateType, Array<UsersType>>(
-    state => state.user,
-  );
-  const isLoading = useSelector<AppRootStateType, RequestStatusType>(
-    state => state.app.isLoading,
+    state => state.usersStore.users,
   );
   const error = useSelector<AppRootStateType, string | null>(
-    state => state.app.error,
+    state => state.appStore.error,
   );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getUsersTC());
+    dispatch(getUsersTC(1));
   }, [dispatch]);
 
   return (
     <View style={styles.container}>
-      {isLoading ? <Loading /> : <Users users={users} />}
+      <Users users={users} />
       {error ? <ErrorImage /> : null}
     </View>
   );

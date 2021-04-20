@@ -15,7 +15,7 @@ export const appReducer = (
   action: ActionsType,
 ): InitialStateType => {
   switch (action.type) {
-    case 'APP/SET-STATUS-SET-ERROR':
+    case 'APP/SET_STATUS_SET_ERROR':
       return {...state, isLoading: action.isLoading, error: action.error};
     default:
       return state;

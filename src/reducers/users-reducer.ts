@@ -1,18 +1,42 @@
 import {UsersType} from '../api/users-api';
-import {GetUsersActionType} from './actions';
+import {
+  SetUsersActionType,
+  SetFilterActionType,
+  SetPageActionType,
+} from './actions';
 
-type ActionsType = GetUsersActionType;
+type ActionsType = SetUsersActionType | SetFilterActionType | SetPageActionType;
 
-const initialState: Array<UsersType> = [];
+type InitialStateType = typeof initialState;
+
+const initialState = {
+  users: [] as Array<UsersType>,
+  filter: {term: ''},
+  page: 1,
+  total_pages: null as null | number,
+};
 
 export const usersReducer = (
-  state: Array<UsersType> = initialState,
+  state: InitialStateType = initialState,
   action: ActionsType,
-): Array<UsersType> => {
+): InitialStateType => {
   switch (action.type) {
-    case 'GET-USERS':
-      return [...(state = action.users)];
-
+    case 'USERS/SET_USERS':
+      if (action.page === 1) {
+        return {
+          ...state,
+          users: action.users,
+          page: action.page,
+          total_pages: action.total_pages,
+        };
+      }
+      return {
+        ...state,
+        users: [...state.users, ...action.users],
+        page: action.page,
+      };
+    case 'USERS/SET_FILTER':
+      return {...state, filter: action.payload};
     default:
       return state;
   }

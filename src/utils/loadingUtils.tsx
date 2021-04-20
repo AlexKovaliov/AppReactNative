@@ -10,8 +10,8 @@ type MapStatePropsType = {
 type PropsType = MapStatePropsType;
 
 function mapStateToProps(state: AppRootStateType): MapStatePropsType {
-  const {app} = state;
-  return {isLoading: app.isLoading};
+  const {appStore} = state;
+  return {isLoading: appStore.isLoading};
 }
 
 class Loading extends React.PureComponent<PropsType> {
@@ -20,7 +20,7 @@ class Loading extends React.PureComponent<PropsType> {
       <View style={styles.container}>
         {this.props.isLoading ? (
           <View>
-            <ActivityIndicator color={'#3949ab'} size={100} />
+            <ActivityIndicator color={'#3949ab'} size="large" />
             <Text style={styles.text}>Loading...</Text>
           </View>
         ) : null}
@@ -34,7 +34,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    marginTop: 30,
   },
   text: {
     marginTop: 10,

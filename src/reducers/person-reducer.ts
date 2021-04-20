@@ -16,7 +16,7 @@ export const personReducer = (
   action: ActionsType,
 ): PersonStateType => {
   switch (action.type) {
-    case 'CHOSEN-PERSON':
+    case 'PERSON/CHOSEN_PERSON':
       return {...(state = action.person)};
 
     default:

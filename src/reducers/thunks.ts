@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux';
-import {usersAPI} from '../api/users-api';
-import {chosenPersonAC, getUsersAC, setStatusSetErrorAC} from './actions';
+import {ResponseUsersType, usersAPI} from '../api/users-api';
+import {chosenPersonAC, setUsersAC, setStatusSetErrorAC} from './actions';
 
 export const chosenPersonTC = (id: number) => {
   return (dispatch: Dispatch) => {
@@ -17,14 +17,18 @@ export const chosenPersonTC = (id: number) => {
   };
 };
 
-export const getUsersTC = () => {
-  return (dispatch: Dispatch) => {
+export const getUsersTC = (page: number) => {
+  return (dispatch: Dispatch, getState: ResponseUsersType) => {
     dispatch(setStatusSetErrorAC(true, null));
+    const totalPage = getState.total_pages;
+    if (totalPage && page > totalPage) {
+      return;
+    }
     usersAPI
-      .getUsers()
+      .getUsers(page)
       .then(res => {
         if (res.data) {
-          dispatch(getUsersAC(res.data));
+          dispatch(setUsersAC(res.data.data, page, res.data.total_pages));
           dispatch(setStatusSetErrorAC(false, null));
         }
       })

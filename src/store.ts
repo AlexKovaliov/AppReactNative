@@ -5,9 +5,9 @@ import {appReducer} from './reducers/app-reducer';
 import {personReducer} from './reducers/person-reducer';
 
 const rootReducer = combineReducers({
-  user: usersReducer,
-  app: appReducer,
-  person: personReducer,
+  usersStore: usersReducer,
+  appStore: appReducer,
+  personStore: personReducer,
 });
 
 export const store = createStore(rootReducer, applyMiddleware(thunk));

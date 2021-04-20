@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 
 export function ErrorImage() {
   const error = useSelector<AppRootStateType, string | null>(
-    state => state.app.error,
+    state => state.appStore.error,
   );
 
   return (
