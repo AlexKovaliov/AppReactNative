@@ -1,11 +1,11 @@
 import React from 'react';
 import {Provider} from 'react-redux';
 import {store} from './src/store';
-import UsersScreen from './src/components/screens/UsersScreen';
 import {PersonScreen} from './src/components/screens/PersonScreen';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
+import {UsersScreen} from './src/components/screens/UsersScreen';
 
 const Stack = createStackNavigator();
 export default function App() {

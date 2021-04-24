@@ -3,23 +3,32 @@ import {
   SetUsersActionType,
   SetFilterActionType,
   SetPageActionType,
+  SetRefreshingActionType,
 } from './actions';
 
-type ActionsType = SetUsersActionType | SetFilterActionType | SetPageActionType;
+type ActionsType =
+  | SetUsersActionType
+  | SetFilterActionType
+  | SetPageActionType
+  | SetRefreshingActionType;
 
-type InitialStateType = typeof initialState;
+export type InitialStateUserReducerType = typeof initialState;
 
 const initialState = {
   users: [] as Array<UsersType>,
-  filter: {term: ''},
+  term: '',
   page: 1,
   total_pages: null as null | number,
+  filter: {term: ''},
+  isRefreshing: false,
 };
 
+export type FilterType = typeof initialState.filter;
+
 export const usersReducer = (
-  state: InitialStateType = initialState,
+  state: InitialStateUserReducerType = initialState,
   action: ActionsType,
-): InitialStateType => {
+): InitialStateUserReducerType => {
   switch (action.type) {
     case 'USERS/SET_USERS':
       if (action.page === 1) {
@@ -37,6 +46,8 @@ export const usersReducer = (
       };
     case 'USERS/SET_FILTER':
       return {...state, filter: action.payload};
+    case 'USERS/SET_REFRESHING':
+      return {...state, isRefreshing: action.isRefreshing};
     default:
       return state;
   }

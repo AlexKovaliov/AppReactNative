@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
-import {ErrorType, RequestStatusType} from '../../reducers/app-reducer';
+import {ErrorType, InitialPersonStateType} from '../../reducers/app-reducer';
 import {chosenPersonTC} from '../../reducers/thunks';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
@@ -17,12 +17,11 @@ type routeType = {
 };
 
 export const PersonScreen = React.memo(({route}: routeType) => {
-  const isLoading = useSelector<AppRootStateType, RequestStatusType>(
-    state => state.appStore.isLoading,
-  );
-  const error = useSelector<AppRootStateType, string | null>(
-    state => state.appStore.error,
-  );
+  const {error, isLoading} = useSelector<
+    AppRootStateType,
+    InitialPersonStateType
+  >(state => state.appStore);
+
   const dispatch = useDispatch();
 
   useEffect(() => {

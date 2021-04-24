@@ -3,7 +3,7 @@ import {SetStatusSetErrorActionType} from './actions';
 export type RequestStatusType = boolean;
 export type ErrorType = null | string;
 type ActionsType = SetStatusSetErrorActionType;
-type InitialStateType = typeof initialState;
+export type InitialPersonStateType = typeof initialState;
 
 const initialState = {
   isLoading: true as RequestStatusType,
@@ -11,9 +11,9 @@ const initialState = {
 };
 
 export const appReducer = (
-  state: InitialStateType = initialState,
+  state: InitialPersonStateType = initialState,
   action: ActionsType,
-): InitialStateType => {
+): InitialPersonStateType => {
   switch (action.type) {
     case 'APP/SET_STATUS_SET_ERROR':
       return {...state, isLoading: action.isLoading, error: action.error};

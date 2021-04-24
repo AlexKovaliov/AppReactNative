@@ -7,7 +7,7 @@ import {Users} from '../Users';
 import {getUsersTC} from '../../reducers/thunks';
 import {ErrorImage} from '../../utils/errorUtils';
 
-export default function UsersScreen() {
+export const UsersScreen = React.memo(() => {
   const users = useSelector<AppRootStateType, Array<UsersType>>(
     state => state.usersStore.users,
   );
@@ -27,7 +27,7 @@ export default function UsersScreen() {
       {error ? <ErrorImage /> : null}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

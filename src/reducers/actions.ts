@@ -42,6 +42,13 @@ export type SetFilterActionType = {
 export const setFilterAC = (term: string) => {
   return {type: 'USERS/SET_FILTER', payload: {term}};
 };
+export type SetRefreshingActionType = {
+  type: 'USERS/SET_REFRESHING';
+  isRefreshing: boolean;
+};
+export const setRefreshingAC = (isRefreshing: boolean) => {
+  return {type: 'USERS/SET_REFRESHING', isRefreshing};
+};
 export type SetPageActionType = {
   type: 'USERS/SET_PAGE';
   page: number;
