@@ -1,12 +1,10 @@
 import React, {useCallback} from 'react';
 import {UsersType} from '../api/users-api';
-import {FlatList, RefreshControl, StyleSheet, View} from 'react-native';
+import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {UsersList} from './UsersList';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUsersTC} from '../reducers/thunks';
 import {AppRootStateType} from '../store';
-import Loading from '../utils/loadingUtils';
-import {FindUser} from './FindUserForm';
 import {setRefreshingAC} from '../reducers/actions';
 import {InitialStateUserReducerType} from '../reducers/users-reducer';
 
@@ -33,23 +31,20 @@ export const Users = React.memo((props: PropsType) => {
   }, [dispatch, page]);
 
   return (
-    <View>
-      <FlatList
-        style={styles.flatList}
-        data={props.users}
-        keyExtractor={item => String(item.id)}
-        renderItem={({item}) => <UsersList user={item} />}
-        onEndReachedThreshold={0.1}
-        onEndReached={handleLoadMore}
-        refreshControl={
-          <RefreshControl
-            refreshing={isRefreshing}
-            onRefresh={onRefreshHandler}
-          />
-        }
-      />
-      <Loading />
-    </View>
+    <FlatList
+      style={styles.flatList}
+      data={props.users}
+      keyExtractor={item => String(item.id)}
+      renderItem={({item}) => <UsersList user={item} />}
+      onEndReachedThreshold={0.1}
+      onEndReached={handleLoadMore}
+      refreshControl={
+        <RefreshControl
+          refreshing={isRefreshing}
+          onRefresh={onRefreshHandler}
+        />
+      }
+    />
   );
 });
 
