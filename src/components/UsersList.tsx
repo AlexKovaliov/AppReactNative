@@ -1,10 +1,10 @@
 import React from 'react';
-import {UsersType} from '../api/users-api';
 import {View, TouchableOpacity, Text, Image, StyleSheet} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import {NewUserType} from './screens/UsersScreen';
 
 export type PropsType = {
-  user: UsersType;
+  user: NewUserType;
 };
 
 export const UsersList = React.memo(({...props}: PropsType) => {
@@ -15,7 +15,14 @@ export const UsersList = React.memo(({...props}: PropsType) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.wrap} onPress={onNavigation}>
-        <Image style={styles.image} source={{uri: props.user.avatar}} />
+        <Image
+          style={styles.image}
+          source={{
+            uri: props.user.avatar
+              ? props.user.avatar
+              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',
+          }}
+        />
         <View>
           <Text style={styles.text}>
             {props.user.first_name} {props.user.last_name}

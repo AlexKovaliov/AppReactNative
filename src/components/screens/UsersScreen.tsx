@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, StyleSheet, View, SafeAreaView, StatusBar} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
@@ -8,8 +8,18 @@ import {getUsersTC} from '../../reducers/thunks';
 import {ErrorImage} from '../../utils/errorUtils';
 import Loading from '../../utils/loadingUtils';
 import {InitialPersonStateType} from '../../reducers/app-reducer';
+import {ModalAddUser} from '../Modal';
+
+export type NewUserType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  id: string;
+  avatar: string | null;
+};
 
 export const UsersScreen = React.memo(() => {
+  const dispatch = useDispatch();
   const users = useSelector<AppRootStateType, Array<UsersType>>(
     state => state.usersStore.users,
   );
@@ -18,19 +28,37 @@ export const UsersScreen = React.memo(() => {
     InitialPersonStateType
   >(state => state.appStore);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(getUsersTC(1));
   }, [dispatch]);
+  const [newUsers, setNewUsers] = useState<Array<NewUserType>>([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const newMappedUsers = [...newUsers, ...users];
+
+  const addReview = (newUser: NewUserType) => {
+    newUser.id = Math.random().toString();
+    setNewUsers(currentReviews => {
+      return [newUser, ...currentReviews];
+    });
+    setModalVisible(false);
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {isLoading ? <Loading /> : null}
-        <Users users={users} />
+        <Users newMappedUsers={newMappedUsers} />
         <View style={styles.button}>
-          <Button onPress={() => {}} title={'Add User'} />
+          <Button
+            disabled={modalVisible}
+            onPress={() => setModalVisible(!modalVisible)}
+            title={'Add User'}
+          />
+          <ModalAddUser
+            addReview={addReview}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
         </View>
         {error ? <ErrorImage /> : null}
       </View>
@@ -46,11 +74,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     paddingHorizontal: 5,
   },
   button: {
     paddingHorizontal: 10,
-    paddingBottom: 15,
   },
 });

@@ -1,5 +1,4 @@
 import React, {useCallback} from 'react';
-import {UsersType} from '../api/users-api';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {UsersList} from './UsersList';
 import {useDispatch, useSelector} from 'react-redux';
@@ -8,8 +7,9 @@ import {AppRootStateType} from '../store';
 import {setRefreshingAC} from '../reducers/actions';
 import {InitialStateUserReducerType} from '../reducers/users-reducer';
 
+
 type PropsType = {
-  users: Array<UsersType>;
+  newMappedUsers: any;
 };
 
 export const Users = React.memo((props: PropsType) => {
@@ -33,7 +33,7 @@ export const Users = React.memo((props: PropsType) => {
   return (
     <FlatList
       style={styles.flatList}
-      data={props.users}
+      data={props.newMappedUsers}
       keyExtractor={item => String(item.id)}
       renderItem={({item}) => <UsersList user={item} />}
       onEndReachedThreshold={0.1}
