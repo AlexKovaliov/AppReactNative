@@ -7,6 +7,7 @@ import {FilterType} from '../reducers/users-reducer';
 export function FindUser() {
   return (
     <View style={styles.inputWrap}>
+     {/*почему не добавил это в апплик? тут ошибка компонент должен быть в формике*/}
       <Formik
         initialValues={{
           term: '',
@@ -16,6 +17,7 @@ export function FindUser() {
           Alert.alert(values.term);
         }}
       />
+      {/* эни не оч хорошо, может пока без тайп скрипта, это не обязательно, проще будет на остальном сконцентрироваться*/}
       {(props: any) => (
         <View style={styles.inputWrap}>
           <TextInput
@@ -23,6 +25,7 @@ export function FindUser() {
             placeholder="Find"
             onChangeText={props.handleChange('term')}
             value={props.values.term}
+            //почему нумерик?
             keyboardType="numeric"
           />
           <Button title="submit" onPress={props.handleSubmit} />

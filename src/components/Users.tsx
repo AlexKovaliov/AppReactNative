@@ -12,6 +12,7 @@ type PropsType = {
   users: Array<UsersType>;
 };
 
+//зачем используешь тут мемо?
 export const Users = React.memo((props: PropsType) => {
   const {page, isRefreshing} = useSelector<
     AppRootStateType,
@@ -21,6 +22,7 @@ export const Users = React.memo((props: PropsType) => {
   const dispatch = useDispatch();
 
   const onRefreshHandler = useCallback(() => {
+    // почему в компоненте setRefreshingAC? все такое в саму функцию переноси, у тебя thunk же. и чтоб меньше экшенов было, их можно пообъединять
     setRefreshingAC(true);
     dispatch(getUsersTC(1));
     setRefreshingAC(false);
