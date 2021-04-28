@@ -18,6 +18,8 @@ export const UsersList = React.memo(({...props}: PropsType) => {
         <Image
           style={styles.image}
           source={{
+            // props.user.avatar || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU'
+            // и такую строку лучше выносить в отдельный файл в константы
             uri: props.user.avatar
               ? props.user.avatar
               : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',

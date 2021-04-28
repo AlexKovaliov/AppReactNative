@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {Formik} from 'formik';
 
+// используй модалку из реакт навигейшн
 type PropsType = {
   modalVisible: boolean;
   addReview: (newUser: NewUserType) => void;
@@ -23,6 +24,8 @@ type NewUserType = {
   id: string;
   avatar: string | null;
 };
+
+//мемо не обязательно везде использовать
 export const ModalAddUser: FC<PropsType> = React.memo(
   ({modalVisible, setModalVisible, addReview}) => {
     const closeModal = useCallback(() => {
@@ -100,7 +103,7 @@ type AddUserFormType = {
   addReview: (newUser: NewUserType) => void;
   closeModal: () => void;
 };
-
+//добавить лодер на время загрузки и валидацию
 export const AddUserForm = React.memo(
   ({addReview, closeModal}: AddUserFormType) => {
     return (
@@ -114,6 +117,7 @@ export const AddUserForm = React.memo(
             id: '',
           }}
           onSubmit={(values, actions) => {
+            //а если ошибка будет а данные уже резетнули?
             actions.resetForm();
             addReview(values);
           }}>

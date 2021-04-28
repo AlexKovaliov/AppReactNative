@@ -31,6 +31,7 @@ export const UsersScreen = React.memo(() => {
   useEffect(() => {
     dispatch(getUsersTC(1));
   }, [dispatch]);
+  //не в стейте юзеров хранить, в сторадже, пересмотри тз. и все равно они должны быть в сторе, а то у тебя данные по всему апплику разбросаны
   const [newUsers, setNewUsers] = useState<Array<NewUserType>>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const newMappedUsers = [...newUsers, ...users];
@@ -49,6 +50,7 @@ export const UsersScreen = React.memo(() => {
         {isLoading ? <Loading /> : null}
         <Users newMappedUsers={newMappedUsers} />
         <View style={styles.button}>
+        {/*кнопка должна быть справа внизу, как fab button**/}
           <Button
             disabled={modalVisible}
             onPress={() => setModalVisible(!modalVisible)}

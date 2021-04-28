@@ -9,6 +9,7 @@ import {InitialStateUserReducerType} from '../reducers/users-reducer';
 
 
 type PropsType = {
+  //еще эни?
   newMappedUsers: any;
 };
 
