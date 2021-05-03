@@ -6,6 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {StyleSheet} from 'react-native';
 import {UsersScreen} from './src/components/screens/UsersScreen';
+import {ModalScreen} from './src/components/CreateUserModal';
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -27,6 +28,15 @@ export default function App() {
             component={PersonScreen}
             options={{
               title: 'Person Room',
+              headerStyle: styles.header,
+              headerTintColor: '#fff',
+            }}
+          />
+          <Stack.Screen
+            name="Modal"
+            component={ModalScreen}
+            options={{
+              title: 'Create user',
               headerStyle: styles.header,
               headerTintColor: '#fff',
             }}

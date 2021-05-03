@@ -1,5 +1,6 @@
 import {RequestStatusType} from './app-reducer';
 import {UsersType} from '../api/users-api';
+import { NewUserType } from "../components/screens/UsersScreen";
 
 //app-reducer
 export type SetStatusSetErrorActionType = ReturnType<
@@ -49,10 +50,17 @@ export type SetRefreshingActionType = {
 export const setRefreshingAC = (isRefreshing: boolean) => {
   return {type: 'USERS/SET_REFRESHING', isRefreshing};
 };
-export type SetPageActionType = {
+export type AddNewUserActionType = {
+  type: 'USERS/ADD_NEW_USER';
+  newUser: UsersType;
+};
+export const addNewUserAC = (newUser: UsersType) => {
+  return {type: 'USERS/ADD_NEW_USER', newUser};
+};
+/*export type SetPageActionType = {
   type: 'USERS/SET_PAGE';
   page: number;
 };
 export const setPageAC = (page: number) => {
   return {type: 'USERS/SET_PAGE', page};
-};
+};*/

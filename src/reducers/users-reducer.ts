@@ -2,15 +2,15 @@ import {UsersType} from '../api/users-api';
 import {
   SetUsersActionType,
   SetFilterActionType,
-  SetPageActionType,
   SetRefreshingActionType,
+  AddNewUserActionType,
 } from './actions';
 
 type ActionsType =
   | SetUsersActionType
   | SetFilterActionType
-  | SetPageActionType
-  | SetRefreshingActionType;
+  | SetRefreshingActionType
+  | AddNewUserActionType;
 
 export type InitialStateUserReducerType = typeof initialState;
 
@@ -48,6 +48,8 @@ export const usersReducer = (
       return {...state, filter: action.payload};
     case 'USERS/SET_REFRESHING':
       return {...state, isRefreshing: action.isRefreshing};
+    case 'USERS/ADD_NEW_USER':
+      return {...state, users: [action.newUser, ...state.users]};
     default:
       return state;
   }

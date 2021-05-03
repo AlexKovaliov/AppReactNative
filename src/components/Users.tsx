@@ -6,10 +6,10 @@ import {getUsersTC} from '../reducers/thunks';
 import {AppRootStateType} from '../store';
 import {setRefreshingAC} from '../reducers/actions';
 import {InitialStateUserReducerType} from '../reducers/users-reducer';
-
+import {UsersType} from '../api/users-api';
 
 type PropsType = {
-  newMappedUsers: any;
+  users: Array<UsersType>;
 };
 
 export const Users = React.memo((props: PropsType) => {
@@ -33,10 +33,10 @@ export const Users = React.memo((props: PropsType) => {
   return (
     <FlatList
       style={styles.flatList}
-      data={props.newMappedUsers}
-      keyExtractor={item => String(item.id)}
+      data={props.users}
+      keyExtractor={(item: UsersType) => String(item.id)}
       renderItem={({item}) => <UsersList user={item} />}
-      onEndReachedThreshold={0.1}
+      onEndReachedThreshold={0.5}
       onEndReached={handleLoadMore}
       refreshControl={
         <RefreshControl

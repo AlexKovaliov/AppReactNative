@@ -1,11 +1,11 @@
 import {Dispatch} from 'redux';
-import {ResponseUsersType, usersAPI} from '../api/users-api';
+import { ResponseUsersType, usersAPI, UsersType } from '../api/users-api';
 import {chosenPersonAC, setUsersAC, setStatusSetErrorAC} from './actions';
 
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setStatusSetErrorAC(true, null));
-  let response = await usersAPI.chosenPerson(id);
   try {
+    let response = await usersAPI.chosenPerson(id);
     dispatch(chosenPersonAC(response.data));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
@@ -13,7 +13,7 @@ export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   }
 };
 
-export const getUsersTC = (page: number) => async (
+export const getUsersTC = (page: number, newUser?: UsersType) => async (
   dispatch: Dispatch,
   getState: ResponseUsersType,
 ) => {
@@ -22,10 +22,17 @@ export const getUsersTC = (page: number) => async (
   if (totalPage && page > totalPage) {
     return;
   }
-  let response = await usersAPI.getUsers(page);
   try {
+    let response = await usersAPI.getUsers(page);
     if (response.data) {
-      dispatch(setUsersAC(response.data.data, page, response.data.total_pages));
+      dispatch(
+        setUsersAC(
+          response.data.data,
+          page,
+          response.data.total_pages,
+          newUser || null,
+        ),
+      );
       dispatch(setStatusSetErrorAC(false, null));
     }
   } catch (error) {
