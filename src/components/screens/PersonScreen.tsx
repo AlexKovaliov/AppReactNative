@@ -17,12 +17,12 @@ type routeType = {
 };
 
 export const PersonScreen = React.memo(({route}: routeType) => {
+  const dispatch = useDispatch();
+
   const {error, isLoading} = useSelector<
     AppRootStateType,
     InitialPersonStateType
   >(state => state.appStore);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(chosenPersonTC(route.params.id));

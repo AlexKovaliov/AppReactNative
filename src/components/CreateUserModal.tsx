@@ -1,30 +1,35 @@
 import React from 'react';
-import {Button, StyleSheet, TextInput, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {NewUserType} from './screens/UsersScreen';
 import {Formik, FormikHelpers} from 'formik';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from 'react-redux';
-import {Dispatch} from 'redux';
-import {addNewUserAC} from '../reducers/actions';
-import { UsersType } from "../api/users-api";
+import {storeData} from './asyncStorage/StoreData';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-/*type routeType = {
-  route: {
-    params: {
-      addReview: (newUser: NewUserType) => void;
-    };
-  };
-};*/
-
-export function ModalScreen(/*{route}: routeType*/) {
+//camera isn't finish
+export const ModalScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  /*const addReview = route.params.addReview;*/
   const navigationGoBack = () => navigation.goBack();
+
+  const takePhotoFromCamera = async () => {
+    await launchCamera({mediaType: 'photo', quality: 1}, response => {});
+  };
 
   return (
     <View style={styles.container}>
+      <View style={styles.closeArea}>
+        <TouchableOpacity style={styles.closeBtn} onPress={navigationGoBack}>
+          <Text style={styles.textBtn}>x</Text>
+        </TouchableOpacity>
+      </View>
       <Formik
         initialValues={{
           first_name: '',
@@ -35,10 +40,9 @@ export function ModalScreen(/*{route}: routeType*/) {
         }}
         onSubmit={(values, actions: FormikHelpers<NewUserType>) => {
           actions.resetForm();
-          /*addReview(values);*/
         }}>
         {props => (
-          <View>
+          <View style={styles.content}>
             <TextInput
               style={styles.input}
               placeholder="First Name"
@@ -57,59 +61,81 @@ export function ModalScreen(/*{route}: routeType*/) {
               onChangeText={props.handleChange('email')}
               value={props.values.email}
             />
-            <View style={styles.buttonArea}>
-              <Button onPress={navigationGoBack} title="Dismiss" />
-              <Button
-                onPress={() => storeData(props.values, dispatch)}
+            <View style={styles.btnAddArea}>
+              {/*<Button onPress={navigationGoBack} title="Dismiss" />*/}
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => storeData(dispatch, props.values)}>
+                <Text style={styles.textBtn}>add</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={takePhotoFromCamera}>
+                <Text style={styles.textBtn}>photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                /*onPress={chosePhotoFromLibrary}*/>
+                <Text style={styles.textBtn}>from library</Text>
+              </TouchableOpacity>
+              {/*<Button
+                onPress={() => storeData(dispatch, props.values)}
                 title="Submit"
-              />
-              <Button onPress={() => getData()} title="Get" />
+              />*/}
             </View>
           </View>
         )}
       </Formik>
     </View>
   );
-}
-
-export const storeData = async (newUser: NewUserType, dispatch: Dispatch) => {
-  try {
-    const jsonValue = JSON.stringify(newUser);
-    console.log(jsonValue);
-    await AsyncStorage.setItem('user', jsonValue);
-    let user: UsersType = JSON.parse(jsonValue);
-    dispatch(addNewUserAC(user));
-  } catch (error) {
-    return <Text>{error}</Text>;
-  }
 };
 
-export const getData = async () => {
-  try {
-    const jsonValueUser = await AsyncStorage.getItem('user');
-    console.log(jsonValueUser);
-    return jsonValueUser != null ? JSON.parse(jsonValueUser) : null;
-  } catch (error) {
-    return <Text>{error}</Text>;
-  }
-};
-
+// need to change styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    justifyContent: 'space-around',
   },
-  buttonArea: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 300,
+  closeArea: {
+    alignItems: 'flex-end',
+  },
+  closeBtn: {
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3949ab',
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: 10,
+    justifyContent: 'center',
   },
   input: {
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderColor: '#f1f3f6',
     marginBottom: 30,
+  },
+  btnAddArea: {
+    marginTop: 30,
+    alignItems: 'flex-end',
+  },
+  button: {
+    width: 55,
+    height: 55,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3949ab',
+  },
+  textBtn: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#fff',
   },
 });

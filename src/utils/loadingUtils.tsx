@@ -32,14 +32,16 @@ export default connect(mapStateToProps)(Loading);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    zIndex: 100,
+    width: '100%',
+    backgroundColor: '#f1f3f6',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-    marginTop: 30,
   },
   text: {
     marginTop: 10,
     fontSize: 20,
     fontStyle: 'italic',
+    color: '#3949ab',
   },
 });

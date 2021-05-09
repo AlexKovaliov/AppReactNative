@@ -1,8 +1,14 @@
 import React, {useEffect} from 'react';
-import {Button, StyleSheet, View, SafeAreaView, StatusBar} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
-import {UsersType} from '../../api/users-api';
 import {Users} from '../Users';
 import {getUsersTC} from '../../reducers/thunks';
 import {ErrorImage} from '../../utils/errorUtils';
@@ -20,9 +26,9 @@ export type NewUserType = {
 
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
-  const users = useSelector<AppRootStateType, Array<UsersType>>(
-    state => state.usersStore.users,
-  );
+  const navigation = useNavigation();
+  const onModal = () => navigation.navigate('Modal');
+
   const {error, isLoading} = useSelector<
     AppRootStateType,
     InitialPersonStateType
@@ -31,30 +37,15 @@ export const UsersScreen = React.memo(() => {
   useEffect(() => {
     dispatch(getUsersTC(1));
   }, [dispatch]);
-  /*const [newUsers, setNewUsers] = useState<Array<NewUserType>>([]);
-  const newMappedUsers = [...newUsers, ...users];
-  const addReview = (newUser: NewUserType) => {
-    newUser.id = Math.random().toString();
-    setNewUsers(currentReviews => {
-      return [newUser, ...currentReviews];
-    });
-  };*/
-  const navigation = useNavigation();
-  const onModal = () => navigation.navigate('Modal');
 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         {isLoading ? <Loading /> : null}
-        <Users users={users} />
-        <View style={styles.button}>
-          <Button onPress={onModal} title={'Add User'} />
-          {/*<ModalAddUser
-            addReview={addReview}
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-          />*/}
-        </View>
+        <Users />
+        <TouchableOpacity style={styles.button} onPress={onModal}>
+          <Text style={styles.textBtn}>+</Text>
+        </TouchableOpacity>
         {error ? <ErrorImage /> : null}
       </View>
     </SafeAreaView>
@@ -72,7 +63,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   button: {
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    position: 'absolute',
+    width: 55,
+    height: 55,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#3949ab',
+    top: 500,
+    left: 290,
+  },
+  textBtn: {
+    fontSize: 30,
+    textAlign: 'center',
+    color: '#fff',
   },
 });

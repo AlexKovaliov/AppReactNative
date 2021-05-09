@@ -1,12 +1,18 @@
-import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import React, {useCallback} from 'react';
+import {Image, StyleSheet, Text, View, Button} from 'react-native';
 import {AppRootStateType} from '../store';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
+import {onRefreshTC} from '../reducers/thunks';
 
 export function ErrorImage() {
+  const dispatch = useDispatch();
+
   const error = useSelector<AppRootStateType, string | null>(
     state => state.appStore.error,
   );
+  const onRefreshHandler = useCallback(() => {
+    dispatch(onRefreshTC());
+  }, [dispatch]);
 
   return (
     <View style={styles.containerError}>
@@ -18,6 +24,7 @@ export function ErrorImage() {
       />
       <Text style={styles.textError}>Oops! Something went wrong!</Text>
       <Text style={styles.textError}>{error}</Text>
+      <Button onPress={onRefreshHandler} title="Refreshing" />
     </View>
   );
 }
@@ -25,6 +32,7 @@ export function ErrorImage() {
 const styles = StyleSheet.create({
   textError: {
     marginTop: 10,
+    marginBottom: 10,
     fontSize: 16,
     fontStyle: 'italic',
     color: 'red',
@@ -40,6 +48,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
-    backgroundColor: 'grey',
+    backgroundColor: '#fff',
   },
 });

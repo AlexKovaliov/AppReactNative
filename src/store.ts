@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import {usersReducer} from './reducers/users-reducer';
 import {appReducer} from './reducers/app-reducer';
 import {personReducer} from './reducers/person-reducer';
+import {compose} from 'redux';
 
 const rootReducer = combineReducers({
   usersStore: usersReducer,
@@ -10,5 +11,16 @@ const rootReducer = combineReducers({
   personStore: personReducer,
 });
 
-export const store = createStore(rootReducer, applyMiddleware(thunk));
+// redux dev-tools
+//@ts-ignore
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+export const store = createStore(
+  rootReducer,
+  composeEnhancers(applyMiddleware(thunk)),
+);
+// export const store = createStore(rootReducer, applyMiddleware(thunk));
+
+// @ts-ignore
+window.store = store;
+console.log(store.getState());
 export type AppRootStateType = ReturnType<typeof rootReducer>;

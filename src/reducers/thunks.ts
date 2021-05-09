@@ -1,6 +1,13 @@
 import {Dispatch} from 'redux';
-import { ResponseUsersType, usersAPI, UsersType } from '../api/users-api';
-import {chosenPersonAC, setUsersAC, setStatusSetErrorAC} from './actions';
+import {usersAPI} from '../api/users-api';
+import {
+  chosenPersonAC,
+  setRefreshingAC,
+  setStatusSetErrorAC,
+  setUsersAC,
+} from './actions';
+import {AppRootStateType} from '../store';
+import {getData} from '../components/asyncStorage/StoreData';
 
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setStatusSetErrorAC(true, null));
@@ -13,26 +20,34 @@ export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   }
 };
 
-export const getUsersTC = (page: number, newUser?: UsersType) => async (
+export const onRefreshTC = () => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
+  try {
+    setRefreshingAC(true);
+    getUsersTC(1);
+    setRefreshingAC(false);
+    dispatch(setStatusSetErrorAC(false, null));
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
+
+export const getUsersTC = (page: number) => async (
   dispatch: Dispatch,
-  getState: ResponseUsersType,
+  getState: () => AppRootStateType,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
-  const totalPage = getState.total_pages;
+  const totalPage = getState().usersStore.total_pages;
   if (totalPage && page > totalPage) {
+    dispatch(setStatusSetErrorAC(false, null));
     return;
   }
   try {
     let response = await usersAPI.getUsers(page);
     if (response.data) {
-      dispatch(
-        setUsersAC(
-          response.data.data,
-          page,
-          response.data.total_pages,
-          newUser || null,
-        ),
-      );
+      dispatch(setUsersAC(response.data.data, page, response.data.total_pages));
+      let usersId = getState().usersStore.users;
+      getData(dispatch, usersId).then(r => r);
       dispatch(setStatusSetErrorAC(false, null));
     }
   } catch (error) {

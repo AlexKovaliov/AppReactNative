@@ -4,13 +4,15 @@ import {
   SetFilterActionType,
   SetRefreshingActionType,
   AddNewUserActionType,
+  SetNewUserSActionType,
 } from './actions';
 
 type ActionsType =
   | SetUsersActionType
   | SetFilterActionType
   | SetRefreshingActionType
-  | AddNewUserActionType;
+  | AddNewUserActionType
+  | SetNewUserSActionType;
 
 export type InitialStateUserReducerType = typeof initialState;
 
@@ -49,7 +51,12 @@ export const usersReducer = (
     case 'USERS/SET_REFRESHING':
       return {...state, isRefreshing: action.isRefreshing};
     case 'USERS/ADD_NEW_USER':
-      return {...state, users: [action.newUser, ...state.users]};
+      return {
+        ...state,
+        users: [action.newUser, ...state.users],
+      };
+    case 'USERS/SET_NEW_USERS':
+      return {...state, users: [...action.users, ...state.users]};
     default:
       return state;
   }

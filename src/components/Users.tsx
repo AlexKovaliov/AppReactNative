@@ -2,28 +2,21 @@ import React, {useCallback} from 'react';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {UsersList} from './UsersList';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUsersTC} from '../reducers/thunks';
+import {getUsersTC, onRefreshTC} from '../reducers/thunks';
 import {AppRootStateType} from '../store';
-import {setRefreshingAC} from '../reducers/actions';
 import {InitialStateUserReducerType} from '../reducers/users-reducer';
 import {UsersType} from '../api/users-api';
 
-type PropsType = {
-  users: Array<UsersType>;
-};
+export const Users = () => {
+  const dispatch = useDispatch();
 
-export const Users = React.memo((props: PropsType) => {
-  const {page, isRefreshing} = useSelector<
+  const {page, isRefreshing, users} = useSelector<
     AppRootStateType,
     InitialStateUserReducerType
   >(state => state.usersStore);
 
-  const dispatch = useDispatch();
-
   const onRefreshHandler = useCallback(() => {
-    setRefreshingAC(true);
-    dispatch(getUsersTC(1));
-    setRefreshingAC(false);
+    dispatch(onRefreshTC());
   }, [dispatch]);
 
   const handleLoadMore = useCallback(() => {
@@ -33,7 +26,7 @@ export const Users = React.memo((props: PropsType) => {
   return (
     <FlatList
       style={styles.flatList}
-      data={props.users}
+      data={users}
       keyExtractor={(item: UsersType) => String(item.id)}
       renderItem={({item}) => <UsersList user={item} />}
       onEndReachedThreshold={0.5}
@@ -46,7 +39,7 @@ export const Users = React.memo((props: PropsType) => {
       }
     />
   );
-});
+};
 
 const styles = StyleSheet.create({
   inputWrap: {

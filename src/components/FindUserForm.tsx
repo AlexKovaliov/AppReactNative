@@ -4,6 +4,7 @@ import {Formik} from 'formik';
 import {setFilterAC} from '../reducers/actions';
 import {FilterType} from '../reducers/users-reducer';
 
+//component isn't using
 export function FindUser() {
   return (
     <View style={styles.inputWrap}>

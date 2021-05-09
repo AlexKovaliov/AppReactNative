@@ -10,7 +10,6 @@ export type PropsType = {
 
 export const UsersList = React.memo(({...props}: PropsType) => {
   const navigation = useNavigation();
-
   const onNavigation = () => navigation.navigate('Person', {id: props.user.id});
 
   return (

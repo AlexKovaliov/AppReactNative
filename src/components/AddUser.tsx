@@ -1,13 +1,5 @@
-import React, {FC} from 'react';
-import {
-  StyleSheet,
-  View,
-  Button,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from 'react-native';
-import {Formik} from 'formik';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
 
 type NewUserType = {
   first_name: string;
@@ -17,16 +9,13 @@ type NewUserType = {
   avatar: string;
 };
 
+//component isn't using
 type AddUserFormType = {
   addReview: (newUser: NewUserType) => void;
 };
 
 export const AddUserForm = React.memo(({addReview}: AddUserFormType) => {
-  return (
-    <View>
-
-    </View>
-  );
+  return <View></View>;
 });
 
 export const styles2 = StyleSheet.create({
