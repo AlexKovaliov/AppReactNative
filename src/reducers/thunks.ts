@@ -47,6 +47,7 @@ export const getUsersTC = (page: number) => async (
     if (response.data) {
       dispatch(setUsersAC(response.data.data, page, response.data.total_pages));
       let usersId = getState().usersStore.users;
+      //каждый раз в асинк сторадж лазить?
       getData(dispatch, usersId).then(r => r);
       dispatch(setStatusSetErrorAC(false, null));
     }
@@ -54,3 +55,5 @@ export const getUsersTC = (page: number) => async (
     dispatch(setStatusSetErrorAC(false, error.message));
   }
 };
+
+//на старт апплика - ошибка

@@ -15,6 +15,8 @@ export const Users = () => {
     InitialStateUserReducerType
   >(state => state.usersStore);
 
+  //после рефрешинга должно быть 6 юзеров - у тебя больше, похоже он неправильно работает
+  //ты смотрел мо предыдущие комментарии?
   const onRefreshHandler = useCallback(() => {
     dispatch(onRefreshTC());
   }, [dispatch]);

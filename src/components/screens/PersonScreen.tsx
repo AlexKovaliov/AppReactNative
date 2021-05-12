@@ -43,6 +43,8 @@ const Content = React.memo((props: {error: ErrorType}) => {
   return (
     <View style={styles.container}>
       {props.error ? (
+        //кнопка рефрешинг на еррор скрине не работает на странице юзера
+        //если назать на созаднного юзера - ошибка
         <ErrorImage />
       ) : (
         <View style={styles.wrap}>

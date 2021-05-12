@@ -23,6 +23,9 @@ export const ModalScreen = () => {
     await launchCamera({mediaType: 'photo', quality: 1}, response => {});
   };
 
+  //при клавиатуре дизайн едет
+  //после нажатия кнопки add ничего не происзодит, не понятно, создается юзер или нет
+
   return (
     <View style={styles.container}>
       <View style={styles.closeArea}>
@@ -43,6 +46,7 @@ export const ModalScreen = () => {
         }}>
         {props => (
           <View style={styles.content}>
+          {/*валидация*/}
             <TextInput
               style={styles.input}
               placeholder="First Name"
