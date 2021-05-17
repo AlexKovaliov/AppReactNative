@@ -59,6 +59,15 @@ const Content = React.memo((props: {id: number}) => {
               {person.first_name} {person.last_name}
             </Text>
             <Text style={styles.email}>Email: {person.email}</Text>
+=======
+  return (
+    <View style={styles.container}>
+      {props.error ? (
+        <ErrorImage />
+      ) : (
+        <View style={styles.wrap}>
+          <View style={styles.wrapImg}>
+            <Image style={styles.image} source={{uri: person.avatar}} />
           </View>
         )}
       </View>
