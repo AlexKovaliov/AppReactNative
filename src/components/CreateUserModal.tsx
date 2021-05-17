@@ -1,114 +1,123 @@
 import React from 'react';
 import {
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
+  Alert,
+  Button,
+  TextInput,
+  StyleSheet,
+  ActivityIndicator,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NewUserType} from './screens/UsersScreen';
-import {Formik, FormikHelpers} from 'formik';
+import * as yup from 'yup';
 import {useDispatch} from 'react-redux';
-import {storeData} from './asyncStorage/StoreData';
+import {Formik, FormikHelpers} from 'formik';
+import {storeDataTC} from '../reducers/thunks';
+import {NewUserType} from './screens/UsersScreen';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 //camera isn't finish
-export const ModalScreen = () => {
+export const ModalScreen = React.memo(() => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const navigationGoBack = () => navigation.goBack();
+
+  const validation = yup.object().shape({
+    first_name: yup
+      .string()
+      .typeError('Must be a string.')
+      .required('Please enter your name'),
+
+    last_name: yup.string().required('Please enter your last name'),
+
+    email: yup
+      .string()
+      .email('Invalid email')
+      .required('Please enter your name'),
+  });
 
   const takePhotoFromCamera = async () => {
-    await launchCamera({mediaType: 'photo', quality: 1}, response => {});
+    await launchCamera(
+      {
+        quality: 1,
+        mediaType: 'photo',
+        saveToPhotos: true,
+        includeBase64: false,
+      },
+      response => {
+        response.uri;
+      },
+    );
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.closeArea}>
-        <TouchableOpacity style={styles.closeBtn} onPress={navigationGoBack}>
-          <Text style={styles.textBtn}>x</Text>
-        </TouchableOpacity>
-      </View>
       <Formik
         initialValues={{
-          first_name: '',
-          last_name: '',
           email: '',
           avatar: '',
+          last_name: '',
+          first_name: '',
           id: Math.random().toString(),
         }}
         onSubmit={(values, actions: FormikHelpers<NewUserType>) => {
           actions.resetForm();
-        }}>
+        }}
+        validationSchema={validation}>
         {props => (
           <View style={styles.content}>
             <TextInput
               style={styles.input}
               placeholder="First Name"
-              onChangeText={props.handleChange('first_name')}
               value={props.values.first_name}
+              onChangeText={props.handleChange('first_name')}
             />
+            <Text style={styles.error}>{props.errors.first_name}</Text>
+
             <TextInput
               style={styles.input}
               placeholder="Last Name"
-              onChangeText={props.handleChange('last_name')}
               value={props.values.last_name}
+              onChangeText={props.handleChange('last_name')}
             />
+            <Text style={styles.error}>{props.errors.last_name}</Text>
+
             <TextInput
-              style={styles.input}
               placeholder="Email"
-              onChangeText={props.handleChange('email')}
+              style={styles.input}
               value={props.values.email}
+              onChangeText={props.handleChange('email')}
             />
+            <Text style={styles.error}>{props.errors.email}</Text>
+
             <View style={styles.btnAddArea}>
-              {/*<Button onPress={navigationGoBack} title="Dismiss" />*/}
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => storeData(dispatch, props.values)}>
-                <Text style={styles.textBtn}>add</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={takePhotoFromCamera}>
-                <Text style={styles.textBtn}>photo</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                /*onPress={chosePhotoFromLibrary}*/>
-                <Text style={styles.textBtn}>from library</Text>
-              </TouchableOpacity>
-              {/*<Button
-                onPress={() => storeData(dispatch, props.values)}
-                title="Submit"
-              />*/}
+              <Button onPress={takePhotoFromCamera} title="take photo" />
+              <Button onPress={() => {}} title="from gallery" />
+
+              {props.isSubmitting ? (
+                <ActivityIndicator color={'#3949ab'} size="small" />
+              ) : (
+                <Button
+                  onPress={() =>
+                    dispatch(storeDataTC(props.values)) &&
+                    Alert.alert('Success')
+                  }
+                  disabled={props.isSubmitting}
+                  title="add"
+                />
+              )}
             </View>
           </View>
         )}
       </Formik>
     </View>
   );
-};
+});
 
-// need to change styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
     paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#fff',
     justifyContent: 'space-around',
-  },
-  closeArea: {
-    alignItems: 'flex-end',
-  },
-  closeBtn: {
-    width: 35,
-    height: 35,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#3949ab',
   },
   content: {
     flex: 1,
@@ -116,26 +125,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
+    marginBottom: 20,
     borderStyle: 'solid',
     borderBottomWidth: 1,
     borderColor: '#f1f3f6',
-    marginBottom: 30,
+  },
+  error: {
+    fontSize: 18,
+    color: 'red',
   },
   btnAddArea: {
-    marginTop: 30,
-    alignItems: 'flex-end',
-  },
-  button: {
-    width: 55,
-    height: 55,
-    borderRadius: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#3949ab',
-  },
-  textBtn: {
-    fontSize: 18,
-    textAlign: 'center',
-    color: '#fff',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

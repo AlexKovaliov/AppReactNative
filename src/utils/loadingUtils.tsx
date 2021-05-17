@@ -32,16 +32,16 @@ export default connect(mapStateToProps)(Loading);
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
     zIndex: 100,
     width: '100%',
-    backgroundColor: '#f1f3f6',
+    position: 'absolute',
     alignItems: 'center',
+    backgroundColor: '#f1f3f6',
   },
   text: {
-    marginTop: 10,
     fontSize: 20,
-    fontStyle: 'italic',
+    marginTop: 10,
     color: '#3949ab',
+    fontStyle: 'italic',
   },
 });

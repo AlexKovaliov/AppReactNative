@@ -1,27 +1,27 @@
 import React, {useEffect} from 'react';
 import {
-  StyleSheet,
   View,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
   Text,
+  StatusBar,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType} from '../../store';
 import {Users} from '../Users';
-import {getUsersTC} from '../../reducers/thunks';
-import {ErrorImage} from '../../utils/errorUtils';
+import {AppRootStateType} from '../../store';
 import Loading from '../../utils/loadingUtils';
-import {InitialPersonStateType} from '../../reducers/app-reducer';
+import {getAllUsers} from '../../reducers/thunks';
+import {ErrorImage} from '../../utils/errorUtils';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {InitialAppStateType} from '../../reducers/app-reducer';
 
 export type NewUserType = {
-  first_name: string;
-  last_name: string;
-  email: string;
   id: string;
+  email: string;
   avatar: string;
+  last_name: string;
+  first_name: string;
 };
 
 export const UsersScreen = React.memo(() => {
@@ -29,14 +29,13 @@ export const UsersScreen = React.memo(() => {
   const navigation = useNavigation();
   const onModal = () => navigation.navigate('Modal');
 
-  const {error, isLoading} = useSelector<
-    AppRootStateType,
-    InitialPersonStateType
-  >(state => state.appStore);
-
   useEffect(() => {
-    dispatch(getUsersTC(1));
+    dispatch(getAllUsers());
   }, [dispatch]);
+
+  const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -55,27 +54,27 @@ export const UsersScreen = React.memo(() => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    paddingTop: StatusBar.currentHeight,
     backgroundColor: '#fff',
+    paddingTop: StatusBar.currentHeight,
   },
   container: {
     flex: 1,
     paddingHorizontal: 5,
   },
   button: {
-    position: 'absolute',
+    top: 500,
+    left: 290,
     width: 55,
     height: 55,
     borderRadius: 50,
-    justifyContent: 'center',
+    position: 'absolute',
     alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#3949ab',
-    top: 500,
-    left: 290,
   },
   textBtn: {
+    color: '#fff',
     fontSize: 30,
     textAlign: 'center',
-    color: '#fff',
   },
 });

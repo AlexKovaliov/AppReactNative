@@ -1,8 +1,8 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {Avatar} from '../utils/avatarUtils';
 import {UsersType} from '../api/users-api';
+import {Avatar} from '../utils/avatarUtils';
+import {useNavigation} from '@react-navigation/native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 
 export type PropsType = {
   user: UsersType;
@@ -33,17 +33,17 @@ const styles = StyleSheet.create({
   },
   wrap: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
     borderRadius: 4,
-    paddingVertical: 10,
-    paddingHorizontal: 10,
     marginVertical: 4,
+    paddingVertical: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 10,
     backgroundColor: '#f1f3f6',
   },
   text: {
-    marginLeft: 10,
     fontSize: 18,
+    marginLeft: 10,
     fontWeight: '400',
   },
   email: {

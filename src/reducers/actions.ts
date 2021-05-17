@@ -1,5 +1,5 @@
-import {RequestStatusType} from './app-reducer';
 import {UsersType} from '../api/users-api';
+import {RequestStatusType} from './app-reducer';
 
 //app-reducer
 export type SetStatusSetErrorActionType = ReturnType<

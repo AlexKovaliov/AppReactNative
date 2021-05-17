@@ -1,12 +1,11 @@
-import React, {useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import React from 'react';
+import {useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
-import {UsersType} from '../../api/users-api';
-import {ErrorType, InitialPersonStateType} from '../../reducers/app-reducer';
-import {chosenPersonTC} from '../../reducers/thunks';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {InitialAppStateType} from '../../reducers/app-reducer';
+import {InitialStateUserReducerType} from '../../reducers/users-reducer';
 
 type routeType = {
   route: {
@@ -17,46 +16,56 @@ type routeType = {
 };
 
 export const PersonScreen = React.memo(({route}: routeType) => {
-  const dispatch = useDispatch();
-
-  const {error, isLoading} = useSelector<
-    AppRootStateType,
-    InitialPersonStateType
-  >(state => state.appStore);
-
-  useEffect(() => {
-    dispatch(chosenPersonTC(route.params.id));
-  }, [dispatch, route.params.id]);
+  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
 
   return (
     <View style={styles.container}>
-      {isLoading ? <Loading /> : <Content error={error} />}
+      {isLoading ? <Loading /> : <Content id={route.params.id} />}
     </View>
   );
 });
 
-const Content = React.memo((props: {error: ErrorType}) => {
-  const person = useSelector<AppRootStateType, UsersType>(
-    state => state.personStore,
+const Content = React.memo((props: {id: number}) => {
+  const {users} = useSelector<AppRootStateType, InitialStateUserReducerType>(
+    state => state.usersStore,
+  );
+  const {error} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
   );
 
-  return (
-    <View style={styles.container}>
-      {props.error ? (
-        <ErrorImage />
-      ) : (
-        <View style={styles.wrap}>
-          <View style={styles.wrapImg}>
-            <Image style={styles.image} source={{uri: person.avatar}} />
+  const person = users.find(user => user.id === props.id);
+
+  if (person) {
+    const PersonAvatar = (
+      <Image
+        style={styles.image}
+        source={{
+          uri: person.avatar
+            ? person.avatar
+            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',
+        }}
+      />
+    );
+    return (
+      <View style={styles.container}>
+        {error ? (
+          <ErrorImage />
+        ) : (
+          <View style={styles.wrap}>
+            <View style={styles.wrapImg}>{PersonAvatar}</View>
+            <Text style={styles.text}>
+              {person.first_name} {person.last_name}
+            </Text>
+            <Text style={styles.email}>Email: {person.email}</Text>
           </View>
-          <Text style={styles.text}>
-            {person.first_name} {person.last_name}
-          </Text>
-          <Text style={styles.email}>Email: {person.email}</Text>
-        </View>
-      )}
-    </View>
-  );
+        )}
+      </View>
+    );
+  } else {
+    return <ErrorImage />;
+  }
 });
 
 const styles = StyleSheet.create({
@@ -67,35 +76,34 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f3f6',
   },
   wrap: {
-    alignItems: 'center',
     marginTop: 20,
+    alignItems: 'center',
   },
   wrapImg: {
-    height: 150,
     width: 150,
+    height: 150,
     borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
     elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
   },
   image: {
-    height: 150,
     width: 150,
+    height: 150,
     borderRadius: 10,
   },
   text: {
-    marginTop: 10,
     fontSize: 20,
+    marginTop: 10,
     fontStyle: 'italic',
   },
   email: {
-    marginTop: 15,
     fontSize: 16,
+    marginTop: 15,
   },
 });

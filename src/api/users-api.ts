@@ -3,9 +3,9 @@ import axios from 'axios';
 export type UsersType = {
   id: number;
   email: string;
-  first_name: string;
-  last_name: string;
   avatar: string;
+  last_name: string;
+  first_name: string;
 };
 
 type ResponsePersonType = {

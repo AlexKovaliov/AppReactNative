@@ -1,27 +1,27 @@
 import React, {useCallback} from 'react';
-import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {UsersList} from './UsersList';
+import {AppRootStateType} from '../store';
+import {UsersType} from '../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUsersTC, onRefreshTC} from '../reducers/thunks';
-import {AppRootStateType} from '../store';
+import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {InitialStateUserReducerType} from '../reducers/users-reducer';
-import {UsersType} from '../api/users-api';
 
-export const Users = () => {
+export const Users = React.memo(() => {
   const dispatch = useDispatch();
 
-  const {page, isRefreshing, users} = useSelector<
+  const {isRefreshing, users} = useSelector<
     AppRootStateType,
     InitialStateUserReducerType
   >(state => state.usersStore);
 
+  const handleLoadMore = useCallback(() => {
+    dispatch(getUsersTC());
+  }, [dispatch]);
+
   const onRefreshHandler = useCallback(() => {
     dispatch(onRefreshTC());
   }, [dispatch]);
-
-  const handleLoadMore = useCallback(() => {
-    dispatch(getUsersTC(page + 1));
-  }, [dispatch, page]);
 
   return (
     <FlatList
@@ -39,22 +39,22 @@ export const Users = () => {
       }
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
     paddingVertical: 10,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   input: {
-    height: 40,
     width: '78%',
+    height: 40,
+    borderRadius: 5,
     borderStyle: 'solid',
     borderColor: 'black',
-    borderRadius: 5,
     backgroundColor: '#f1f3f6',
   },
   flatList: {},

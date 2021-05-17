@@ -1,5 +1,5 @@
-import {Image, StyleSheet} from 'react-native';
 import React from 'react';
+import {Image, StyleSheet} from 'react-native';
 
 export const Avatar = React.memo((props: {avatar: string}) => (
   <Image
@@ -14,8 +14,8 @@ export const Avatar = React.memo((props: {avatar: string}) => (
 
 const styles = StyleSheet.create({
   image: {
-    borderRadius: 100,
-    height: 50,
     width: 50,
+    height: 50,
+    borderRadius: 100,
   },
 });

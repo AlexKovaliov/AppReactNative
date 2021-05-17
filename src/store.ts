@@ -22,5 +22,4 @@ export const store = createStore(
 
 // @ts-ignore
 window.store = store;
-console.log(store.getState());
 export type AppRootStateType = ReturnType<typeof rootReducer>;
