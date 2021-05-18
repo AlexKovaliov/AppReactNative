@@ -82,6 +82,9 @@ export const getUsersTC = () => async (
       dispatch(
         setUsersAC(response.data.data, page + 1, response.data.total_pages),
       );
+      dispatch(setUsersAC(response.data.data, page, response.data.total_pages));
+      let usersId = getState().usersStore.users;
+      getData(dispatch, usersId).then(r => r);
       dispatch(setStatusSetErrorAC(false, null));
     }
   } catch (error) {

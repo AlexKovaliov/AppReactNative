@@ -7,8 +7,17 @@ import {setStatusSetErrorAC} from '../../reducers/actions';
   try {
     const jsonValue = JSON.stringify(newUser);
     console.log('storeData', jsonValue);
+
+export const storeData = async (dispatch: Dispatch, newUser: NewUserType) => {
+  try {
+    if (!newUser.id) {
+      return Alert.alert('User is created');
+    }
+    const jsonValue = JSON.stringify(newUser);
+    console.log(jsonValue);
     await AsyncStorage.setItem('user', jsonValue);
   } catch (error) {
+    //что setStatusSetErrorAC делает? ошибка будет во всем апплике?
     dispatch(setStatusSetErrorAC(false, error.message));
   }
 };*/
@@ -19,6 +28,10 @@ import {setStatusSetErrorAC} from '../../reducers/actions';
     console.log('data from asyncstorage(getData)', jsonValueUser);
     let usersNew = jsonValueUser !== null ? JSON.parse(jsonValueUser) : null;
     if (users.some(el => el.id === usersNew.id)) {
+    console.log('data from asyncstorage', jsonValueUser)
+    let usersNew = jsonValueUser != null ? JSON.parse(jsonValueUser) : null;
+    // передать айдишники чтоб перебрать их - плохо
+    if (usersId.some(el => el.id === usersNew.id)) {
       return;
     } else {
       dispatch(addNewUserAC(usersNew));

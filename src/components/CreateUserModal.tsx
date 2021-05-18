@@ -47,6 +47,9 @@ export const ModalScreen = React.memo(() => {
     );
   };
 
+  //при клавиатуре дизайн едет
+  //после нажатия кнопки add ничего не происзодит, не понятно, создается юзер или нет
+
   return (
     <View style={styles.container}>
       <Formik
@@ -63,6 +66,7 @@ export const ModalScreen = React.memo(() => {
         validationSchema={validation}>
         {props => (
           <View style={styles.content}>
+          {/*валидация*/}
             <TextInput
               style={styles.input}
               placeholder="First Name"
