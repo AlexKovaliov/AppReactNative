@@ -15,9 +15,9 @@ import {storeDataTC} from '../reducers/thunks';
 import {NewUserType} from './screens/UsersScreen';
 import {launchCamera /*launchImageLibrary*/} from 'react-native-image-picker';
 
-//camera isn't finish
 export const ModalScreen = React.memo(() => {
   const dispatch = useDispatch();
+  const {container, content, input, error, btnAddArea} = styles;
 
   const validation = yup.object().shape({
     first_name: yup
@@ -25,11 +25,15 @@ export const ModalScreen = React.memo(() => {
       .typeError('Must be a string.')
       .required('Please enter your name'),
 
-    last_name: yup.string().required('Please enter your last name'),
+    last_name: yup
+      .string()
+      .typeError('Must be a string.')
+      .required('Please enter your last name'),
 
     email: yup
       .string()
       .email('Invalid email')
+      .typeError('Must be a string.')
       .required('Please enter your name'),
   });
 
@@ -47,11 +51,8 @@ export const ModalScreen = React.memo(() => {
     );
   };
 
-  //при клавиатуре дизайн едет
-  //после нажатия кнопки add ничего не происзодит, не понятно, создается юзер или нет
-
   return (
-    <View style={styles.container}>
+    <View style={container}>
       <Formik
         initialValues={{
           email: '',
@@ -65,33 +66,32 @@ export const ModalScreen = React.memo(() => {
         }}
         validationSchema={validation}>
         {props => (
-          <View style={styles.content}>
-          {/*валидация*/}
+          <View style={content}>
             <TextInput
-              style={styles.input}
+              style={input}
               placeholder="First Name"
               value={props.values.first_name}
               onChangeText={props.handleChange('first_name')}
             />
-            <Text style={styles.error}>{props.errors.first_name}</Text>
+            <Text style={error}>{props.errors.first_name}</Text>
 
             <TextInput
-              style={styles.input}
+              style={input}
               placeholder="Last Name"
               value={props.values.last_name}
               onChangeText={props.handleChange('last_name')}
             />
-            <Text style={styles.error}>{props.errors.last_name}</Text>
+            <Text style={error}>{props.errors.last_name}</Text>
 
             <TextInput
               placeholder="Email"
-              style={styles.input}
+              style={input}
               value={props.values.email}
               onChangeText={props.handleChange('email')}
             />
-            <Text style={styles.error}>{props.errors.email}</Text>
+            <Text style={error}>{props.errors.email}</Text>
 
-            <View style={styles.btnAddArea}>
+            <View style={btnAddArea}>
               <Button onPress={takePhotoFromCamera} title="take photo" />
               <Button onPress={() => {}} title="from gallery" />
 

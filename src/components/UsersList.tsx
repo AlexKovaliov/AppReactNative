@@ -9,18 +9,20 @@ export type PropsType = {
 };
 
 export const UsersList = React.memo(({...props}: PropsType) => {
+  const {avatar, first_name, last_name, email, id} = props.user;
+  const {container, wrap, text, emailSt} = styles;
   const navigation = useNavigation();
-  const onNavigation = () => navigation.navigate('Person', {id: props.user.id});
+  const onNavigation = () => navigation.navigate('Person', {id: id});
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.wrap} onPress={onNavigation}>
-        <Avatar avatar={props.user.avatar} />
+    <View style={container}>
+      <TouchableOpacity style={wrap} onPress={onNavigation}>
+        <Avatar avatar={avatar} />
         <View>
-          <Text style={styles.text}>
-            {props.user.first_name} {props.user.last_name}
+          <Text style={text}>
+            {first_name} {last_name}
           </Text>
-          <Text style={styles.email}>Email: {props.user.email}</Text>
+          <Text style={emailSt}>Email: {email}</Text>
         </View>
       </TouchableOpacity>
     </View>
@@ -46,7 +48,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontWeight: '400',
   },
-  email: {
+  emailSt: {
     fontSize: 14,
     marginLeft: 10,
   },

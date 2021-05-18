@@ -16,12 +16,14 @@ function mapStateToProps(state: AppRootStateType): MapStatePropsType {
 
 class Loading extends React.PureComponent<PropsType> {
   render() {
+    const {container, text} = styles;
+
     return (
-      <View style={styles.container}>
+      <View style={container}>
         {this.props.isLoading ? (
           <View>
             <ActivityIndicator color={'#3949ab'} size="large" />
-            <Text style={styles.text}>Loading...</Text>
+            <Text style={text}>Loading...</Text>
           </View>
         ) : null}
       </View>

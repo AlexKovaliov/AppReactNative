@@ -11,6 +11,8 @@ import {PersonScreen} from './src/components/screens/PersonScreen';
 const Stack = createStackNavigator();
 
 export default function App() {
+  const {header} = styles;
+
   return (
     <Provider store={store}>
       <NavigationContainer>
@@ -21,7 +23,7 @@ export default function App() {
             options={{
               title: 'Users',
               headerTintColor: '#fff',
-              headerStyle: styles.header,
+              headerStyle: header,
             }}
           />
 
@@ -31,7 +33,7 @@ export default function App() {
             options={{
               title: 'Person Room',
               headerTintColor: '#fff',
-              headerStyle: styles.header,
+              headerStyle: header,
             }}
           />
 
@@ -41,7 +43,7 @@ export default function App() {
             options={{
               title: 'Create user',
               headerTintColor: '#fff',
-              headerStyle: styles.header,
+              headerStyle: header,
             }}
           />
         </Stack.Navigator>

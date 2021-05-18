@@ -13,21 +13,23 @@ export function ErrorImage() {
     state => state.appStore.error,
   );
 
+  const {containerError, image, textError} = styles;
+
   const onComeHome = () => {
     navigation.navigate('Users');
     dispatch(setStatusSetErrorAC(false, null));
   };
 
   return (
-    <View style={styles.containerError}>
+    <View style={containerError}>
       <Image
-        style={styles.image}
+        style={image}
         source={{
           uri: 'https://www.hostinger.co.uk/assets/images/404-3a53e76ef1.png',
         }}
       />
-      <Text style={styles.textError}>Oops! Something went wrong!</Text>
-      <Text style={styles.textError}>{error}</Text>
+      <Text style={textError}>Oops! Something went wrong!</Text>
+      <Text style={textError}>{error}</Text>
       <Button title={'come home'} onPress={onComeHome} />
     </View>
   );

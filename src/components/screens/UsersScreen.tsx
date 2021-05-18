@@ -36,14 +36,15 @@ export const UsersScreen = React.memo(() => {
   const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
+  const {safeArea, container, button, textBtn} = styles;
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView style={safeArea}>
+      <View style={container}>
         {isLoading ? <Loading /> : null}
         <Users />
-        <TouchableOpacity style={styles.button} onPress={onModal}>
-          <Text style={styles.textBtn}>+</Text>
+        <TouchableOpacity style={button} onPress={onModal}>
+          <Text style={textBtn}>+</Text>
         </TouchableOpacity>
         {error ? <ErrorImage /> : null}
       </View>

@@ -34,40 +34,36 @@ const Content = React.memo((props: {id: number}) => {
   const {error} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
+  const {image, container, wrap, wrapImg, text, emailSt} = styles;
 
   const person = users.find(user => user.id === props.id);
 
   if (person) {
+    const {avatar, first_name, last_name, email} = person;
     const PersonAvatar = (
       <Image
-        style={styles.image}
+        style={image}
         source={{
-          uri: person.avatar
-            ? person.avatar
+          uri: avatar
+            ? avatar
             : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',
         }}
       />
     );
+
     return (
-      <View style={styles.container}>
+      <View style={container}>
         {error ? (
           <ErrorImage />
         ) : (
-          <View style={styles.wrap}>
-            <View style={styles.wrapImg}>{PersonAvatar}</View>
-            <Text style={styles.text}>
-              {person.first_name} {person.last_name}
+          <View style={wrap}>
+            <View style={wrapImg}>{PersonAvatar}</View>
+
+            <Text style={text}>
+              {first_name} {last_name}
             </Text>
-            <Text style={styles.email}>Email: {person.email}</Text>
-=======
-  return (
-    <View style={styles.container}>
-      {props.error ? (
-        <ErrorImage />
-      ) : (
-        <View style={styles.wrap}>
-          <View style={styles.wrapImg}>
-            <Image style={styles.image} source={{uri: person.avatar}} />
+
+            <Text style={emailSt}>Email: {email}</Text>
           </View>
         )}
       </View>
@@ -111,7 +107,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontStyle: 'italic',
   },
-  email: {
+  emailSt: {
     fontSize: 16,
     marginTop: 15,
   },

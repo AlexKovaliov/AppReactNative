@@ -69,9 +69,6 @@ export const getUsersTC = () => async (
 
   const totalPage = getState().usersStore.total_pages;
   const page = getState().usersStore.page;
-  console.log('page', page);
-  console.log('totalPage', totalPage);
-  console.log('result', totalPage && page > totalPage);
   if (totalPage && page > totalPage) {
     dispatch(setStatusSetErrorAC(false, null));
     return;
@@ -82,9 +79,6 @@ export const getUsersTC = () => async (
       dispatch(
         setUsersAC(response.data.data, page + 1, response.data.total_pages),
       );
-      dispatch(setUsersAC(response.data.data, page, response.data.total_pages));
-      let usersId = getState().usersStore.users;
-      getData(dispatch, usersId).then(r => r);
       dispatch(setStatusSetErrorAC(false, null));
     }
   } catch (error) {
