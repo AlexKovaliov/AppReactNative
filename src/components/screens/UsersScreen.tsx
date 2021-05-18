@@ -28,6 +28,7 @@ export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const onModal = () => navigation.navigate('Modal');
+  const {safeArea, container, button, textBtn} = styles;
 
   useEffect(() => {
     dispatch(getAllUsers());
@@ -36,7 +37,6 @@ export const UsersScreen = React.memo(() => {
   const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
-  const {safeArea, container, button, textBtn} = styles;
 
   return (
     <SafeAreaView style={safeArea}>

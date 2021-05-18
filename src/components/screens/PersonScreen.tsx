@@ -1,16 +1,16 @@
 import React from 'react';
 import {useSelector} from 'react-redux';
 import {AppRootStateType} from '../../store';
+import {UsersType} from '../../api/users-api';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {InitialAppStateType} from '../../reducers/app-reducer';
-import {InitialStateUserReducerType} from '../../reducers/users-reducer';
 
 type routeType = {
   route: {
     params: {
-      id: number;
+      user: UsersType;
     };
   };
 };
@@ -22,55 +22,46 @@ export const PersonScreen = React.memo(({route}: routeType) => {
 
   return (
     <View style={styles.container}>
-      {isLoading ? <Loading /> : <Content id={route.params.id} />}
+      {isLoading ? <Loading /> : <Content user={route.params.user} />}
     </View>
   );
 });
 
-const Content = React.memo((props: {id: number}) => {
-  const {users} = useSelector<AppRootStateType, InitialStateUserReducerType>(
-    state => state.usersStore,
-  );
+const Content = React.memo((props: {user: UsersType}) => {
   const {error} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
+  const {avatar, first_name, last_name, email} = props.user;
   const {image, container, wrap, wrapImg, text, emailSt} = styles;
+  const noAvatar =
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU';
 
-  const person = users.find(user => user.id === props.id);
+  const PersonAvatar = (
+    <Image
+      style={image}
+      source={{
+        uri: avatar ? avatar : noAvatar,
+      }}
+    />
+  );
 
-  if (person) {
-    const {avatar, first_name, last_name, email} = person;
-    const PersonAvatar = (
-      <Image
-        style={image}
-        source={{
-          uri: avatar
-            ? avatar
-            : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',
-        }}
-      />
-    );
+  return (
+    <View style={container}>
+      {error ? (
+        <ErrorImage />
+      ) : (
+        <View style={wrap}>
+          <View style={wrapImg}>{PersonAvatar}</View>
 
-    return (
-      <View style={container}>
-        {error ? (
-          <ErrorImage />
-        ) : (
-          <View style={wrap}>
-            <View style={wrapImg}>{PersonAvatar}</View>
+          <Text style={text}>
+            {first_name} {last_name}
+          </Text>
 
-            <Text style={text}>
-              {first_name} {last_name}
-            </Text>
-
-            <Text style={emailSt}>Email: {email}</Text>
-          </View>
-        )}
-      </View>
-    );
-  } else {
-    return <ErrorImage />;
-  }
+          <Text style={emailSt}>Email: {email}</Text>
+        </View>
+      )}
+    </View>
+  );
 });
 
 const styles = StyleSheet.create({
