@@ -13,7 +13,7 @@ import {useDispatch} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 import {storeDataTC} from '../reducers/thunks';
 import {NewUserType} from './screens/UsersScreen';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera /*launchImageLibrary*/} from 'react-native-image-picker';
 
 //camera isn't finish
 export const ModalScreen = React.memo(() => {

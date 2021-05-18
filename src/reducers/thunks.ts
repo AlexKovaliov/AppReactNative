@@ -5,6 +5,7 @@ import {
   chosenPersonAC,
   setRefreshingAC,
   setStatusSetErrorAC,
+  SetRefreshingActionType,
   SetStatusSetErrorActionType,
 } from './actions';
 import {ThunkDispatch} from 'redux-thunk';
@@ -24,14 +25,37 @@ export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   }
 };
 
-export const onRefreshTC = () => async (dispatch: Dispatch) => {
+export const onRefreshTC = () => async (
+  dispatch: ThunkDispatch<
+    AppRootStateType,
+    {},
+    SetStatusSetErrorActionType | SetRefreshingActionType
+  >,
+) => {
   dispatch(setStatusSetErrorAC(true, null));
+  setRefreshingAC(true);
   try {
-    setRefreshingAC(true);
-    getUsersTC();
-    getUsersAsyncStorageTC();
+    await dispatch(refreshTC());
+    await dispatch(getUsersAsyncStorageTC());
     setRefreshingAC(false);
     dispatch(setStatusSetErrorAC(false, null));
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
+
+export const refreshTC = () => async (
+  dispatch: Dispatch,
+  getState: () => AppRootStateType,
+) => {
+  const isRefreshing = getState().usersStore.isRefreshing;
+  try {
+    if (isRefreshing) {
+      let response = await usersAPI.getUsers(1);
+      if (response.data) {
+        dispatch(setUsersAC(response.data.data, 1, response.data.total_pages));
+      }
+    }
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -42,8 +66,12 @@ export const getUsersTC = () => async (
   getState: () => AppRootStateType,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
+
   const totalPage = getState().usersStore.total_pages;
   const page = getState().usersStore.page;
+  console.log('page', page);
+  console.log('totalPage', totalPage);
+  console.log('result', totalPage && page > totalPage);
   if (totalPage && page > totalPage) {
     dispatch(setStatusSetErrorAC(false, null));
     return;

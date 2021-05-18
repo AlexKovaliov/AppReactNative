@@ -12,9 +12,6 @@ export function ErrorImage() {
   const error = useSelector<AppRootStateType, string | null>(
     state => state.appStore.error,
   );
-  /*const onRefreshHandler = useCallback(() => {
-    dispatch(onRefreshTC());
-  }, [dispatch]);*/
 
   const onComeHome = () => {
     navigation.navigate('Users');
