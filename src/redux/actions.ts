@@ -21,6 +21,14 @@ export const chosenPersonAC = (person: UsersType) => {
   return {type: 'PERSON/CHOSEN_PERSON', person};
 };
 
+export type SetErrorPersonActionType = ReturnType<typeof setErrorPersonAC>;
+export const setErrorPersonAC = (
+  isLoading: RequestStatusType,
+  error: null | string,
+) => {
+  return {type: 'PERSON/ERROR_PERSON', isLoading, error};
+};
+
 //users-reducer
 export type SetUsersActionType = {
   type: 'USERS/SET_USERS';

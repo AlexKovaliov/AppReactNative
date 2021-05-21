@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../store';
-import {RequestStatusType} from '../reducers/app-reducer';
+import {RequestStatusType} from '../redux/app-reducer';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 
 type MapStatePropsType = {

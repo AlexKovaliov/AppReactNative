@@ -1,11 +1,22 @@
-import React from 'react';
-import {useSelector} from 'react-redux';
+import React, {useCallback} from 'react';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  RefreshControl,
+} from 'react-native';
+import {noAvatar} from '../../utils/images';
 import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {InitialAppStateType} from '../../reducers/app-reducer';
+import {chosenPersonTC} from '../../redux/thunks';
+import {useDispatch, useSelector} from 'react-redux';
+import {InitialAppStateType} from '../../redux/app-reducer';
+import {InitialStateUserReducerType} from '../../redux/users-reducer';
 
 type routeType = {
   route: {
@@ -15,7 +26,7 @@ type routeType = {
   };
 };
 
-export const PersonScreen = React.memo(({route}: routeType) => {
+export const PersonScreen = ({route}: routeType) => {
   const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
@@ -25,16 +36,26 @@ export const PersonScreen = React.memo(({route}: routeType) => {
       {isLoading ? <Loading /> : <Content user={route.params.user} />}
     </View>
   );
-});
+};
 
-const Content = React.memo((props: {user: UsersType}) => {
+const Content = (props: {user: UsersType}) => {
+  const dispatch = useDispatch();
+
   const {error} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
-  const {avatar, first_name, last_name, email} = props.user;
+  const {isRefreshing} = useSelector<
+    AppRootStateType,
+    InitialStateUserReducerType
+  >(state => state.usersStore);
+
+  const {avatar, first_name, last_name, email, id} = props.user;
+
   const {image, container, wrap, wrapImg, text, emailSt} = styles;
-  const noAvatar =
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU';
+
+  const onRefreshHandler = useCallback(() => {
+    dispatch(chosenPersonTC(id));
+  }, [dispatch, id]);
 
   const PersonAvatar = (
     <Image
@@ -46,11 +67,18 @@ const Content = React.memo((props: {user: UsersType}) => {
   );
 
   return (
-    <View style={container}>
+    <SafeAreaView style={container}>
       {error ? (
         <ErrorImage />
       ) : (
-        <View style={wrap}>
+        <ScrollView
+          contentContainerStyle={wrap}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefreshHandler}
+            />
+          }>
           <View style={wrapImg}>{PersonAvatar}</View>
 
           <Text style={text}>
@@ -58,11 +86,11 @@ const Content = React.memo((props: {user: UsersType}) => {
           </Text>
 
           <Text style={emailSt}>Email: {email}</Text>
-        </View>
+        </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -72,8 +100,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#f1f3f6',
   },
   wrap: {
-    marginTop: 20,
+    height: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   wrapImg: {
     width: 150,

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Alert, Button, StyleSheet, TextInput, View} from 'react-native';
 import {Formik} from 'formik';
-import {setFilterAC} from '../reducers/actions';
-import {FilterType} from '../reducers/users-reducer';
+import {setFilterAC} from '../redux/actions';
+import {FilterType} from '../redux/users-reducer';
 
 //component isn't using
 export function FindUser() {

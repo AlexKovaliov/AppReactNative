@@ -4,6 +4,7 @@ import {
   addNewUserAC,
   chosenPersonAC,
   setRefreshingAC,
+  setErrorPersonAC,
   setStatusSetErrorAC,
   SetRefreshingActionType,
   SetStatusSetErrorActionType,
@@ -11,17 +12,16 @@ import {
 import {ThunkDispatch} from 'redux-thunk';
 import {AppRootStateType} from '../store';
 import {usersAPI, UsersType} from '../api/users-api';
-import {NewUserType} from '../components/screens/UsersScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
-  dispatch(setStatusSetErrorAC(true, null));
+  dispatch(setErrorPersonAC(true, null));
   try {
     let response = await usersAPI.chosenPerson(id);
     dispatch(chosenPersonAC(response.data));
-    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setErrorPersonAC(false, null));
   } catch (error) {
-    dispatch(setStatusSetErrorAC(false, error.message));
+    dispatch(setErrorPersonAC(false, error.message));
   }
 };
 
@@ -100,17 +100,18 @@ export const getAllUsers = () => async (
 };
 
 // AsyncStorage
-export const storeDataTC = (newUser: NewUserType) => async (
-  dispatch: ThunkDispatch<AppRootStateType, {}, SetStatusSetErrorActionType>,
+export const storeDataTC = (newUser: UsersType) => async (
+  dispatch: Dispatch,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
 
   try {
+    dispatch(addNewUserAC(newUser));
     let ArrayOldUsers = await AsyncStorage.getItem('users');
     let parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
     const jsonValue = JSON.stringify([newUser, ...parsedUsers]);
     await AsyncStorage.setItem('users', jsonValue);
-    await dispatch(getUsersAsyncStorageTC());
+    /*await dispatch(getUsersAsyncStorageTC());*/
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
@@ -130,6 +131,10 @@ export const getUsersAsyncStorageTC = () => async (
     let usersNew: Array<UsersType> = jsonValueUser
       ? JSON.parse(jsonValueUser)
       : [];
+
+    /*usersNew.map(u => dispatch(addNewUserAC(u)));*/
+
+    console.log('usersNew', jsonValueUser);
 
     const ids: number[] = users.map(u => +u.id);
 

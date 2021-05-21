@@ -1,16 +1,15 @@
 import React from 'react';
+import {noAvatar} from './images';
 import {Image, StyleSheet} from 'react-native';
 
-export const Avatar = React.memo((props: {avatar: string}) => (
+export const Avatar = (props: {avatar: string}) => (
   <Image
     style={styles.image}
     source={{
-      uri:
-        props.avatar ||
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',
+      uri: props.avatar || noAvatar,
     }}
   />
-));
+);
 
 const styles = StyleSheet.create({
   image: {

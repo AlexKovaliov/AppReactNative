@@ -3,9 +3,9 @@ import {UsersList} from './UsersList';
 import {AppRootStateType} from '../store';
 import {UsersType} from '../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUsersTC, onRefreshTC} from '../reducers/thunks';
+import {getUsersTC, onRefreshTC} from '../redux/thunks';
 import {FlatList, RefreshControl, StyleSheet} from 'react-native';
-import {InitialStateUserReducerType} from '../reducers/users-reducer';
+import {InitialStateUserReducerType} from '../redux/users-reducer';
 
 export const Users = React.memo(() => {
   const dispatch = useDispatch();
