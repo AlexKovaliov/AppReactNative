@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {
   Text,
   View,
@@ -40,6 +40,19 @@ export const PersonScreen = ({route}: routeType) => {
 
 const Content = (props: {user: UsersType}) => {
   const dispatch = useDispatch();
+  const {avatar, first_name, last_name, email, id} = props.user;
+
+  useEffect(() => {
+    if (id.toString().length <= 2) {
+      dispatch(chosenPersonTC(id));
+    }
+  }, [dispatch, id]);
+
+  const onRefreshHandler = useCallback(() => {
+    if (id.toString().length <= 2) {
+      dispatch(chosenPersonTC(id));
+    }
+  }, [dispatch, id]);
 
   const {error} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
@@ -49,13 +62,7 @@ const Content = (props: {user: UsersType}) => {
     InitialStateUserReducerType
   >(state => state.usersStore);
 
-  const {avatar, first_name, last_name, email, id} = props.user;
-
-  const {image, container, wrap, wrapImg, text, emailSt} = styles;
-
-  const onRefreshHandler = useCallback(() => {
-    dispatch(chosenPersonTC(id));
-  }, [dispatch, id]);
+  const {image, container, wrap, wrapImg, text, emailSt, wrapName} = styles;
 
   const PersonAvatar = (
     <Image
@@ -80,10 +87,11 @@ const Content = (props: {user: UsersType}) => {
             />
           }>
           <View style={wrapImg}>{PersonAvatar}</View>
-
-          <Text style={text}>
-            {first_name} {last_name}
-          </Text>
+          <View style={wrapName}>
+            <Text style={text}>
+              {first_name} {last_name}
+            </Text>
+          </View>
 
           <Text style={emailSt}>Email: {email}</Text>
         </ScrollView>
@@ -99,8 +107,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#f1f3f6',
   },
+  background: {
+    width: '100%',
+    height: '40%',
+  },
   wrap: {
+    width: 355,
     height: '100%',
+    position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -130,5 +144,22 @@ const styles = StyleSheet.create({
   emailSt: {
     fontSize: 16,
     marginTop: 15,
+  },
+  button: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    height: 50,
+    width: 50,
+  },
+  wrapName: {
+    marginTop: 10,
+    width: 180,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
 });

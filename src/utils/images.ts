@@ -11,3 +11,6 @@ export const addUser =
 
 export const noAvatar =
   'https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/OOjs_UI_icon_userAvatar.svg/1200px-OOjs_UI_icon_userAvatar.svg.png';
+
+export const edit =
+  'https://icon-library.com/images/pencil-edit-icon/pencil-edit-icon-11.jpg';

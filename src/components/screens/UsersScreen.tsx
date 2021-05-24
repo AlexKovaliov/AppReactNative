@@ -25,7 +25,7 @@ export const UsersScreen = React.memo(() => {
 
   useEffect(() => {
     dispatch(getAllUsers());
-  }, []);
+  }, [dispatch]);
 
   const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,

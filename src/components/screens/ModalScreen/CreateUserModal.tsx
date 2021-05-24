@@ -11,41 +11,34 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import * as yup from 'yup';
 import {useDispatch} from 'react-redux';
-import {UsersType} from '../api/users-api';
-import {storeDataTC} from '../redux/thunks';
 import {Formik, FormikHelpers} from 'formik';
+import {UsersType} from '../../../api/users-api';
+import {storeDataTC} from '../../../redux/thunks';
+import FlashMessage from 'react-native-flash-message';
 import ImagePicker from 'react-native-image-crop-picker';
-import {camera, gallery, noAvatar} from '../utils/images';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {SuccessMessage, validation} from './ModalScreenUtils';
+import {camera, gallery, noAvatar} from '../../../utils/images';
 
-export const ModalScreen = React.memo(() => {
+export const ModalScreen = () => {
   const dispatch = useDispatch();
 
   const {
-    input,
-    error,
-    image,
-    avatarSt,
-    content,
-    button,
     wrap,
+    input,
+    image,
+    button,
+    errorSt,
+    areaBtn,
+    content,
+    avatarSt,
+    errorInput,
     inputArea,
     container,
     textTitle,
     avatarArea,
     galleryBtn,
   } = styles;
-
-  const validation = yup.object().shape({
-    first_name: yup.string().required('Please enter your name'),
-    last_name: yup.string().required('Please enter your last name'),
-    email: yup
-      .string()
-      .email('Invalid email')
-      .required('Please enter your email'),
-  });
 
   return (
     <SafeAreaView style={container}>
@@ -59,12 +52,23 @@ export const ModalScreen = React.memo(() => {
             id: Math.random(),
           }}
           onSubmit={(values, actions: FormikHelpers<UsersType>) => {
+            dispatch(storeDataTC(values));
+            SuccessMessage();
             actions.resetForm();
           }}
           validationSchema={validation}>
           {props => {
-            const {handleChange, isSubmitting, errors} = props;
-            const {first_name, last_name, email} = props.values;
+            let {
+              errors,
+              isValid,
+              touched,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+            } = props;
+
+            let {first_name, last_name, email, avatar} = props.values;
 
             const choosePhotoFromLibrary = () => {
               ImagePicker.openPicker({
@@ -73,18 +77,18 @@ export const ModalScreen = React.memo(() => {
                 cropping: true,
                 compressImageQuality: 0.7,
               }).then(el => {
-                props.values.avatar = el.path;
+                handleChange('avatar')(el.path);
               });
             };
 
-            const takePhotoFromCamera = async () => {
+            const takePhotoFromCamera = () => {
               ImagePicker.openCamera({
                 width: 300,
                 height: 300,
                 cropping: true,
                 compressImageQuality: 0.7,
               }).then(el => {
-                props.values.avatar = el.path;
+                handleChange('avatar')(el.path);
               });
             };
 
@@ -94,21 +98,16 @@ export const ModalScreen = React.memo(() => {
               last_name.trim() === '' ||
               first_name.trim() === '';
 
-            const onSetValue = () => {
-              dispatch(storeDataTC(props.values));
-              showMessage({
-                type: 'success',
-                message: 'Success',
-                description: 'The user has been created',
-              });
-            };
+            let errorEmail = errors.email && touched.email;
+            let errorLastName = errors.last_name && touched.last_name;
+            let errorFirstName = errors.first_name && touched.first_name;
 
             return (
               <View style={wrap}>
                 <View style={avatarArea}>
                   <Image
                     source={{
-                      uri: props.values.avatar ? props.values.avatar : noAvatar,
+                      uri: avatar ? avatar : noAvatar,
                     }}
                     style={avatarSt}
                   />
@@ -125,44 +124,55 @@ export const ModalScreen = React.memo(() => {
                   </TouchableOpacity>
                 </View>
                 <View style={inputArea}>
-                  {errors.first_name || errors.last_name || errors.email ? (
-                    <Text style={error}>
-                      {errors.first_name || errors.last_name || errors.email}
-                    </Text>
-                  ) : (
-                    <Text style={textTitle}>User Profile</Text>
-                  )}
+                  <Text style={textTitle}>User Profile</Text>
 
                   <TextInput
-                    style={input}
                     value={first_name}
                     placeholder="First Name"
+                    style={errorFirstName ? errorInput : input}
+                    onBlur={handleBlur('first_name')}
                     onChangeText={handleChange('first_name')}
                   />
+                  {errorFirstName ? (
+                    <Text style={errorSt}>{errors.first_name}</Text>
+                  ) : null}
 
                   <TextInput
-                    style={input}
                     value={last_name}
                     placeholder="Last Name"
+                    style={errorLastName ? errorInput : input}
+                    onBlur={handleBlur('last_name')}
                     onChangeText={handleChange('last_name')}
                   />
+                  {errorLastName ? (
+                    <Text style={errorSt}>{errors.last_name}</Text>
+                  ) : null}
 
                   <TextInput
-                    style={input}
                     value={email}
                     placeholder="Email"
                     autoCompleteType={'email'}
+                    style={errorEmail ? errorInput : input}
+                    onBlur={handleBlur('email')}
                     onChangeText={handleChange('email')}
                   />
+                  {errorEmail ? (
+                    <Text style={errorSt}>{errors.email}</Text>
+                  ) : null}
 
                   {isSubmitting ? (
-                    <ActivityIndicator color={'#3949ab'} size="small" />
+                    <ActivityIndicator color={'#3949ab'} size="large" />
                   ) : (
-                    <Button
-                      onPress={onSetValue}
-                      disabled={disabled}
-                      title="save"
-                    />
+                    <View style={areaBtn}>
+                      <Button
+                        onPress={handleSubmit}
+                        //оставил дополнительную проверку т.к. isValid не достаточно,
+                        // на момент входа isValid true кнопка активна и после submit тоже активна
+                        // и можно пробелы поставить и отправить, isValid не ругается
+                        disabled={!isValid || disabled}
+                        title="save"
+                      />
+                    </View>
                   )}
                 </View>
               </View>
@@ -173,7 +183,7 @@ export const ModalScreen = React.memo(() => {
       </ScrollView>
     </SafeAreaView>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -208,6 +218,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#f1f3f6',
+  },
+  areaBtn: {
+    marginTop: 25,
   },
   image: {
     width: 45,
@@ -249,10 +262,15 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#f1f3f6',
   },
-  error: {
+  errorInput: {
+    marginBottom: 20,
+    borderColor: 'red',
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+  },
+  errorSt: {
     color: 'red',
-    fontSize: 18,
-    textAlign: 'center',
-    paddingVertical: 10,
+    fontSize: 14,
+    textAlign: 'left',
   },
 });
