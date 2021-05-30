@@ -15,6 +15,13 @@ export const setStatusSetErrorAC = (
     error,
   } as const);
 
+export type SuccessActionType = ReturnType<typeof setSuccessAC>;
+export const setSuccessAC = (success: boolean) =>
+  ({
+    type: 'APP/SET_SUCCESS',
+    success,
+  } as const);
+
 //person-reducer
 export type ChosenPersonActionType = ReturnType<typeof chosenPersonAC>;
 export const chosenPersonAC = (person: UsersType) => {
@@ -40,41 +47,52 @@ export const setUsersAC = (
   users: Array<UsersType>,
   page: number,
   total_pages: number | null,
-) => {
+): SetUsersActionType => {
   return {type: 'USERS/SET_USERS', users, page, total_pages};
 };
+
 export type SetFilterActionType = {
   type: 'USERS/SET_FILTER';
   payload: {term: string};
 };
-export const setFilterAC = (term: string) => {
+export const setFilterAC = (term: string): SetFilterActionType => {
   return {type: 'USERS/SET_FILTER', payload: {term}};
 };
+
 export type SetRefreshingActionType = {
   type: 'USERS/SET_REFRESHING';
   isRefreshing: boolean;
 };
-export const setRefreshingAC = (isRefreshing: boolean) => {
+export const setRefreshingAC = (
+  isRefreshing: boolean,
+): SetRefreshingActionType => {
   return {type: 'USERS/SET_REFRESHING', isRefreshing};
 };
+
 export type AddNewUserActionType = {
   type: 'USERS/ADD_NEW_USER';
   newUser: UsersType;
 };
-export const addNewUserAC = (newUser: UsersType) => {
+export const addNewUserAC = (newUser: UsersType): AddNewUserActionType => {
   return {type: 'USERS/ADD_NEW_USER', newUser};
 };
-export type SetNewUserSActionType = {
-  type: 'USERS/SET_NEW_USERS';
-  users: UsersType[];
+
+export type AddEditedUserActionType = {
+  type: 'USERS/ADD_EDITED_USER';
+  editedUser: UsersType;
 };
-export const setNewUsersAC = (users: UsersType[]) => {
-  return {type: 'USERS/SET_NEW_USERS', users};
+export const addEditedUserAC = (
+  editedUser: UsersType,
+): AddEditedUserActionType => {
+  return {type: 'USERS/ADD_EDITED_USER', editedUser};
 };
-/*export type SetPageActionType = {
-  type: 'USERS/SET_PAGE';
-  page: number;
+
+export type RemoveNewUserActionType = {
+  type: 'USERS/REMOVE_NEW_USER';
+  id: number;
 };
-export const setPageAC = (page: number) => {
-  return {type: 'USERS/SET_PAGE', page};
-};*/
+export const removeNewUserAC = (
+  id: number,
+): RemoveNewUserActionType => {
+  return {type: 'USERS/REMOVE_NEW_USER', id};
+};

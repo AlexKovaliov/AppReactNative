@@ -1,13 +1,10 @@
 import {ChosenPersonActionType} from './actions';
+import {UsersType} from '../api/users-api';
 
 type ActionsType = ChosenPersonActionType;
 
 export type PersonStateType = {
-  id: number;
-  email: string;
-  avatar: string;
-  last_name: string;
-  first_name: string;
+  person: UsersType | undefined;
 };
 
 const initialState = {} as PersonStateType;
@@ -18,7 +15,7 @@ export const personReducer = (
 ): PersonStateType => {
   switch (action.type) {
     case 'PERSON/CHOSEN_PERSON':
-      return {...action.person};
+      return {person: action.person};
 
     default:
       return state;

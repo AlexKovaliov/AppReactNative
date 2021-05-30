@@ -1,5 +1,5 @@
 import React from 'react';
-import {errorImg} from './images';
+import {ERROR_IMG} from './images';
 import {AppRootStateType} from '../store';
 import {useDispatch, useSelector} from 'react-redux';
 import {setStatusSetErrorAC} from '../redux/actions';
@@ -31,7 +31,7 @@ export function ErrorImage() {
 
   return (
     <View style={containerError}>
-      <Image style={image} source={{uri: errorImg}} />
+      <Image style={image} source={ERROR_IMG} />
       <Text style={textError}>Oops! Something went wrong!</Text>
       <Text style={textError}>{error}</Text>
       <Button title={'come home'} onPress={onComeHome} />
@@ -44,8 +44,11 @@ const styles = StyleSheet.create({
   textError: {
     color: 'red',
     fontSize: 16,
-    marginTop: 10,
-    marginBottom: 10,
+    paddingBottom: 5,
+    marginVertical: 15,
+    marginHorizontal: 20,
+    borderBottomWidth: 2,
+    borderColor: '#f1f3f6',
     fontStyle: 'italic',
   },
   image: {
@@ -60,16 +63,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
     justifyContent: 'center',
-  },
-  btn: {
-    backgroundColor: 'red',
-    width: 150,
-    height: 90,
-  },
-  text: {
-    fontSize: 16,
-    color: '#fff',
-    marginTop: 10,
-    marginBottom: 10,
   },
 });

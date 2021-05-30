@@ -11,13 +11,13 @@ export type PropsType = {
 export const UsersList = React.memo(({...props}: PropsType) => {
   const navigation = useNavigation();
   const {container, wrap, text, emailSt} = styles;
-  const {avatar, first_name, last_name, email} = props.user;
+  const {avatar, first_name, last_name, email, local} = props.user;
   const onNavigation = () => navigation.navigate('Person', {user: props.user});
 
   return (
     <View style={container}>
       <TouchableOpacity style={wrap} onPress={onNavigation}>
-        <Avatar avatar={avatar} />
+        <Avatar avatar={avatar} local={local} />
         <View>
           <Text style={text}>
             {first_name} {last_name}

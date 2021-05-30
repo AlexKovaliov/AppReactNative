@@ -1,13 +1,16 @@
-import {SetStatusSetErrorActionType} from './actions';
+import {SetStatusSetErrorActionType, SuccessActionType} from './actions';
 
 export type ErrorType = null | string;
 export type RequestStatusType = boolean;
-type ActionsType = SetStatusSetErrorActionType;
+export type SuccessType = boolean;
+
+type ActionsType = SetStatusSetErrorActionType | SuccessActionType;
 export type InitialAppStateType = typeof initialState;
 
 const initialState = {
   error: null as ErrorType,
   isLoading: true as RequestStatusType,
+  success: false as SuccessType,
 };
 
 export const appReducer = (
@@ -17,6 +20,9 @@ export const appReducer = (
   switch (action.type) {
     case 'APP/SET_STATUS_SET_ERROR':
       return {...state, isLoading: action.isLoading, error: action.error};
+
+    case 'APP/SET_SUCCESS':
+      return {...state, success: action.success};
 
     default:
       return state;

@@ -1,35 +1,47 @@
 import React, {useEffect} from 'react';
 import {
   View,
-  Image,
   StatusBar,
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
 } from 'react-native';
 import {Users} from '../Users';
-import {addUser} from '../../utils/images';
-import {AppRootStateType} from '../../store';
 import Loading from '../../utils/loadingUtils';
 import {getAllUsers} from '../../redux/thunks';
 import {ErrorImage} from '../../utils/errorUtils';
+import {AppRootStateType} from '../../store';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {InitialAppStateType} from '../../redux/app-reducer';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {setSuccessAC} from '../../redux/actions';
 
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const onModal = () => navigation.navigate('Modal');
-  const {safeArea, container, button, image} = styles;
+  const {safeArea, container, button} = styles;
 
   useEffect(() => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
-  const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
-    state => state.appStore,
-  );
+  const {error, isLoading, success} = useSelector<
+    AppRootStateType,
+    InitialAppStateType
+  >(state => state.appStore);
+
+  useEffect(() => {
+    if (success) {
+      showMessage({
+        type: 'success',
+        message: 'Success',
+      });
+    }
+    dispatch(setSuccessAC(false));
+  }, [dispatch, success]);
 
   return (
     <SafeAreaView style={safeArea}>
@@ -37,10 +49,11 @@ export const UsersScreen = React.memo(() => {
         {isLoading ? <Loading /> : null}
         <Users />
         <TouchableOpacity style={button} onPress={onModal}>
-          <Image style={image} source={{uri: addUser}} />
+          <Icon name="user-plus" size={25} color="#fff" />
         </TouchableOpacity>
         {error ? <ErrorImage /> : null}
       </View>
+      <FlashMessage position="top" />
     </SafeAreaView>
   );
 });

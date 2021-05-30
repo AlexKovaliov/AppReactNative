@@ -1,13 +1,12 @@
 import React from 'react';
 import {store} from './src/store';
 import {Provider} from 'react-redux';
-import {StyleSheet} from 'react-native';
-import {ModalScreen} from './src/components/screens/ModalScreen/CreateUserModal';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {UsersScreen} from './src/components/screens/UsersScreen';
 import {PersonScreen} from './src/components/screens/PersonScreen';
-import { ModalForm } from "./src/components/screens/ModalScreen/ModalForm";
+import {StyleSheet} from 'react-native';
+import {ModalScreen} from './src/components/screens/ModalScreen/CreateUserModal';
 
 const Stack = createStackNavigator();
 

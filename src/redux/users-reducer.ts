@@ -3,15 +3,17 @@ import {
   SetUsersActionType,
   SetFilterActionType,
   AddNewUserActionType,
-  SetNewUserSActionType,
   SetRefreshingActionType,
+  RemoveNewUserActionType,
+  AddEditedUserActionType,
 } from './actions';
 
 type ActionsType =
   | SetUsersActionType
   | SetFilterActionType
   | AddNewUserActionType
-  | SetNewUserSActionType
+  | AddEditedUserActionType
+  | RemoveNewUserActionType
   | SetRefreshingActionType;
 
 export type InitialStateUserReducerType = typeof initialState;
@@ -19,6 +21,7 @@ export type InitialStateUserReducerType = typeof initialState;
 const initialState = {
   page: 1,
   term: '',
+  success: false,
   filter: {term: ''},
   isRefreshing: false,
   users: [] as Array<UsersType>,
@@ -52,8 +55,19 @@ export const usersReducer = (
         users: [action.newUser, ...state.users],
       };
 
-    case 'USERS/SET_NEW_USERS':
-      return {...state, users: [...action.users, ...state.users]};
+    case 'USERS/REMOVE_NEW_USER':
+      return {
+        ...state,
+        users: state.users.filter(user => user.id !== action.id),
+      };
+
+    case 'USERS/ADD_EDITED_USER':
+      return {
+        ...state,
+        users: state.users.map(user =>
+          user.id === action.editedUser.id ? action.editedUser : user,
+        ),
+      };
 
     default:
       return state;

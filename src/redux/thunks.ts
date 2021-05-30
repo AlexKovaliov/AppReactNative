@@ -7,7 +7,9 @@ import {
   setErrorPersonAC,
   setStatusSetErrorAC,
   SetRefreshingActionType,
+  SetErrorPersonActionType,
   SetStatusSetErrorActionType,
+  setSuccessAC,
 } from './actions';
 import {ThunkDispatch} from 'redux-thunk';
 import {AppRootStateType} from '../store';
@@ -18,46 +20,43 @@ export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setErrorPersonAC(true, null));
   try {
     let response = await usersAPI.chosenPerson(id);
-    dispatch(chosenPersonAC(response.data));
+    if (response.data) {
+      dispatch(chosenPersonAC(response.data));
+    }
     dispatch(setErrorPersonAC(false, null));
   } catch (error) {
     dispatch(setErrorPersonAC(false, error.message));
   }
 };
 
-export const onRefreshTC = () => async (
-  dispatch: ThunkDispatch<
-    AppRootStateType,
-    {},
-    SetStatusSetErrorActionType | SetRefreshingActionType
-  >,
+export const refreshPersonTC = (id: number) => async (
+  dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
 ) => {
-  dispatch(setStatusSetErrorAC(true, null));
-  setRefreshingAC(true);
+  dispatch(setRefreshingAC(true));
+  dispatch(setErrorPersonAC(true, null));
   try {
-    await dispatch(refreshTC());
-    await dispatch(getUsersAsyncStorageTC());
-    setRefreshingAC(false);
-    dispatch(setStatusSetErrorAC(false, null));
+    await dispatch(chosenPersonTC(id));
+    dispatch(setErrorPersonAC(false, null));
+    dispatch(setRefreshingAC(false));
   } catch (error) {
-    dispatch(setStatusSetErrorAC(false, error.message));
+    dispatch(setErrorPersonAC(false, error.message));
   }
 };
 
-export const refreshTC = () => async (
-  dispatch: Dispatch,
-  getState: () => AppRootStateType,
+type dispatchActionType = SetErrorPersonActionType | SetRefreshingActionType;
+export const onRefreshTC = () => async (
+  dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
 ) => {
-  const isRefreshing = getState().usersStore.isRefreshing;
+  dispatch(setStatusSetErrorAC(true, null));
+  dispatch(setRefreshingAC(true));
   try {
-    if (isRefreshing) {
-      let response = await usersAPI.getUsers(1);
-      if (response.data) {
-        dispatch(setUsersAC(response.data.data, 1, response.data.total_pages));
-      }
-    }
+    await dispatch(getUsersTC());
+    await dispatch(getUsersAsyncStorageTC());
+    dispatch(setRefreshingAC(false));
+    dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
+    dispatch(setRefreshingAC(false));
   }
 };
 
@@ -66,7 +65,6 @@ export const getUsersTC = () => async (
   getState: () => AppRootStateType,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
-
   const totalPage = getState().usersStore.total_pages;
   const page = getState().usersStore.page;
   if (totalPage && page > totalPage) {
@@ -106,13 +104,68 @@ export const storeDataTC = (newUser: UsersType) => async (
   dispatch(setStatusSetErrorAC(true, null));
 
   try {
-    dispatch(addNewUserAC(newUser));
+    console.log('newUser', newUser);
+
     let ArrayOldUsers = await AsyncStorage.getItem('users');
     let parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
     const jsonValue = JSON.stringify([newUser, ...parsedUsers]);
+    console.log('newUser', newUser);
+
     await AsyncStorage.setItem('users', jsonValue);
-    /*await dispatch(getUsersAsyncStorageTC());*/
+    console.log('jsonValue', jsonValue);
+
+    dispatch(addNewUserAC(newUser));
     dispatch(setStatusSetErrorAC(false, null));
+    if (newUser) {
+      dispatch(setSuccessAC(true));
+    }
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
+
+export const editedUserDataTC = (editedUser: UsersType) => async (
+  dispatch: Dispatch,
+) => {
+  dispatch(setStatusSetErrorAC(true, null));
+
+  try {
+    let jsonValueUser = await AsyncStorage.getItem('users');
+
+    let users: Array<UsersType> = jsonValueUser
+      ? JSON.parse(jsonValueUser)
+      : [];
+
+    let editedLocalUser = users.map(user =>
+      user.id === editedUser.id ? editedUser : user,
+    );
+
+    await AsyncStorage.setItem('users', JSON.stringify(editedLocalUser));
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
+
+export const removeUsersAsyncStorageTC = (id: number) => async (
+  dispatch: Dispatch,
+) => {
+  dispatch(setStatusSetErrorAC(true, null));
+
+  try {
+    let jsonValueUser = await AsyncStorage.getItem('users');
+
+    let users: Array<UsersType> = jsonValueUser
+      ? JSON.parse(jsonValueUser)
+      : [];
+
+    let filteredUser = users.filter(u => u.id !== id);
+
+    await AsyncStorage.setItem('users', JSON.stringify(filteredUser));
+
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -122,21 +175,21 @@ export const getUsersAsyncStorageTC = () => async (
   dispatch: Dispatch,
   getState: () => AppRootStateType,
 ) => {
-  const users = getState().usersStore.users;
   dispatch(setStatusSetErrorAC(true, null));
-
   try {
+    const users = getState().usersStore.users;
+    const localUsers = users.filter(u => u.local);
+    console.log('getState().usersStore.users', getState().usersStore.users);
+    console.log('localUsers', localUsers);
+
     let jsonValueUser = await AsyncStorage.getItem('users');
+    console.log('jsonValueUser', jsonValueUser);
 
     let usersNew: Array<UsersType> = jsonValueUser
       ? JSON.parse(jsonValueUser)
       : [];
 
-    /*usersNew.map(u => dispatch(addNewUserAC(u)));*/
-
-    console.log('usersNew', jsonValueUser);
-
-    const ids: number[] = users.map(u => +u.id);
+    const ids: number[] = localUsers.map(u => +u.id);
 
     usersNew.forEach((el: UsersType) => {
       if (!ids.includes(+el.id)) {

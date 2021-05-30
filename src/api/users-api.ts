@@ -4,6 +4,7 @@ export type UsersType = {
   id: number;
   email: string;
   avatar: string;
+  local?: boolean;
   last_name: string;
   first_name: string;
 };
