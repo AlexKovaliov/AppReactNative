@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {AppRootStateType} from '../store';
 import {RequestStatusType} from '../redux/app-reducer';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {CERULEAN_BLUE, SOLITUDE} from './colors';
 
 type MapStatePropsType = {
   isLoading: RequestStatusType;
@@ -22,7 +23,7 @@ class Loading extends React.PureComponent<PropsType> {
       <View style={container}>
         {this.props.isLoading ? (
           <View>
-            <ActivityIndicator color={'#3949ab'} size="large" />
+            <ActivityIndicator color={CERULEAN_BLUE} size="large" />
             <Text style={text}>Loading...</Text>
           </View>
         ) : null}
@@ -38,12 +39,12 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     alignItems: 'center',
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
   text: {
     fontSize: 20,
     marginTop: 10,
-    color: '#3949ab',
+    color: CERULEAN_BLUE,
     fontStyle: 'italic',
   },
 });

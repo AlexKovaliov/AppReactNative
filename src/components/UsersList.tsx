@@ -3,6 +3,7 @@ import {UsersType} from '../api/users-api';
 import {Avatar} from '../utils/avatarUtils';
 import {useNavigation} from '@react-navigation/native';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {SOLITUDE} from '../utils/colors';
 
 export type PropsType = {
   user: UsersType;
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 10,
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
   text: {
     fontSize: 18,

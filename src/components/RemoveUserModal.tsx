@@ -5,6 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {removeUsersAsyncStorageTC} from '../redux/thunks';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {BLACK, WHITE} from '../utils/colors';
 
 type PropsRemoveModalType = {
   modalVisible: boolean;
@@ -39,11 +40,11 @@ export const RemoveUserModal = (props: PropsRemoveModalType) => {
           <Text style={modalText}>Do you want to delete the user?</Text>
           <View style={btnArea}>
             <TouchableOpacity style={touchableArea} onPress={closeModalBtn}>
-              <Icon name="times" size={30} color="#000000" />
+              <Icon name="times" size={30} color={BLACK} />
             </TouchableOpacity>
 
             <TouchableOpacity style={touchableArea} onPress={deleteUserBtn}>
-              <Icon name="check" size={30} color="#000000" />
+              <Icon name="check" size={30} color={BLACK} />
             </TouchableOpacity>
           </View>
         </View>
@@ -68,9 +69,9 @@ const styles = StyleSheet.create({
     margin: 20,
     padding: 35,
     borderRadius: 20,
-    shadowColor: '#000',
+    shadowColor: BLACK,
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: WHITE,
     shadowOffset: {
       width: 0,
       height: 2,

@@ -104,16 +104,10 @@ export const storeDataTC = (newUser: UsersType) => async (
   dispatch(setStatusSetErrorAC(true, null));
 
   try {
-    console.log('newUser', newUser);
-
     let ArrayOldUsers = await AsyncStorage.getItem('users');
     let parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
     const jsonValue = JSON.stringify([newUser, ...parsedUsers]);
-    console.log('newUser', newUser);
-
     await AsyncStorage.setItem('users', jsonValue);
-    console.log('jsonValue', jsonValue);
-
     dispatch(addNewUserAC(newUser));
     dispatch(setStatusSetErrorAC(false, null));
     if (newUser) {
@@ -179,11 +173,8 @@ export const getUsersAsyncStorageTC = () => async (
   try {
     const users = getState().usersStore.users;
     const localUsers = users.filter(u => u.local);
-    console.log('getState().usersStore.users', getState().usersStore.users);
-    console.log('localUsers', localUsers);
 
     let jsonValueUser = await AsyncStorage.getItem('users');
-    console.log('jsonValueUser', jsonValueUser);
 
     let usersNew: Array<UsersType> = jsonValueUser
       ? JSON.parse(jsonValueUser)

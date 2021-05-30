@@ -17,6 +17,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {InitialAppStateType} from '../../redux/app-reducer';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import {setSuccessAC} from '../../redux/actions';
+import {CERULEAN_BLUE, WHITE} from '../../utils/colors';
 
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
@@ -49,7 +50,7 @@ export const UsersScreen = React.memo(() => {
         {isLoading ? <Loading /> : null}
         <Users />
         <TouchableOpacity style={button} onPress={onModal}>
-          <Icon name="user-plus" size={25} color="#fff" />
+          <Icon name="user-plus" size={25} color={WHITE} />
         </TouchableOpacity>
         {error ? <ErrorImage /> : null}
       </View>
@@ -61,7 +62,7 @@ export const UsersScreen = React.memo(() => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     paddingTop: StatusBar.currentHeight,
   },
   container: {
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#3949ab',
+    backgroundColor: CERULEAN_BLUE,
   },
   image: {
     width: 50,
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
   },
   textBtn: {
     fontSize: 30,
-    color: '#fff',
+    color: WHITE,
     textAlign: 'center',
   },
 });

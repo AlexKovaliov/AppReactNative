@@ -4,7 +4,7 @@ import {AppRootStateType} from '../store';
 import {UsersType} from '../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
 import {getUsersTC, onRefreshTC} from '../redux/thunks';
-import {FlatList, RefreshControl, StyleSheet} from 'react-native';
+import {FlatList, RefreshControl} from 'react-native';
 import {InitialStateUserReducerType} from '../redux/users-reducer';
 
 export const Users = React.memo(() => {
@@ -25,7 +25,6 @@ export const Users = React.memo(() => {
 
   return (
     <FlatList
-      style={styles.flatList}
       data={users}
       keyExtractor={(item: UsersType) => String(item.id)}
       renderItem={({item}) => <UsersList user={item} />}
@@ -39,23 +38,4 @@ export const Users = React.memo(() => {
       }
     />
   );
-});
-
-const styles = StyleSheet.create({
-  inputWrap: {
-    paddingVertical: 10,
-    paddingHorizontal: 10,
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  input: {
-    width: '78%',
-    height: 40,
-    borderRadius: 5,
-    borderStyle: 'solid',
-    borderColor: 'black',
-    backgroundColor: '#f1f3f6',
-  },
-  flatList: {},
 });

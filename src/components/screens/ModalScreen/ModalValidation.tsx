@@ -1,13 +1,4 @@
 import * as yup from 'yup';
-import {showMessage} from 'react-native-flash-message';
-
-export const SuccessMessage = () => {
-  showMessage({
-    type: 'success',
-    message: 'Success',
-    description: 'The user has been created',
-  });
-};
 
 export const validation = yup.object().shape({
   first_name: yup

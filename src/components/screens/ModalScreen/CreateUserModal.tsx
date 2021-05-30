@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
-import {validation} from './ModalScreenUtils';
+import {validation} from './ModalValidation';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import {addEditedUserAC} from '../../../redux/actions';
@@ -21,7 +21,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import {editedUserDataTC, storeDataTC} from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {NO_AVATAR} from '../../../utils/images';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
 
 type routeType = {
   route: {params?: {user: UsersType}};
@@ -122,10 +122,10 @@ export const ModalScreen = ({route}: routeType) => {
             const errorFirstName = errors.first_name && touched.first_name;
 
             return (
-              <View style={wrap}>
+              <ScrollView style={wrap}>
                 <View style={avatarArea}>
                   {props.isSubmitting ? (
-                    <ActivityIndicator color={'#3949ab'} size="large" />
+                    <ActivityIndicator color={CERULEAN_BLUE} size="large" />
                   ) : (
                     <Image
                       source={{
@@ -140,14 +140,14 @@ export const ModalScreen = ({route}: routeType) => {
                     style={editWrap}
                     onPress={choosePhotoFromLibrary}>
                     <Text style={removeText}>Choose photo</Text>
-                    <Icon name="images" size={25} color="#3949ab" />
+                    <Icon name="images" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
 
                   <TouchableOpacity
                     style={editWrap}
                     onPress={takePhotoFromCamera}>
                     <Text style={removeText}>Take Photo</Text>
-                    <Icon name="camera" size={25} color="#3949ab" />
+                    <Icon name="camera" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
                 </View>
 
@@ -194,13 +194,9 @@ export const ModalScreen = ({route}: routeType) => {
                       disabled={!isValid}
                       title="save"
                     />
-                    {/*<Button
-                      onPress={() => AsyncStorage.clear()}
-                      title="clear"
-                    />*/}
                   </View>
                 </View>
-              </View>
+              </ScrollView>
             );
           }}
         </Formik>
@@ -212,11 +208,11 @@ export const ModalScreen = ({route}: routeType) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
   content: {
     flex: 1,
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
   removeText: {
     fontSize: 18,
@@ -230,19 +226,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: '#3949ab',
+    backgroundColor: CERULEAN_BLUE,
   },
   avatarSt: {
     width: 130,
     height: 130,
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   editArea: {
     height: 60,
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: '#3949ab',
+    backgroundColor: CERULEAN_BLUE,
     justifyContent: 'space-around',
   },
   editWrap: {
@@ -251,8 +247,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    borderColor: '#f1f3f6',
-    backgroundColor: '#fff',
+    borderColor: SOLITUDE,
+    backgroundColor: WHITE,
     justifyContent: 'center',
   },
   iconArea: {
@@ -268,7 +264,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000000',
+    backgroundColor: BLACK,
   },
   areaBtn: {
     marginTop: 25,
@@ -287,7 +283,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#000000',
+    backgroundColor: BLACK,
   },
   wrap: {
     height: 580,
@@ -298,11 +294,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     marginHorizontal: 30,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   textTitle: {
     fontSize: 18,
-    color: '#3949ab',
+    color: CERULEAN_BLUE,
     textAlign: 'center',
     fontStyle: 'italic',
     paddingVertical: 10,
@@ -311,7 +307,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderStyle: 'solid',
     borderBottomWidth: 1,
-    borderColor: '#f1f3f6',
+    borderColor: SOLITUDE,
   },
   errorInput: {
     marginBottom: 20,

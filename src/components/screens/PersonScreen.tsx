@@ -23,7 +23,7 @@ import {PersonStateType} from '../../redux/person-reducer';
 import {InitialAppStateType} from '../../redux/app-reducer';
 import {chosenPersonTC, refreshPersonTC} from '../../redux/thunks';
 import {InitialStateUserReducerType} from '../../redux/users-reducer';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {BLACK, CERULEAN_BLUE, SOLITUDE, WHITE} from '../../utils/colors';
 
 type routeType = {route: {params: {user: UsersType}}};
 
@@ -134,7 +134,7 @@ const Content = (props: {user: UsersType | undefined}) => {
                   <TouchableOpacity
                     style={touchableArea}
                     onPress={() => setEditWindow(!editWindow)}>
-                    <Icon name="ellipsis-v" size={25} color="#000000" />
+                    <Icon name="ellipsis-v" size={25} color={BLACK} />
                   </TouchableOpacity>
                 </View>
               ) : null}
@@ -143,12 +143,12 @@ const Content = (props: {user: UsersType | undefined}) => {
                 <View style={editArea}>
                   <TouchableOpacity style={editWrap} onPress={onModal}>
                     <Text style={removeText}>Edit user</Text>
-                    <Icon name="user-edit" size={25} color="#3949ab" />
+                    <Icon name="user-edit" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
 
                   <TouchableOpacity style={editWrap} onPress={ModalVisible}>
                     <Text style={removeText}>Remove user</Text>
-                    <Icon name="user-minus" size={25} color="#3949ab" />
+                    <Icon name="user-minus" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
                 </View>
               ) : null}
@@ -157,7 +157,7 @@ const Content = (props: {user: UsersType | undefined}) => {
                 {first_name} {last_name}
               </Text>
               <View style={emailWrap}>
-                <Icon name="envelope" size={25} color="#3949ab" />
+                <Icon name="envelope" size={25} color={CERULEAN_BLUE} />
                 <Text style={emailSt}>{email}</Text>
               </View>
             </View>
@@ -171,7 +171,7 @@ const Content = (props: {user: UsersType | undefined}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
   wrap: {
     flex: 1,
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: BLACK,
     position: 'absolute',
     shadowOffset: {
       width: 0,
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     right: 10,
     position: 'absolute',
     flexDirection: 'column',
-    backgroundColor: '#3949ab',
+    backgroundColor: CERULEAN_BLUE,
   },
   editWrap: {
     borderWidth: 1,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexDirection: 'row',
     paddingHorizontal: 10,
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
     justifyContent: 'flex-end',
   },
   removeText: {
@@ -241,8 +241,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderRadius: 10,
     position: 'absolute',
-    borderColor: '#f1f3f6',
-    backgroundColor: '#fff',
+    borderColor: SOLITUDE,
+    backgroundColor: WHITE,
   },
   emailWrap: {
     paddingLeft: 15,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 26,
     marginTop: 80,
-    color: '#3949ab',
+    color: CERULEAN_BLUE,
     textAlign: 'center',
     fontStyle: 'italic',
   },
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     height: 450,
     width: '100%',
     borderRadius: 20,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   wrapName: {
     zIndex: -1,
@@ -284,6 +284,6 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     position: 'relative',
     paddingHorizontal: 20,
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
 });

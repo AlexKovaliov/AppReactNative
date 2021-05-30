@@ -7,6 +7,7 @@ import {UsersScreen} from './src/components/screens/UsersScreen';
 import {PersonScreen} from './src/components/screens/PersonScreen';
 import {StyleSheet} from 'react-native';
 import {ModalScreen} from './src/components/screens/ModalScreen/CreateUserModal';
+import {WHITE, CERULEAN_BLUE} from './src/utils/colors';
 
 const Stack = createStackNavigator();
 
@@ -22,7 +23,7 @@ export default function App() {
             component={UsersScreen}
             options={{
               title: 'Users',
-              headerTintColor: '#fff',
+              headerTintColor: WHITE,
               headerStyle: header,
             }}
           />
@@ -32,7 +33,7 @@ export default function App() {
             component={PersonScreen}
             options={{
               title: 'Person Room',
-              headerTintColor: '#fff',
+              headerTintColor: WHITE,
               headerStyle: header,
             }}
           />
@@ -42,7 +43,7 @@ export default function App() {
             component={ModalScreen}
             options={{
               title: 'Create user',
-              headerTintColor: '#fff',
+              headerTintColor: WHITE,
               headerStyle: header,
             }}
           />
@@ -54,6 +55,6 @@ export default function App() {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: '#3949ab',
+    backgroundColor: CERULEAN_BLUE,
   },
 });

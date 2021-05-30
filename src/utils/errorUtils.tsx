@@ -6,6 +6,7 @@ import {setStatusSetErrorAC} from '../redux/actions';
 import {useNavigation} from '@react-navigation/native';
 import {Image, StyleSheet, Text, View, Button} from 'react-native';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {SOLITUDE, WHITE} from './colors';
 
 export function ErrorImage() {
   const dispatch = useDispatch();
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
     marginHorizontal: 20,
     borderBottomWidth: 2,
-    borderColor: '#f1f3f6',
+    borderColor: SOLITUDE,
     fontStyle: 'italic',
   },
   image: {
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     height: '100%',
     position: 'absolute',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     justifyContent: 'center',
   },
 });
