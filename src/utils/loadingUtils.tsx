@@ -21,12 +21,8 @@ class Loading extends React.PureComponent<PropsType> {
 
     return (
       <View style={container}>
-        {this.props.isLoading ? (
-          <View>
-            <ActivityIndicator color={CERULEAN_BLUE} size="large" />
-            <Text style={text}>Loading...</Text>
-          </View>
-        ) : null}
+        <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+        <Text style={text}>Loading...</Text>
       </View>
     );
   }
@@ -37,6 +33,8 @@ const styles = StyleSheet.create({
   container: {
     zIndex: 100,
     width: '100%',
+    height: '100%',
+    justifyContent: 'center',
     position: 'absolute',
     alignItems: 'center',
     backgroundColor: SOLITUDE,

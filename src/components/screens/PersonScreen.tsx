@@ -29,10 +29,6 @@ type routeType = {route: {params: {user: UsersType}}};
 
 export const PersonScreen = ({route}: routeType) => {
   const dispatch = useDispatch();
-  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
-    state => state.appStore,
-  );
-
   const propsUser = route.params.user;
   const {local} = route.params.user;
 
@@ -45,6 +41,9 @@ export const PersonScreen = ({route}: routeType) => {
   const {person} = useSelector<AppRootStateType, PersonStateType>(
     state => state.personStore,
   );
+  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
 
   let user = person;
 
@@ -52,7 +51,11 @@ export const PersonScreen = ({route}: routeType) => {
     user = propsUser;
   }
 
-  return <>{isLoading ? <Loading /> : <Content user={user} />}</>;
+  if (isLoading || propsUser.id !== user?.id) {
+    return <Loading />;
+  }
+
+  return <Content user={user} />;
 };
 
 const Content = (props: {user: UsersType | undefined}) => {
@@ -73,7 +76,7 @@ const Content = (props: {user: UsersType | undefined}) => {
     }
   }, [dispatch, id, local]);
 
-  const {error} = useSelector<AppRootStateType, InitialAppStateType>(
+  const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
     state => state.appStore,
   );
   const {isRefreshing} = useSelector<
@@ -110,6 +113,7 @@ const Content = (props: {user: UsersType | undefined}) => {
 
   return (
     <SafeAreaView style={container}>
+      {isLoading ? <Loading /> : null}
       {error ? (
         <ErrorImage />
       ) : (
