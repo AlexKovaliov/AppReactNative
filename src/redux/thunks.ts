@@ -1,16 +1,19 @@
 import {Dispatch} from 'redux';
 import {
   setUsersAC,
+  setSuccessAC,
   addNewUserAC,
   chosenPersonAC,
+  addEditedUserAC,
   setRefreshingAC,
   setErrorPersonAC,
+  SuccessActionType,
   setStatusSetErrorAC,
+  setRefreshingUsersAC,
+  AddEditedUserActionType,
   SetRefreshingActionType,
   SetErrorPersonActionType,
   SetStatusSetErrorActionType,
-  setSuccessAC,
-  setRefreshingUsersAC,
   SetRefreshingUsersActionType,
 } from './actions';
 import {ThunkDispatch} from 'redux-thunk';
@@ -90,6 +93,29 @@ export const getUsersTC = () => async (
   }
 };
 
+export const addEditedUserTC = (
+  values: UsersType,
+  resetForm: () => void,
+  navigate: (link: string) => void,
+) => async (
+  dispatch: ThunkDispatch<
+    AppRootStateType,
+    {},
+    SetStatusSetErrorActionType | AddEditedUserActionType | SuccessActionType
+  >,
+) => {
+  dispatch(setStatusSetErrorAC(true, null));
+  try {
+    dispatch(addEditedUserAC(values));
+    await dispatch(editedUserDataTC(values));
+    resetForm();
+    navigate('Users');
+    dispatch(setStatusSetErrorAC(false, null));
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
+
 export const getAllUsers = () => async (
   dispatch: ThunkDispatch<AppRootStateType, {}, SetStatusSetErrorActionType>,
 ) => {
@@ -104,9 +130,11 @@ export const getAllUsers = () => async (
 };
 
 // AsyncStorage
-export const storeDataTC = (newUser: UsersType) => async (
-  dispatch: Dispatch,
-) => {
+export const storeDataTC = (
+  newUser: UsersType,
+  resetForm: () => void,
+  navigate: (link: string) => void,
+) => async (dispatch: Dispatch) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
     const ArrayOldUsers = await AsyncStorage.getItem('users');
@@ -117,6 +145,8 @@ export const storeDataTC = (newUser: UsersType) => async (
     dispatch(setStatusSetErrorAC(false, null));
     if (newUser) {
       dispatch(setSuccessAC(true));
+      resetForm();
+      navigate('Users');
     }
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));

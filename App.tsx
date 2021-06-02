@@ -29,7 +29,7 @@ export default function App() {
         <TouchableOpacity
           style={openInput ? searchAreaActive : searchArea}
           onPress={openInputHandler}>
-          <Icon name="search" size={18} color={WHITE} />
+          <Icon name="search" size={openInput ? 14 : 18} color={WHITE} />
         </TouchableOpacity>
       </View>
     );

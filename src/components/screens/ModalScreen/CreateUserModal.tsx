@@ -14,13 +14,12 @@ import {
 import {useDispatch} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
 import {validation} from './ModalValidation';
+import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
-import {addEditedUserAC} from '../../../redux/actions';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {editedUserDataTC, storeDataTC} from '../../../redux/thunks';
+import {addEditedUserTC, storeDataTC} from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {NO_AVATAR} from '../../../utils/images';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
 
 type routeType = {
@@ -63,14 +62,13 @@ export const ModalScreen = ({route}: routeType) => {
           }}
           onSubmit={(values, actions: FormikHelpers<UsersType>) => {
             if (propsUser && propsUser.local) {
-              dispatch(addEditedUserAC(values));
-              dispatch(editedUserDataTC(values));
-              actions.resetForm();
-              navigation.navigate('Users');
+              dispatch(
+                addEditedUserTC(values, actions.resetForm, navigation.navigate),
+              );
             } else {
-              dispatch(storeDataTC(values));
-              actions.resetForm();
-              navigation.navigate('Users');
+              dispatch(
+                storeDataTC(values, actions.resetForm, navigation.navigate),
+              );
             }
           }}
           validationSchema={validation}>
