@@ -1,8 +1,8 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {removeNewUserAC} from '../redux/actions';
+import {removeLocalUserAC} from '../redux/actions';
 import {useNavigation} from '@react-navigation/native';
-import {removeUsersAsyncStorageTC} from '../redux/thunks';
+import {removeLocalUsersTC} from '../redux/thunks';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {BLACK, WHITE} from '../utils/colors';
@@ -19,11 +19,11 @@ export const RemoveUserModal = (props: PropsRemoveModalType) => {
   const {modalVisible, setModalVisible, id} = props;
   const {centeredView, modalView, modalText, btnArea, touchableArea} = styles;
   //Buttons onPress handler
-  const closeModalBtn = () => setModalVisible(false);
+  const closeModalHandler = () => setModalVisible(false);
   const modalVisibleHandler = () => setModalVisible(!modalVisible);
-  const deleteUserBtn = () => {
-    dispatch(removeNewUserAC(id));
-    dispatch(removeUsersAsyncStorageTC(id));
+  const deleteUserHandler = () => {
+    dispatch(removeLocalUserAC(id));
+    dispatch(removeLocalUsersTC(id));
     setModalVisible(false);
     navigation.navigate('Users');
   };
@@ -38,11 +38,11 @@ export const RemoveUserModal = (props: PropsRemoveModalType) => {
         <View style={modalView}>
           <Text style={modalText}>Do you want to delete the user?</Text>
           <View style={btnArea}>
-            <TouchableOpacity style={touchableArea} onPress={closeModalBtn}>
+            <TouchableOpacity style={touchableArea} onPress={closeModalHandler}>
               <Icon name="times" size={30} color={BLACK} />
             </TouchableOpacity>
 
-            <TouchableOpacity style={touchableArea} onPress={deleteUserBtn}>
+            <TouchableOpacity style={touchableArea} onPress={deleteUserHandler}>
               <Icon name="check" size={30} color={BLACK} />
             </TouchableOpacity>
           </View>

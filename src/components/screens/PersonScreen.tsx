@@ -63,12 +63,12 @@ const Content = (props: {user: UsersType | undefined}) => {
   const navigation = useNavigation();
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
   //Controlling the visibility of windows
-  const [editWindow, setEditWindow] = useState<boolean>(false);
+  const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   //Buttons onPress handler
-  const onModal = () => navigation.navigate('Modal', {user: props.user});
+  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
   const modalVisibleOpen = () => setModalVisible(true);
-  const editWindowVisible = () => setEditWindow(!editWindow);
+  const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
 
   const onRefreshHandler = useCallback(() => {
     if (!local && id) {
@@ -90,12 +90,12 @@ const Content = (props: {user: UsersType | undefined}) => {
     image,
     emailSt,
     backImg,
-    editArea,
+    manageView,
     iconArea,
-    wrapName,
+    detailsView,
     container,
-    emailWrap,
-    editWrap,
+    emailView,
+    manageBtn,
     removeText,
     contentArea,
     touchableArea,
@@ -135,30 +135,32 @@ const Content = (props: {user: UsersType | undefined}) => {
           <ImageBackground source={BACK_IMG} style={backImg}>
             {PersonAvatar}
           </ImageBackground>
-          <View style={wrapName}>
+          <View style={detailsView}>
             <View style={contentArea}>
               {local ? (
                 <View style={iconArea}>
                   <TouchableOpacity
-                    style={editWindow ? touchAreaActive : touchableArea}
+                    style={openEditWindow ? touchAreaActive : touchableArea}
                     onPress={editWindowVisible}>
                     <Icon
                       name="ellipsis-v"
-                      size={25}
-                      color={editWindow ? GREY : BLACK}
+                      size={openEditWindow ? 20 : 25}
+                      color={openEditWindow ? GREY : BLACK}
                     />
                   </TouchableOpacity>
                 </View>
               ) : null}
 
-              {editWindow ? (
-                <View style={editArea}>
-                  <TouchableOpacity style={editWrap} onPress={onModal}>
+              {openEditWindow ? (
+                <View style={manageView}>
+                  <TouchableOpacity style={manageBtn} onPress={onModalHandler}>
                     <Text style={removeText}>Edit user</Text>
                     <Icon name="user-edit" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={editWrap} onPress={modalVisibleOpen}>
+                  <TouchableOpacity
+                    style={manageBtn}
+                    onPress={modalVisibleOpen}>
                     <Text style={removeText}>Remove user</Text>
                     <Icon name="user-minus" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
@@ -168,7 +170,7 @@ const Content = (props: {user: UsersType | undefined}) => {
               <Text style={text}>
                 {first_name} {last_name}
               </Text>
-              <View style={emailWrap}>
+              <View style={emailView}>
                 <Icon name="envelope" size={25} color={GREY} />
                 <Text style={emailSt}>{email}</Text>
               </View>
@@ -212,7 +214,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
   },
-  editArea: {
+  manageView: {
     top: 55,
     zIndex: 1,
     right: 10,
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
   },
-  editWrap: {
+  manageBtn: {
     borderWidth: 1,
     borderColor: WHITE,
     paddingVertical: 10,
@@ -272,7 +274,7 @@ const styles = StyleSheet.create({
     borderColor: SOLITUDE,
     backgroundColor: WHITE,
   },
-  emailWrap: {
+  emailView: {
     paddingLeft: 15,
     paddingVertical: 15,
     flexDirection: 'row',
@@ -309,7 +311,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     backgroundColor: WHITE,
   },
-  wrapName: {
+  detailsView: {
     zIndex: -1,
     width: '100%',
     height: '100%',

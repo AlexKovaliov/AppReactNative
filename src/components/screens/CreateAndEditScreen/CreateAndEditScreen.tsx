@@ -13,12 +13,12 @@ import {
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {Formik, FormikHelpers} from 'formik';
-import {validation} from './ModalValidation';
+import {validation} from './validation';
 import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {addEditedUserTC, storeDataTC} from '../../../redux/thunks';
+import {setEditedUserTC, setLocalUserTC} from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
 
@@ -26,7 +26,7 @@ type routeType = {
   route: {params?: {user: UsersType}};
 };
 
-export const ModalScreen = ({route}: routeType) => {
+export const CreateAndEditScreen = ({route}: routeType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const propsUser = route.params ? route.params.user : null;
@@ -34,13 +34,13 @@ export const ModalScreen = ({route}: routeType) => {
   const {
     wrap,
     input,
-    errorSt,
-    areaBtn,
+    errorText,
+    viewBtn,
     removeText,
-    editArea,
-    editWrap,
+    editView,
+    editBtn,
     content,
-    avatarSt,
+    avatarImage,
     errorInput,
     inputArea,
     container,
@@ -63,11 +63,11 @@ export const ModalScreen = ({route}: routeType) => {
           onSubmit={(values, actions: FormikHelpers<UsersType>) => {
             if (propsUser && propsUser.local) {
               dispatch(
-                addEditedUserTC(values, actions.resetForm, navigation.navigate),
+                setEditedUserTC(values, actions.resetForm, navigation.navigate),
               );
             } else {
               dispatch(
-                storeDataTC(values, actions.resetForm, navigation.navigate),
+                setLocalUserTC(values, actions.resetForm, navigation.navigate),
               );
             }
           }}
@@ -129,20 +129,20 @@ export const ModalScreen = ({route}: routeType) => {
                       source={{
                         uri: props.values.avatar || NO_AVATAR,
                       }}
-                      style={avatarSt}
+                      style={avatarImage}
                     />
                   )}
                 </View>
-                <View style={editArea}>
+                <View style={editView}>
                   <TouchableOpacity
-                    style={editWrap}
+                    style={editBtn}
                     onPress={choosePhotoFromLibrary}>
                     <Text style={removeText}>Choose photo</Text>
                     <Icon name="images" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={editWrap}
+                    style={editBtn}
                     onPress={takePhotoFromCamera}>
                     <Text style={removeText}>Take Photo</Text>
                     <Icon name="camera" size={25} color={CERULEAN_BLUE} />
@@ -160,7 +160,7 @@ export const ModalScreen = ({route}: routeType) => {
                     onChangeText={handleChange('first_name')}
                   />
                   {errorFirstName ? (
-                    <Text style={errorSt}>{errors.first_name}</Text>
+                    <Text style={errorText}>{errors.first_name}</Text>
                   ) : null}
 
                   <TextInput
@@ -171,7 +171,7 @@ export const ModalScreen = ({route}: routeType) => {
                     onChangeText={handleChange('last_name')}
                   />
                   {errorLastName ? (
-                    <Text style={errorSt}>{errors.last_name}</Text>
+                    <Text style={errorText}>{errors.last_name}</Text>
                   ) : null}
 
                   <TextInput
@@ -183,10 +183,10 @@ export const ModalScreen = ({route}: routeType) => {
                     onChangeText={handleChange('email')}
                   />
                   {errorEmail ? (
-                    <Text style={errorSt}>{errors.email}</Text>
+                    <Text style={errorText}>{errors.email}</Text>
                   ) : null}
 
-                  <View style={areaBtn}>
+                  <View style={viewBtn}>
                     <Button
                       onPress={handleSubmit}
                       disabled={!isValid}
@@ -226,20 +226,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: CERULEAN_BLUE,
   },
-  avatarSt: {
+  avatarImage: {
     width: 130,
     height: 130,
     borderRadius: 10,
     backgroundColor: WHITE,
   },
-  editArea: {
+  editView: {
     height: 60,
     width: '100%',
     flexDirection: 'row',
     backgroundColor: CERULEAN_BLUE,
     justifyContent: 'space-around',
   },
-  editWrap: {
+  editBtn: {
     width: '50%',
     borderWidth: 1,
     flexDirection: 'row',
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: BLACK,
   },
-  areaBtn: {
+  viewBtn: {
     marginTop: 25,
   },
   image: {
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderBottomWidth: 1,
   },
-  errorSt: {
+  errorText: {
     color: 'red',
     fontSize: 14,
     textAlign: 'left',

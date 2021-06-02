@@ -1,10 +1,10 @@
-import {SetStatusSetErrorActionType, SuccessActionType} from './actions';
+import {SetStatusSetErrorACType, SuccessACType} from './actions';
 
 export type ErrorType = null | string;
 export type RequestStatusType = boolean;
 export type SuccessType = boolean;
 
-type ActionsType = SetStatusSetErrorActionType | SuccessActionType;
+type ActionsType = SetStatusSetErrorACType | SuccessACType;
 export type InitialAppStateType = typeof initialState;
 
 const initialState = {

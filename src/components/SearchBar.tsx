@@ -2,21 +2,21 @@ import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {WHITE} from '../utils/colors';
 import {useDispatch} from 'react-redux';
-import {setFilterAC} from '../redux/actions';
+import {setSearchBarValueAC} from '../redux/actions';
 
-export const SearchForm = () => {
+export const SearchBar = () => {
   const dispatch = useDispatch();
-  const {areaStyle, input, searchArea} = styles;
-  const handleSearch = (text: string) => dispatch(setFilterAC(text));
+  const {searchBarView, input, inputView} = styles;
+  const onSearchHandle = (text: string) => dispatch(setSearchBarValueAC(text));
 
   return (
-    <View style={areaStyle}>
-      <View style={searchArea}>
+    <View style={searchBarView}>
+      <View style={inputView}>
         <TextInput
           autoFocus={true}
           style={input}
           placeholder="Search..."
-          onChangeText={handleSearch}
+          onChangeText={onSearchHandle}
         />
       </View>
     </View>
@@ -24,7 +24,7 @@ export const SearchForm = () => {
 };
 
 const styles = StyleSheet.create({
-  areaStyle: {
+  searchBarView: {
     width: 220,
     marginRight: 10,
     marginVertical: 8,
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     borderRadius: 20,
   },
-  searchArea: {
+  inputView: {
     flexDirection: 'row',
   },
 });

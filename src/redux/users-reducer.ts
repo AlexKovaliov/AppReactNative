@@ -1,22 +1,22 @@
 import {UsersType} from '../api/users-api';
 import {
-  SetUsersActionType,
-  SetFilterActionType,
-  AddNewUserActionType,
-  SetRefreshingActionType,
-  RemoveNewUserActionType,
-  AddEditedUserActionType,
-  SetRefreshingUsersActionType,
+  FetchUsersACType,
+  SetSearchBarValueACType,
+  AddLocalUserACType,
+  SetRefreshingACType,
+  RemoveLocalUserACType,
+  setEditedUserACType,
+  SetRefreshingUsersACType,
 } from './actions';
 
 type ActionsType =
-  | SetUsersActionType
-  | SetFilterActionType
-  | AddNewUserActionType
-  | AddEditedUserActionType
-  | RemoveNewUserActionType
-  | SetRefreshingActionType
-  | SetRefreshingUsersActionType;
+  | FetchUsersACType
+  | SetSearchBarValueACType
+  | AddLocalUserACType
+  | setEditedUserACType
+  | RemoveLocalUserACType
+  | SetRefreshingACType
+  | SetRefreshingUsersACType;
 
 export type InitialStateUserReducerType = typeof initialState;
 
@@ -34,7 +34,7 @@ export const usersReducer = (
   action: ActionsType,
 ): InitialStateUserReducerType => {
   switch (action.type) {
-    case 'USERS/SET_USERS':
+    case 'USERS/FETCH_USERS':
       return {
         ...state,
         users: [...state.users, ...action.users],
@@ -58,13 +58,13 @@ export const usersReducer = (
     case 'USERS/SET_REFRESHING':
       return {...state, isRefreshing: action.isRefreshing};
 
-    case 'USERS/ADD_NEW_USER':
+    case 'USERS/ADD_LOCAL_USER':
       return {
         ...state,
-        users: [action.newUser, ...state.users],
+        users: [action.localUser, ...state.users],
       };
 
-    case 'USERS/REMOVE_NEW_USER':
+    case 'USERS/REMOVE_LOCAL_USER':
       return {
         ...state,
         users: state.users.filter(user => user.id !== action.id),

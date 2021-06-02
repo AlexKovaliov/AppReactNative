@@ -3,7 +3,7 @@ import {UsersList} from './UsersList';
 import {AppRootStateType} from '../store';
 import {UsersType} from '../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
-import {getUsersTC, onRefreshTC} from '../redux/thunks';
+import {fetchUsersTC, onRefreshTC} from '../redux/thunks';
 import {FlatList, RefreshControl} from 'react-native';
 import {InitialStateUserReducerType} from '../redux/users-reducer';
 
@@ -16,7 +16,7 @@ export const Users = React.memo(() => {
   >(state => state.usersStore);
 
   const handleLoadMore = useCallback(() => {
-    dispatch(getUsersTC());
+    dispatch(fetchUsersTC());
   }, [dispatch]);
 
   const onRefreshHandler = useCallback(() => {
@@ -24,10 +24,10 @@ export const Users = React.memo(() => {
   }, [dispatch]);
 
   const filteredUsers = users.filter(
-    f =>
-      f.email.toLowerCase().includes(filterValue.toLowerCase()) ||
-      f.first_name.toLowerCase().includes(filterValue.toLowerCase()) ||
-      f.last_name.toLowerCase().includes(filterValue.toLowerCase()),
+    user =>
+      user.email.toLowerCase().includes(filterValue.toLowerCase()) ||
+      user.first_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+      user.last_name.toLowerCase().includes(filterValue.toLowerCase()),
   );
 
   const usersData = !filterValue ? users : filteredUsers;

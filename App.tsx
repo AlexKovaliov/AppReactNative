@@ -6,7 +6,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {UsersScreen} from './src/components/screens/UsersScreen';
 import {PersonScreen} from './src/components/screens/PersonScreen';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {ModalScreen} from './src/components/screens/ModalScreen/CreateUserModal';
+import {CreateAndEditScreen} from './src/components/screens/CreateAndEditScreen/CreateAndEditScreen';
 import {
   WHITE,
   TORY_BLUE,
@@ -14,7 +14,7 @@ import {
   EGYPTIAN_BLUE,
 } from './src/utils/colors';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {SearchForm} from './src/components/SearchForm';
+import {SearchBar} from './src/components/SearchBar';
 
 const Stack = createStackNavigator();
 
@@ -25,7 +25,7 @@ export default function App() {
   const openSearchForm = () => {
     return (
       <View style={formWrap}>
-        {openInput ? <SearchForm /> : null}
+        {openInput ? <SearchBar /> : null}
         <TouchableOpacity
           style={openInput ? searchAreaActive : searchArea}
           onPress={openInputHandler}>
@@ -62,7 +62,7 @@ export default function App() {
 
           <Stack.Screen
             name="Modal"
-            component={ModalScreen}
+            component={CreateAndEditScreen}
             options={{
               title: 'Create user',
               headerTintColor: WHITE,

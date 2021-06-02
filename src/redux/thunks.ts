@@ -1,26 +1,27 @@
 import {Dispatch} from 'redux';
 import {
-  setUsersAC,
+  fetchUsersAC,
   setSuccessAC,
-  addNewUserAC,
+  addLocalUserAC,
   chosenPersonAC,
-  addEditedUserAC,
+  setEditedUserAC,
   setRefreshingAC,
   setErrorPersonAC,
-  SuccessActionType,
+  SuccessACType,
   setStatusSetErrorAC,
   setRefreshingUsersAC,
-  AddEditedUserActionType,
-  SetRefreshingActionType,
-  SetErrorPersonActionType,
-  SetStatusSetErrorActionType,
-  SetRefreshingUsersActionType,
+  setEditedUserACType,
+  SetRefreshingACType,
+  SetErrorPersonACType,
+  SetStatusSetErrorACType,
+  SetRefreshingUsersACType,
 } from './actions';
 import {ThunkDispatch} from 'redux-thunk';
 import {AppRootStateType} from '../store';
 import {usersAPI, UsersType} from '../api/users-api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+//person
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setErrorPersonAC(true, null));
   try {
@@ -48,10 +49,11 @@ export const refreshPersonTC = (id: number) => async (
   }
 };
 
+//users
 type dispatchActionType =
-  | SetErrorPersonActionType
-  | SetRefreshingActionType
-  | SetRefreshingUsersActionType;
+  | SetErrorPersonACType
+  | SetRefreshingACType
+  | SetRefreshingUsersACType;
 
 export const onRefreshTC = () => async (
   dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
@@ -59,8 +61,8 @@ export const onRefreshTC = () => async (
   dispatch(setStatusSetErrorAC(true, null));
   dispatch(setRefreshingAC(true));
   try {
-    await dispatch(setRefreshingUsersAC([], 1));
-    await dispatch(getUsersAsyncStorageTC());
+    dispatch(setRefreshingUsersAC([], 1));
+    await dispatch(getLocalUsersTC());
     dispatch(setRefreshingAC(false));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
@@ -69,7 +71,7 @@ export const onRefreshTC = () => async (
   }
 };
 
-export const getUsersTC = () => async (
+export const fetchUsersTC = () => async (
   dispatch: Dispatch,
   getState: () => AppRootStateType,
 ) => {
@@ -84,7 +86,7 @@ export const getUsersTC = () => async (
     const response = await usersAPI.getUsers(page);
     if (response.data) {
       dispatch(
-        setUsersAC(response.data.data, page + 1, response.data.total_pages),
+        fetchUsersAC(response.data.data, page + 1, response.data.total_pages),
       );
       dispatch(setStatusSetErrorAC(false, null));
     }
@@ -93,7 +95,7 @@ export const getUsersTC = () => async (
   }
 };
 
-export const addEditedUserTC = (
+export const setEditedUserTC = (
   values: UsersType,
   resetForm: () => void,
   navigate: (link: string) => void,
@@ -101,13 +103,13 @@ export const addEditedUserTC = (
   dispatch: ThunkDispatch<
     AppRootStateType,
     {},
-    SetStatusSetErrorActionType | AddEditedUserActionType | SuccessActionType
+    SetStatusSetErrorACType | setEditedUserACType | SuccessACType
   >,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    dispatch(addEditedUserAC(values));
-    await dispatch(editedUserDataTC(values));
+    dispatch(setEditedUserAC(values));
+    await dispatch(setEditedLocalUserTC(values));
     resetForm();
     navigate('Users');
     dispatch(setStatusSetErrorAC(false, null));
@@ -117,21 +119,21 @@ export const addEditedUserTC = (
 };
 
 export const getAllUsers = () => async (
-  dispatch: ThunkDispatch<AppRootStateType, {}, SetStatusSetErrorActionType>,
+  dispatch: ThunkDispatch<AppRootStateType, {}, SetStatusSetErrorACType>,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    await dispatch(getUsersTC());
-    await dispatch(getUsersAsyncStorageTC());
+    await dispatch(fetchUsersTC());
+    await dispatch(getLocalUsersTC());
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
 };
 
-// AsyncStorage
-export const storeDataTC = (
-  newUser: UsersType,
+// local (AsyncStorage)
+export const setLocalUserTC = (
+  localUser: UsersType,
   resetForm: () => void,
   navigate: (link: string) => void,
 ) => async (dispatch: Dispatch) => {
@@ -139,11 +141,11 @@ export const storeDataTC = (
   try {
     const ArrayOldUsers = await AsyncStorage.getItem('users');
     const parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
-    const jsonValue = JSON.stringify([newUser, ...parsedUsers]);
+    const jsonValue = JSON.stringify([localUser, ...parsedUsers]);
     await AsyncStorage.setItem('users', jsonValue);
-    dispatch(addNewUserAC(newUser));
+    dispatch(addLocalUserAC(localUser));
     dispatch(setStatusSetErrorAC(false, null));
-    if (newUser) {
+    if (localUser) {
       dispatch(setSuccessAC(true));
       resetForm();
       navigate('Users');
@@ -153,15 +155,15 @@ export const storeDataTC = (
   }
 };
 
-export const editedUserDataTC = (editedUser: UsersType) => async (
+export const setEditedLocalUserTC = (editedUser: UsersType) => async (
   dispatch: Dispatch,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    const jsonValueUser = await AsyncStorage.getItem('users');
+    const arrayLocalUsers = await AsyncStorage.getItem('users');
 
-    const users: Array<UsersType> = jsonValueUser
-      ? JSON.parse(jsonValueUser)
+    const users: Array<UsersType> = arrayLocalUsers
+      ? JSON.parse(arrayLocalUsers)
       : [];
 
     const editedLocalUser = users.map(user =>
@@ -176,18 +178,18 @@ export const editedUserDataTC = (editedUser: UsersType) => async (
   }
 };
 
-export const removeUsersAsyncStorageTC = (id: number) => async (
+export const removeLocalUsersTC = (id: number) => async (
   dispatch: Dispatch,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    const jsonValueUser = await AsyncStorage.getItem('users');
+    const arrayLocalUsers = await AsyncStorage.getItem('users');
 
-    const users: Array<UsersType> = jsonValueUser
-      ? JSON.parse(jsonValueUser)
+    const users: Array<UsersType> = arrayLocalUsers
+      ? JSON.parse(arrayLocalUsers)
       : [];
 
-    const filteredUser = users.filter(u => u.id !== id);
+    const filteredUser = users.filter(user => user.id !== id);
 
     await AsyncStorage.setItem('users', JSON.stringify(filteredUser));
 
@@ -198,26 +200,26 @@ export const removeUsersAsyncStorageTC = (id: number) => async (
   }
 };
 
-export const getUsersAsyncStorageTC = () => async (
+export const getLocalUsersTC = () => async (
   dispatch: Dispatch,
   getState: () => AppRootStateType,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    const users = getState().usersStore.users;
-    const localUsers = users.filter(u => u.local);
+    const storeUsers = getState().usersStore.users;
+    const localUsers = storeUsers.filter(user => user.local);
 
-    const jsonValueUser = await AsyncStorage.getItem('users');
+    const jsonValueLocalUser = await AsyncStorage.getItem('users');
 
-    const usersNew: Array<UsersType> = jsonValueUser
-      ? JSON.parse(jsonValueUser)
+    const newLocalUsers: Array<UsersType> = jsonValueLocalUser
+      ? JSON.parse(jsonValueLocalUser)
       : [];
 
-    const ids: number[] = localUsers.map(u => +u.id);
+    const usersId: number[] = localUsers.map(user => +user.id);
 
-    usersNew.forEach((el: UsersType) => {
-      if (!ids.includes(+el.id)) {
-        dispatch(addNewUserAC(el));
+    newLocalUsers.forEach((el: UsersType) => {
+      if (!usersId.includes(+el.id)) {
+        dispatch(addLocalUserAC(el));
       }
     });
     dispatch(setStatusSetErrorAC(false, null));

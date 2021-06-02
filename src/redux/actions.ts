@@ -1,10 +1,8 @@
 import {UsersType} from '../api/users-api';
 import {RequestStatusType} from './app-reducer';
 
-//app-reducer
-export type SetStatusSetErrorActionType = ReturnType<
-  typeof setStatusSetErrorAC
->;
+// app-reducer /////
+export type SetStatusSetErrorACType = ReturnType<typeof setStatusSetErrorAC>;
 export const setStatusSetErrorAC = (
   isLoading: RequestStatusType,
   error: null | string,
@@ -15,20 +13,20 @@ export const setStatusSetErrorAC = (
     error,
   } as const);
 
-export type SuccessActionType = ReturnType<typeof setSuccessAC>;
+export type SuccessACType = ReturnType<typeof setSuccessAC>;
 export const setSuccessAC = (success: boolean) =>
   ({
     type: 'APP/SET_SUCCESS',
     success,
   } as const);
 
-//person-reducer
-export type ChosenPersonActionType = ReturnType<typeof chosenPersonAC>;
+// person-reducer /////
+export type ChosenPersonACType = ReturnType<typeof chosenPersonAC>;
 export const chosenPersonAC = (person: UsersType) => {
   return {type: 'PERSON/CHOSEN_PERSON', person};
 };
 
-export type SetErrorPersonActionType = ReturnType<typeof setErrorPersonAC>;
+export type SetErrorPersonACType = ReturnType<typeof setErrorPersonAC>;
 export const setErrorPersonAC = (
   isLoading: RequestStatusType,
   error: null | string,
@@ -36,73 +34,34 @@ export const setErrorPersonAC = (
   return {type: 'PERSON/ERROR_PERSON', isLoading, error};
 };
 
-//users-reducer
-export type SetUsersActionType = {
-  type: 'USERS/SET_USERS';
-  users: Array<UsersType>;
-  page: number;
-  total_pages: number | null;
-};
-export const setUsersAC = (
+// users-reducer /////
+export type FetchUsersACType = ReturnType<typeof fetchUsersAC>;
+export const fetchUsersAC = (
   users: Array<UsersType>,
   page: number,
   total_pages: number | null,
-): SetUsersActionType => {
-  return {type: 'USERS/SET_USERS', users, page, total_pages};
-};
+) => ({type: 'USERS/FETCH_USERS', users, page, total_pages} as const);
 
-export type SetFilterActionType = {
-  type: 'USERS/SET_FILTER';
-  filterValue: string;
-};
-export const setFilterAC = (filterValue: string): SetFilterActionType => {
-  return {type: 'USERS/SET_FILTER', filterValue};
-};
+export type SetSearchBarValueACType = ReturnType<typeof setSearchBarValueAC>;
+export const setSearchBarValueAC = (filterValue: string) =>
+  ({type: 'USERS/SET_FILTER', filterValue} as const);
 
-export type SetRefreshingActionType = {
-  type: 'USERS/SET_REFRESHING';
-  isRefreshing: boolean;
-};
-export const setRefreshingAC = (
-  isRefreshing: boolean,
-): SetRefreshingActionType => {
-  return {type: 'USERS/SET_REFRESHING', isRefreshing};
-};
+export type SetRefreshingACType = ReturnType<typeof setRefreshingAC>;
+export const setRefreshingAC = (isRefreshing: boolean) =>
+  ({type: 'USERS/SET_REFRESHING', isRefreshing} as const);
 
-export type SetRefreshingUsersActionType = {
-  type: 'USERS/SET_REFRESHING_USERS';
-  users: Array<UsersType>;
-  page: number;
-};
-export const setRefreshingUsersAC = (
-  users: Array<UsersType>,
-  page: number,
-): SetRefreshingUsersActionType => {
-  return {type: 'USERS/SET_REFRESHING_USERS', users, page};
-};
+export type SetRefreshingUsersACType = ReturnType<typeof setRefreshingUsersAC>;
+export const setRefreshingUsersAC = (users: Array<UsersType>, page: number) =>
+  ({type: 'USERS/SET_REFRESHING_USERS', users, page} as const);
 
-export type AddNewUserActionType = {
-  type: 'USERS/ADD_NEW_USER';
-  newUser: UsersType;
-};
-export const addNewUserAC = (newUser: UsersType): AddNewUserActionType => {
-  return {type: 'USERS/ADD_NEW_USER', newUser};
-};
+export type AddLocalUserACType = ReturnType<typeof addLocalUserAC>;
+export const addLocalUserAC = (localUser: UsersType) =>
+  ({type: 'USERS/ADD_LOCAL_USER', localUser} as const);
 
-export type AddEditedUserActionType = {
-  type: 'USERS/ADD_EDITED_USER';
-  editedUser: UsersType;
-};
-export const addEditedUserAC = (
-  editedUser: UsersType,
-): AddEditedUserActionType => {
-  return {type: 'USERS/ADD_EDITED_USER', editedUser};
-};
+export type setEditedUserACType = ReturnType<typeof setEditedUserAC>;
+export const setEditedUserAC = (editedUser: UsersType) =>
+  ({type: 'USERS/ADD_EDITED_USER', editedUser} as const);
 
-export type RemoveNewUserActionType = {
-  type: 'USERS/REMOVE_NEW_USER';
-  id: number;
-};
-export const removeNewUserAC = (id: number): RemoveNewUserActionType => {
-  return {type: 'USERS/REMOVE_NEW_USER', id};
-};
+export type RemoveLocalUserACType = ReturnType<typeof removeLocalUserAC>;
+export const removeLocalUserAC = (id: number) =>
+  ({type: 'USERS/REMOVE_LOCAL_USER', id} as const);

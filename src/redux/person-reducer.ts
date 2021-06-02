@@ -1,7 +1,7 @@
-import {ChosenPersonActionType} from './actions';
+import {ChosenPersonACType} from './actions';
 import {UsersType} from '../api/users-api';
 
-type ActionsType = ChosenPersonActionType;
+type ActionsType = ChosenPersonACType;
 
 export type PersonStateType = {
   person: UsersType | undefined;
