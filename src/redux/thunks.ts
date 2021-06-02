@@ -21,7 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
   dispatch(setErrorPersonAC(true, null));
   try {
-    let response = await usersAPI.chosenPerson(id);
+    const response = await usersAPI.chosenPerson(id);
     if (response.data) {
       dispatch(chosenPersonAC(response.data));
     }
@@ -78,7 +78,7 @@ export const getUsersTC = () => async (
     return;
   }
   try {
-    let response = await usersAPI.getUsers(page);
+    const response = await usersAPI.getUsers(page);
     if (response.data) {
       dispatch(
         setUsersAC(response.data.data, page + 1, response.data.total_pages),
@@ -109,8 +109,8 @@ export const storeDataTC = (newUser: UsersType) => async (
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    let ArrayOldUsers = await AsyncStorage.getItem('users');
-    let parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
+    const ArrayOldUsers = await AsyncStorage.getItem('users');
+    const parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
     const jsonValue = JSON.stringify([newUser, ...parsedUsers]);
     await AsyncStorage.setItem('users', jsonValue);
     dispatch(addNewUserAC(newUser));
@@ -128,13 +128,13 @@ export const editedUserDataTC = (editedUser: UsersType) => async (
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    let jsonValueUser = await AsyncStorage.getItem('users');
+    const jsonValueUser = await AsyncStorage.getItem('users');
 
-    let users: Array<UsersType> = jsonValueUser
+    const users: Array<UsersType> = jsonValueUser
       ? JSON.parse(jsonValueUser)
       : [];
 
-    let editedLocalUser = users.map(user =>
+    const editedLocalUser = users.map(user =>
       user.id === editedUser.id ? editedUser : user,
     );
 
@@ -151,13 +151,13 @@ export const removeUsersAsyncStorageTC = (id: number) => async (
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
-    let jsonValueUser = await AsyncStorage.getItem('users');
+    const jsonValueUser = await AsyncStorage.getItem('users');
 
-    let users: Array<UsersType> = jsonValueUser
+    const users: Array<UsersType> = jsonValueUser
       ? JSON.parse(jsonValueUser)
       : [];
 
-    let filteredUser = users.filter(u => u.id !== id);
+    const filteredUser = users.filter(u => u.id !== id);
 
     await AsyncStorage.setItem('users', JSON.stringify(filteredUser));
 
@@ -177,9 +177,9 @@ export const getUsersAsyncStorageTC = () => async (
     const users = getState().usersStore.users;
     const localUsers = users.filter(u => u.local);
 
-    let jsonValueUser = await AsyncStorage.getItem('users');
+    const jsonValueUser = await AsyncStorage.getItem('users');
 
-    let usersNew: Array<UsersType> = jsonValueUser
+    const usersNew: Array<UsersType> = jsonValueUser
       ? JSON.parse(jsonValueUser)
       : [];
 

@@ -75,7 +75,7 @@ export const ModalScreen = ({route}: routeType) => {
           }}
           validationSchema={validation}>
           {props => {
-            let {
+            const {
               errors,
               isValid,
               touched,
