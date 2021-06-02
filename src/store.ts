@@ -20,7 +20,6 @@ export const store = createStore(
 );
 // export const store = createStore(rootReducer, applyMiddleware(thunk));
 
-
 // @ts-ignore
 window.store = store;
 export type AppRootStateType = ReturnType<typeof rootReducer>;

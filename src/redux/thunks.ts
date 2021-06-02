@@ -10,6 +10,8 @@ import {
   SetErrorPersonActionType,
   SetStatusSetErrorActionType,
   setSuccessAC,
+  setRefreshingUsersAC,
+  SetRefreshingUsersActionType,
 } from './actions';
 import {ThunkDispatch} from 'redux-thunk';
 import {AppRootStateType} from '../store';
@@ -43,14 +45,18 @@ export const refreshPersonTC = (id: number) => async (
   }
 };
 
-type dispatchActionType = SetErrorPersonActionType | SetRefreshingActionType;
+type dispatchActionType =
+  | SetErrorPersonActionType
+  | SetRefreshingActionType
+  | SetRefreshingUsersActionType;
+
 export const onRefreshTC = () => async (
   dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
   dispatch(setRefreshingAC(true));
   try {
-    await dispatch(getUsersTC());
+    await dispatch(setRefreshingUsersAC([], 1));
     await dispatch(getUsersAsyncStorageTC());
     dispatch(setRefreshingAC(false));
     dispatch(setStatusSetErrorAC(false, null));
@@ -102,7 +108,6 @@ export const storeDataTC = (newUser: UsersType) => async (
   dispatch: Dispatch,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
-
   try {
     let ArrayOldUsers = await AsyncStorage.getItem('users');
     let parsedUsers = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
@@ -122,7 +127,6 @@ export const editedUserDataTC = (editedUser: UsersType) => async (
   dispatch: Dispatch,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
-
   try {
     let jsonValueUser = await AsyncStorage.getItem('users');
 
@@ -146,7 +150,6 @@ export const removeUsersAsyncStorageTC = (id: number) => async (
   dispatch: Dispatch,
 ) => {
   dispatch(setStatusSetErrorAC(true, null));
-
   try {
     let jsonValueUser = await AsyncStorage.getItem('users');
 

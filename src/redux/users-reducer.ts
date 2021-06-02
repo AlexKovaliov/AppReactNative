@@ -6,6 +6,7 @@ import {
   SetRefreshingActionType,
   RemoveNewUserActionType,
   AddEditedUserActionType,
+  SetRefreshingUsersActionType,
 } from './actions';
 
 type ActionsType =
@@ -14,21 +15,19 @@ type ActionsType =
   | AddNewUserActionType
   | AddEditedUserActionType
   | RemoveNewUserActionType
-  | SetRefreshingActionType;
+  | SetRefreshingActionType
+  | SetRefreshingUsersActionType;
 
 export type InitialStateUserReducerType = typeof initialState;
 
 const initialState = {
   page: 1,
-  term: '',
   success: false,
-  filter: {term: ''},
+  filterValue: '',
   isRefreshing: false,
   users: [] as Array<UsersType>,
   total_pages: null as null | number,
 };
-
-export type FilterType = typeof initialState.filter;
 
 export const usersReducer = (
   state: InitialStateUserReducerType = initialState,
@@ -43,8 +42,18 @@ export const usersReducer = (
         total_pages: action.total_pages,
       };
 
+    case 'USERS/SET_REFRESHING_USERS':
+      return {
+        ...state,
+        users: action.users,
+        page: action.page,
+      };
+
     case 'USERS/SET_FILTER':
-      return {...state, filter: action.payload};
+      return {
+        ...state,
+        filterValue: action.filterValue,
+      };
 
     case 'USERS/SET_REFRESHING':
       return {...state, isRefreshing: action.isRefreshing};

@@ -23,7 +23,7 @@ import {PersonStateType} from '../../redux/person-reducer';
 import {InitialAppStateType} from '../../redux/app-reducer';
 import {chosenPersonTC, refreshPersonTC} from '../../redux/thunks';
 import {InitialStateUserReducerType} from '../../redux/users-reducer';
-import {BLACK, CERULEAN_BLUE, SOLITUDE, WHITE} from '../../utils/colors';
+import {BLACK, CERULEAN_BLUE, GREY, SOLITUDE, WHITE} from '../../utils/colors';
 
 type routeType = {route: {params: {user: UsersType}}};
 
@@ -58,11 +58,14 @@ export const PersonScreen = ({route}: routeType) => {
 const Content = (props: {user: UsersType | undefined}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const onModal = () => navigation.navigate('Modal', {user: props.user});
-  const [editWindow, setEditWindow] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
-  const ModalVisible = () => setModalVisible(true);
+  //Controlling the visibility of windows
+  const [editWindow, setEditWindow] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  //Buttons onPress handler
+  const onModal = () => navigation.navigate('Modal', {user: props.user});
+  const modalVisibleOpen = () => setModalVisible(true);
+  const editWindowVisible = () => setEditWindow(!editWindow);
 
   const onRefreshHandler = useCallback(() => {
     if (!local && id) {
@@ -93,6 +96,7 @@ const Content = (props: {user: UsersType | undefined}) => {
     removeText,
     contentArea,
     touchableArea,
+    touchAreaActive,
   } = styles;
 
   const PersonAvatar = (
@@ -132,9 +136,13 @@ const Content = (props: {user: UsersType | undefined}) => {
               {local ? (
                 <View style={iconArea}>
                   <TouchableOpacity
-                    style={touchableArea}
-                    onPress={() => setEditWindow(!editWindow)}>
-                    <Icon name="ellipsis-v" size={25} color={BLACK} />
+                    style={editWindow ? touchAreaActive : touchableArea}
+                    onPress={editWindowVisible}>
+                    <Icon
+                      name="ellipsis-v"
+                      size={25}
+                      color={editWindow ? GREY : BLACK}
+                    />
                   </TouchableOpacity>
                 </View>
               ) : null}
@@ -146,7 +154,7 @@ const Content = (props: {user: UsersType | undefined}) => {
                     <Icon name="user-edit" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={editWrap} onPress={ModalVisible}>
+                  <TouchableOpacity style={editWrap} onPress={modalVisibleOpen}>
                     <Text style={removeText}>Remove user</Text>
                     <Icon name="user-minus" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
@@ -157,7 +165,7 @@ const Content = (props: {user: UsersType | undefined}) => {
                 {first_name} {last_name}
               </Text>
               <View style={emailWrap}>
-                <Icon name="envelope" size={25} color={CERULEAN_BLUE} />
+                <Icon name="envelope" size={25} color={GREY} />
                 <Text style={emailSt}>{email}</Text>
               </View>
             </View>
@@ -206,11 +214,19 @@ const styles = StyleSheet.create({
     right: 10,
     position: 'absolute',
     flexDirection: 'column',
+    shadowColor: BLACK,
     backgroundColor: CERULEAN_BLUE,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
   },
   editWrap: {
     borderWidth: 1,
-    borderColor: '#fff',
+    borderColor: WHITE,
     paddingVertical: 10,
     flexDirection: 'row',
     paddingHorizontal: 10,
@@ -226,6 +242,14 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  touchAreaActive: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    backgroundColor: SOLITUDE,
   },
   iconArea: {
     width: '100%',
@@ -253,9 +277,13 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 26,
     marginTop: 80,
-    color: CERULEAN_BLUE,
+    paddingBottom: 10,
+    borderColor: BLACK,
     textAlign: 'center',
     fontStyle: 'italic',
+    borderBottomWidth: 1,
+    marginHorizontal: 30,
+    color: CERULEAN_BLUE,
   },
   emailSt: {
     fontSize: 16,

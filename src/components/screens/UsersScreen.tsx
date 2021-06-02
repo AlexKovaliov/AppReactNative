@@ -22,17 +22,16 @@ import {CERULEAN_BLUE, WHITE} from '../../utils/colors';
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const onModal = () => navigation.navigate('Modal');
   const {safeArea, container, button} = styles;
-
-  useEffect(() => {
-    dispatch(getAllUsers());
-  }, [dispatch]);
-
+  const onModal = () => navigation.navigate('Modal');
   const {error, isLoading, success} = useSelector<
     AppRootStateType,
     InitialAppStateType
   >(state => state.appStore);
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   useEffect(() => {
     if (success) {
@@ -50,7 +49,7 @@ export const UsersScreen = React.memo(() => {
         {isLoading ? <Loading /> : null}
         <Users />
         <TouchableOpacity style={button} onPress={onModal}>
-          <Icon name="user-plus" size={25} color={WHITE} />
+          <Icon name="user-plus" size={20} color={WHITE} />
         </TouchableOpacity>
         {error ? <ErrorImage /> : null}
       </View>

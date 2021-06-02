@@ -85,6 +85,10 @@ export const ModalScreen = ({route}: routeType) => {
             } = props;
 
             const {first_name, last_name, email} = props.values;
+            const errorEmail = errors.email && touched.email;
+            const errorLastName = errors.last_name && touched.last_name;
+            const errorFirstName = errors.first_name && touched.first_name;
+            const textInputStyle = errorFirstName ? errorInput : input;
 
             const takePhotoFromCamera = async () => {
               launchCamera(
@@ -116,10 +120,6 @@ export const ModalScreen = ({route}: routeType) => {
                 },
               );
             };
-
-            const errorEmail = errors.email && touched.email;
-            const errorLastName = errors.last_name && touched.last_name;
-            const errorFirstName = errors.first_name && touched.first_name;
 
             return (
               <ScrollView style={wrap}>
@@ -157,7 +157,7 @@ export const ModalScreen = ({route}: routeType) => {
                   <TextInput
                     value={first_name}
                     placeholder="First Name"
-                    style={errorFirstName ? errorInput : input}
+                    style={textInputStyle}
                     onBlur={handleBlur('first_name')}
                     onChangeText={handleChange('first_name')}
                   />
@@ -168,7 +168,7 @@ export const ModalScreen = ({route}: routeType) => {
                   <TextInput
                     value={last_name}
                     placeholder="Last Name"
-                    style={errorLastName ? errorInput : input}
+                    style={textInputStyle}
                     onBlur={handleBlur('last_name')}
                     onChangeText={handleChange('last_name')}
                   />
@@ -180,7 +180,7 @@ export const ModalScreen = ({route}: routeType) => {
                     value={email}
                     placeholder="Email"
                     autoCompleteType={'email'}
-                    style={errorEmail ? errorInput : input}
+                    style={textInputStyle}
                     onBlur={handleBlur('email')}
                     onChangeText={handleChange('email')}
                   />

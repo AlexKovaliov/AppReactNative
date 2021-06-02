@@ -18,8 +18,9 @@ export const RemoveUserModal = (props: PropsRemoveModalType) => {
   const dispatch = useDispatch();
   const {modalVisible, setModalVisible, id} = props;
   const {centeredView, modalView, modalText, btnArea, touchableArea} = styles;
+  //Buttons onPress handler
   const closeModalBtn = () => setModalVisible(false);
-
+  const modalVisibleHandler = () => setModalVisible(!modalVisible);
   const deleteUserBtn = () => {
     dispatch(removeNewUserAC(id));
     dispatch(removeUsersAsyncStorageTC(id));
@@ -32,9 +33,7 @@ export const RemoveUserModal = (props: PropsRemoveModalType) => {
       animationType="slide"
       transparent={true}
       visible={modalVisible}
-      onRequestClose={() => {
-        setModalVisible(!modalVisible);
-      }}>
+      onRequestClose={modalVisibleHandler}>
       <View style={centeredView}>
         <View style={modalView}>
           <Text style={modalText}>Do you want to delete the user?</Text>

@@ -10,7 +10,7 @@ import {InitialStateUserReducerType} from '../redux/users-reducer';
 export const Users = React.memo(() => {
   const dispatch = useDispatch();
 
-  const {isRefreshing, users} = useSelector<
+  const {isRefreshing, users, filterValue} = useSelector<
     AppRootStateType,
     InitialStateUserReducerType
   >(state => state.usersStore);
@@ -23,9 +23,18 @@ export const Users = React.memo(() => {
     dispatch(onRefreshTC());
   }, [dispatch]);
 
+  const filteredUsers = users.filter(
+    f =>
+      f.email.toLowerCase().includes(filterValue.toLowerCase()) ||
+      f.first_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+      f.last_name.toLowerCase().includes(filterValue.toLowerCase()),
+  );
+
+  const usersData = !filterValue ? users : filteredUsers;
+
   return (
     <FlatList
-      data={users}
+      data={usersData}
       keyExtractor={(item: UsersType) => String(item.id)}
       renderItem={({item}) => <UsersList user={item} />}
       onEndReachedThreshold={0.5}

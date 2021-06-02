@@ -53,10 +53,10 @@ export const setUsersAC = (
 
 export type SetFilterActionType = {
   type: 'USERS/SET_FILTER';
-  payload: {term: string};
+  filterValue: string;
 };
-export const setFilterAC = (term: string): SetFilterActionType => {
-  return {type: 'USERS/SET_FILTER', payload: {term}};
+export const setFilterAC = (filterValue: string): SetFilterActionType => {
+  return {type: 'USERS/SET_FILTER', filterValue};
 };
 
 export type SetRefreshingActionType = {
@@ -67,6 +67,18 @@ export const setRefreshingAC = (
   isRefreshing: boolean,
 ): SetRefreshingActionType => {
   return {type: 'USERS/SET_REFRESHING', isRefreshing};
+};
+
+export type SetRefreshingUsersActionType = {
+  type: 'USERS/SET_REFRESHING_USERS';
+  users: Array<UsersType>;
+  page: number;
+};
+export const setRefreshingUsersAC = (
+  users: Array<UsersType>,
+  page: number,
+): SetRefreshingUsersActionType => {
+  return {type: 'USERS/SET_REFRESHING_USERS', users, page};
 };
 
 export type AddNewUserActionType = {
@@ -91,8 +103,6 @@ export type RemoveNewUserActionType = {
   type: 'USERS/REMOVE_NEW_USER';
   id: number;
 };
-export const removeNewUserAC = (
-  id: number,
-): RemoveNewUserActionType => {
+export const removeNewUserAC = (id: number): RemoveNewUserActionType => {
   return {type: 'USERS/REMOVE_NEW_USER', id};
 };

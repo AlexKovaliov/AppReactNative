@@ -3,7 +3,7 @@ import {UsersType} from '../api/users-api';
 import {Avatar} from '../utils/avatarUtils';
 import {useNavigation} from '@react-navigation/native';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {SOLITUDE} from '../utils/colors';
+import {GREY, SOLITUDE} from '../utils/colors';
 
 export type PropsType = {
   user: UsersType;
@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   emailSt: {
+    color: GREY,
     fontSize: 14,
     marginLeft: 10,
   },
