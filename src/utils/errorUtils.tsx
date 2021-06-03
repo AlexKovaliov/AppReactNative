@@ -1,53 +1,68 @@
-import React, {useCallback} from 'react';
-import {Image, StyleSheet, Text, View, Button} from 'react-native';
+import React from 'react';
+import {ERROR_IMG} from './images';
 import {AppRootStateType} from '../store';
 import {useDispatch, useSelector} from 'react-redux';
-import {onRefreshTC} from '../reducers/thunks';
+import {setStatusSetErrorAC} from '../redux/actions';
+import {useNavigation} from '@react-navigation/native';
+import {Image, StyleSheet, Text, View, Button} from 'react-native';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {SOLITUDE, WHITE} from './colors';
 
 export function ErrorImage() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const {containerError, image, textError} = styles;
 
   const error = useSelector<AppRootStateType, string | null>(
     state => state.appStore.error,
   );
-  const onRefreshHandler = useCallback(() => {
-    dispatch(onRefreshTC());
-  }, [dispatch]);
+
+  const onComeHome = () => {
+    navigation.navigate('Users');
+    dispatch(setStatusSetErrorAC(false, null));
+  };
+
+  if (error) {
+    showMessage({
+      type: 'danger',
+      message: 'Error',
+      description: error.toString(),
+    });
+  }
 
   return (
-    <View style={styles.containerError}>
-      <Image
-        style={styles.image}
-        source={{
-          uri: 'https://www.hostinger.co.uk/assets/images/404-3a53e76ef1.png',
-        }}
-      />
-      <Text style={styles.textError}>Oops! Something went wrong!</Text>
-      <Text style={styles.textError}>{error}</Text>
-      <Button onPress={onRefreshHandler} title="Refreshing" />
+    <View style={containerError}>
+      <Image style={image} source={ERROR_IMG} />
+      <Text style={textError}>Oops! Something went wrong!</Text>
+      <Text style={textError}>{error}</Text>
+      <Button title={'come home'} onPress={onComeHome} />
+      <FlashMessage position="top" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   textError: {
-    marginTop: 10,
-    marginBottom: 10,
-    fontSize: 16,
-    fontStyle: 'italic',
     color: 'red',
+    fontSize: 16,
+    paddingBottom: 5,
+    marginVertical: 15,
+    marginHorizontal: 20,
+    borderBottomWidth: 2,
+    borderColor: SOLITUDE,
+    fontStyle: 'italic',
   },
   image: {
-    height: 150,
     width: 150,
+    height: 150,
   },
   containerError: {
     flex: 1,
-    height: '100%',
     width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: '100%',
     position: 'absolute',
-    backgroundColor: '#fff',
+    alignItems: 'center',
+    backgroundColor: WHITE,
+    justifyContent: 'center',
   },
 });

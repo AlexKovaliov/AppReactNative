@@ -1,8 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../store';
-import {RequestStatusType} from '../reducers/app-reducer';
+import {RequestStatusType} from '../redux/app-reducer';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {CERULEAN_BLUE, SOLITUDE} from './colors';
 
 type MapStatePropsType = {
   isLoading: RequestStatusType;
@@ -16,14 +17,12 @@ function mapStateToProps(state: AppRootStateType): MapStatePropsType {
 
 class Loading extends React.PureComponent<PropsType> {
   render() {
+    const {container, text} = styles;
+
     return (
-      <View style={styles.container}>
-        {this.props.isLoading ? (
-          <View>
-            <ActivityIndicator color={'#3949ab'} size="large" />
-            <Text style={styles.text}>Loading...</Text>
-          </View>
-        ) : null}
+      <View style={container}>
+        <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+        <Text style={text}>Loading...</Text>
       </View>
     );
   }
@@ -32,16 +31,18 @@ export default connect(mapStateToProps)(Loading);
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
     zIndex: 100,
     width: '100%',
-    backgroundColor: '#f1f3f6',
+    height: '100%',
+    justifyContent: 'center',
+    position: 'absolute',
     alignItems: 'center',
+    backgroundColor: SOLITUDE,
   },
   text: {
-    marginTop: 10,
     fontSize: 20,
+    marginTop: 10,
+    color: CERULEAN_BLUE,
     fontStyle: 'italic',
-    color: '#3949ab',
   },
 });

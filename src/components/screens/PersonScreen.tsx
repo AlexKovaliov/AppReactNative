@@ -1,103 +1,323 @@
-import React, {useEffect} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  Text,
+  View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  RefreshControl,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native';
 import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
-import {ErrorType, InitialPersonStateType} from '../../reducers/app-reducer';
-import {chosenPersonTC} from '../../reducers/thunks';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
+import {RemoveUserModal} from '../RemoveUserModal';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
+import {BACK_IMG, NO_AVATAR} from '../../utils/images';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {PersonStateType} from '../../redux/person-reducer';
+import {InitialAppStateType} from '../../redux/app-reducer';
+import {chosenPersonTC, refreshPersonTC} from '../../redux/thunks';
+import {InitialStateUserReducerType} from '../../redux/users-reducer';
+import {BLACK, CERULEAN_BLUE, GREY, SOLITUDE, WHITE} from '../../utils/colors';
 
-type routeType = {
-  route: {
-    params: {
-      id: number;
-    };
-  };
-};
+type routeType = {route: {params: {user: UsersType}}};
 
-export const PersonScreen = React.memo(({route}: routeType) => {
+export const PersonScreen = ({route}: routeType) => {
   const dispatch = useDispatch();
-
-  const {error, isLoading} = useSelector<
-    AppRootStateType,
-    InitialPersonStateType
-  >(state => state.appStore);
+  const propsUser = route.params.user;
+  const {local} = route.params.user;
 
   useEffect(() => {
-    dispatch(chosenPersonTC(route.params.id));
-  }, [dispatch, route.params.id]);
+    if (!local) {
+      dispatch(chosenPersonTC(propsUser.id));
+    }
+  }, [dispatch, local, propsUser.id]);
 
-  return (
-    <View style={styles.container}>
-      {isLoading ? <Loading /> : <Content error={error} />}
-    </View>
-  );
-});
-
-const Content = React.memo((props: {error: ErrorType}) => {
-  const person = useSelector<AppRootStateType, UsersType>(
+  const {person} = useSelector<AppRootStateType, PersonStateType>(
     state => state.personStore,
   );
+  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
+
+  let user = person;
+
+  if (local) {
+    user = propsUser;
+  }
+
+  if (isLoading || propsUser.id !== user?.id) {
+    return <Loading />;
+  }
+
+  return <Content user={user} />;
+};
+
+const Content = (props: {user: UsersType | undefined}) => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const {avatar, first_name, last_name, email, id, local} = props.user || {};
+  //Controlling the visibility of windows
+  const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+  //Buttons onPress handler
+  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
+  const modalVisibleOpen = () => setModalVisible(true);
+  const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
+
+  const onRefreshHandler = useCallback(() => {
+    if (!local && id) {
+      dispatch(refreshPersonTC(id));
+    }
+  }, [dispatch, id, local]);
+
+  const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
+  const {isRefreshing} = useSelector<
+    AppRootStateType,
+    InitialStateUserReducerType
+  >(state => state.usersStore);
+
+  const {
+    wrap,
+    text,
+    image,
+    emailSt,
+    backImg,
+    manageView,
+    iconArea,
+    detailsView,
+    container,
+    emailView,
+    manageBtn,
+    removeText,
+    contentArea,
+    touchableArea,
+    touchAreaActive,
+  } = styles;
+
+  const PersonAvatar = (
+    <Image
+      style={image}
+      source={{
+        uri: avatar || NO_AVATAR,
+      }}
+    />
+  );
 
   return (
-    <View style={styles.container}>
-      {props.error ? (
-        //кнопка рефрешинг на еррор скрине не работает на странице юзера
-        //если назать на созаднного юзера - ошибка
+    <SafeAreaView style={container}>
+      {isLoading ? <Loading /> : null}
+      {error ? (
         <ErrorImage />
       ) : (
-        <View style={styles.wrap}>
-          <View style={styles.wrapImg}>
-            <Image style={styles.image} source={{uri: person.avatar}} />
+        <ScrollView
+          style={wrap}
+          refreshControl={
+            <RefreshControl
+              refreshing={isRefreshing}
+              onRefresh={onRefreshHandler}
+            />
+          }>
+          {modalVisible ? (
+            <RemoveUserModal
+              id={id || 0}
+              modalVisible={modalVisible}
+              setModalVisible={setModalVisible}
+            />
+          ) : null}
+          <ImageBackground source={BACK_IMG} style={backImg}>
+            {PersonAvatar}
+          </ImageBackground>
+          <View style={detailsView}>
+            <View style={contentArea}>
+              {local ? (
+                <View style={iconArea}>
+                  <TouchableOpacity
+                    style={openEditWindow ? touchAreaActive : touchableArea}
+                    onPress={editWindowVisible}>
+                    <Icon
+                      name="ellipsis-v"
+                      size={openEditWindow ? 20 : 25}
+                      color={openEditWindow ? GREY : BLACK}
+                    />
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+
+              {openEditWindow ? (
+                <View style={manageView}>
+                  <TouchableOpacity style={manageBtn} onPress={onModalHandler}>
+                    <Text style={removeText}>Edit user</Text>
+                    <Icon name="user-edit" size={25} color={CERULEAN_BLUE} />
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={manageBtn}
+                    onPress={modalVisibleOpen}>
+                    <Text style={removeText}>Remove user</Text>
+                    <Icon name="user-minus" size={25} color={CERULEAN_BLUE} />
+                  </TouchableOpacity>
+                </View>
+              ) : null}
+
+              <Text style={text}>
+                {first_name} {last_name}
+              </Text>
+              <View style={emailView}>
+                <Icon name="envelope" size={25} color={GREY} />
+                <Text style={emailSt}>{email}</Text>
+              </View>
+            </View>
           </View>
-          <Text style={styles.text}>
-            {person.first_name} {person.last_name}
-          </Text>
-          <Text style={styles.email}>Email: {person.email}</Text>
-        </View>
+        </ScrollView>
       )}
-    </View>
+    </SafeAreaView>
   );
-});
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#f1f3f6',
+    backgroundColor: SOLITUDE,
   },
   wrap: {
+    flex: 1,
+  },
+  backImg: {
+    height: 150,
+    width: '100%',
+    paddingVertical: 0,
+    paddingHorizontal: 0,
     alignItems: 'center',
-    marginTop: 20,
+    justifyContent: 'center',
   },
   wrapImg: {
-    height: 150,
+    top: 70,
+    zIndex: 1,
     width: 150,
+    height: 150,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: BLACK,
+    position: 'absolute',
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-
     elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
+  },
+  manageView: {
+    top: 55,
+    zIndex: 1,
+    right: 10,
+    position: 'absolute',
+    flexDirection: 'column',
+    shadowColor: BLACK,
+    backgroundColor: CERULEAN_BLUE,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
+  },
+  manageBtn: {
+    borderWidth: 1,
+    borderColor: WHITE,
+    paddingVertical: 10,
+    flexDirection: 'row',
+    paddingHorizontal: 10,
+    backgroundColor: SOLITUDE,
+    justifyContent: 'flex-end',
+  },
+  removeText: {
+    fontSize: 18,
+    paddingRight: 15,
+  },
+  touchableArea: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  touchAreaActive: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    backgroundColor: SOLITUDE,
+  },
+  iconArea: {
+    width: '100%',
+    paddingTop: 10,
+    paddingRight: 5,
+    alignItems: 'flex-end',
   },
   image: {
-    height: 150,
+    top: 70,
+    zIndex: 1,
     width: 150,
+    height: 150,
+    borderWidth: 3,
     borderRadius: 10,
+    position: 'absolute',
+    borderColor: SOLITUDE,
+    backgroundColor: WHITE,
+  },
+  emailView: {
+    paddingLeft: 15,
+    paddingVertical: 15,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   text: {
-    marginTop: 10,
-    fontSize: 20,
+    fontSize: 26,
+    marginTop: 80,
+    paddingBottom: 10,
+    borderColor: BLACK,
+    textAlign: 'center',
     fontStyle: 'italic',
+    borderBottomWidth: 1,
+    marginHorizontal: 30,
+    color: CERULEAN_BLUE,
   },
-  email: {
-    marginTop: 15,
+  emailSt: {
     fontSize: 16,
+    paddingLeft: 10,
+  },
+  button: {
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  icon: {
+    width: 50,
+    height: 50,
+  },
+  contentArea: {
+    height: 450,
+    width: '100%',
+    borderRadius: 20,
+    backgroundColor: WHITE,
+  },
+  detailsView: {
+    zIndex: -1,
+    width: '100%',
+    height: '100%',
+    paddingVertical: 20,
+    position: 'relative',
+    paddingHorizontal: 20,
+    backgroundColor: SOLITUDE,
   },
 });

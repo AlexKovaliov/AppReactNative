@@ -1,53 +1,59 @@
 import React, {useEffect} from 'react';
 import {
-  StyleSheet,
   View,
-  SafeAreaView,
   StatusBar,
+  StyleSheet,
+  SafeAreaView,
   TouchableOpacity,
-  Text,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType} from '../../store';
 import {Users} from '../Users';
-import {getUsersTC} from '../../reducers/thunks';
-import {ErrorImage} from '../../utils/errorUtils';
 import Loading from '../../utils/loadingUtils';
-import {InitialPersonStateType} from '../../reducers/app-reducer';
+import {getAllUsers} from '../../redux/thunks';
+import {ErrorImage} from '../../utils/errorUtils';
+import {AppRootStateType} from '../../store';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-
-export type NewUserType = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  id: string;
-  avatar: string;
-};
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {InitialAppStateType} from '../../redux/app-reducer';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {setSuccessAC} from '../../redux/actions';
+import {CERULEAN_BLUE, WHITE} from '../../utils/colors';
 
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const {safeArea, container, button} = styles;
   const onModal = () => navigation.navigate('Modal');
-
-  const {error, isLoading} = useSelector<
+  const {error, isLoading, success} = useSelector<
     AppRootStateType,
-    InitialPersonStateType
+    InitialAppStateType
   >(state => state.appStore);
 
   useEffect(() => {
-    dispatch(getUsersTC(1));
+    dispatch(getAllUsers());
   }, [dispatch]);
 
+  useEffect(() => {
+    if (success) {
+      showMessage({
+        type: 'success',
+        message: 'Success',
+      });
+    }
+    dispatch(setSuccessAC(false));
+  }, [dispatch, success]);
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
+    <SafeAreaView style={safeArea}>
+      <View style={container}>
         {isLoading ? <Loading /> : null}
         <Users />
-        <TouchableOpacity style={styles.button} onPress={onModal}>
-          <Text style={styles.textBtn}>+</Text>
+        <TouchableOpacity style={button} onPress={onModal}>
+          <Icon name="user-plus" size={20} color={WHITE} />
         </TouchableOpacity>
         {error ? <ErrorImage /> : null}
       </View>
+      <FlashMessage position="top" />
     </SafeAreaView>
   );
 });
@@ -55,27 +61,32 @@ export const UsersScreen = React.memo(() => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: WHITE,
     paddingTop: StatusBar.currentHeight,
-    backgroundColor: '#fff',
   },
   container: {
     flex: 1,
     paddingHorizontal: 5,
   },
   button: {
-    position: 'absolute',
+    right: 20,
     width: 55,
     height: 55,
+    bottom: 25,
     borderRadius: 50,
-    justifyContent: 'center',
+    position: 'absolute',
     alignItems: 'center',
-    backgroundColor: '#3949ab',
-    top: 500,
-    left: 290,
+    justifyContent: 'center',
+    backgroundColor: CERULEAN_BLUE,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
   },
   textBtn: {
     fontSize: 30,
+    color: WHITE,
     textAlign: 'center',
-    color: '#fff',
   },
 });

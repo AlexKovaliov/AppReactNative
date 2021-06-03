@@ -1,21 +1,20 @@
-import {Image, StyleSheet} from 'react-native';
 import React from 'react';
+import {NO_AVATAR} from './images';
+import {Image, StyleSheet} from 'react-native';
 
-export const Avatar = React.memo((props: {avatar: string}) => (
+export const Avatar = (props: {avatar: string; local?: boolean}) => (
   <Image
     style={styles.image}
     source={{
-      uri:
-        props.avatar ||
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRFe6oKnt1B1FMzZEeMgRWWrsBiqeSRGaCLdA&usqp=CAU',
+      uri: props.avatar || NO_AVATAR,
     }}
   />
-));
+);
 
 const styles = StyleSheet.create({
   image: {
-    borderRadius: 100,
-    height: 50,
     width: 50,
+    height: 50,
+    borderRadius: 100,
   },
 });

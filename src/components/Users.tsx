@@ -1,34 +1,40 @@
 import React, {useCallback} from 'react';
-import {FlatList, RefreshControl, StyleSheet} from 'react-native';
 import {UsersList} from './UsersList';
-import {useDispatch, useSelector} from 'react-redux';
-import {getUsersTC, onRefreshTC} from '../reducers/thunks';
 import {AppRootStateType} from '../store';
-import {InitialStateUserReducerType} from '../reducers/users-reducer';
 import {UsersType} from '../api/users-api';
+import {useDispatch, useSelector} from 'react-redux';
+import {fetchUsersTC, onRefreshTC} from '../redux/thunks';
+import {FlatList, RefreshControl} from 'react-native';
+import {InitialStateUserReducerType} from '../redux/users-reducer';
 
-export const Users = () => {
+export const Users = React.memo(() => {
   const dispatch = useDispatch();
 
-  const {page, isRefreshing, users} = useSelector<
+  const {isRefreshing, users, filterValue} = useSelector<
     AppRootStateType,
     InitialStateUserReducerType
   >(state => state.usersStore);
 
-  //после рефрешинга должно быть 6 юзеров - у тебя больше, похоже он неправильно работает
-  //ты смотрел мо предыдущие комментарии?
+  const handleLoadMore = useCallback(() => {
+    dispatch(fetchUsersTC());
+  }, [dispatch]);
+
   const onRefreshHandler = useCallback(() => {
     dispatch(onRefreshTC());
   }, [dispatch]);
 
-  const handleLoadMore = useCallback(() => {
-    dispatch(getUsersTC(page + 1));
-  }, [dispatch, page]);
+  const filteredUsers = users.filter(
+    user =>
+      user.email.toLowerCase().includes(filterValue.toLowerCase()) ||
+      user.first_name.toLowerCase().includes(filterValue.toLowerCase()) ||
+      user.last_name.toLowerCase().includes(filterValue.toLowerCase()),
+  );
+
+  const usersData = !filterValue ? users : filteredUsers;
 
   return (
     <FlatList
-      style={styles.flatList}
-      data={users}
+      data={usersData}
       keyExtractor={(item: UsersType) => String(item.id)}
       renderItem={({item}) => <UsersList user={item} />}
       onEndReachedThreshold={0.5}
@@ -41,23 +47,4 @@ export const Users = () => {
       }
     />
   );
-};
-
-const styles = StyleSheet.create({
-  inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
-  },
-  input: {
-    height: 40,
-    width: '78%',
-    borderStyle: 'solid',
-    borderColor: 'black',
-    borderRadius: 5,
-    backgroundColor: '#f1f3f6',
-  },
-  flatList: {},
 });
