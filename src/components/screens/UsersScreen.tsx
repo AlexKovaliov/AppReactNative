@@ -5,9 +5,9 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {Users} from '../Users';
-import Loading from '../../utils/loadingUtils';
 import {getAllUsers} from '../../redux/thunks';
 import {ErrorImage} from '../../utils/errorUtils';
 import {AppRootStateType} from '../../store';
@@ -24,7 +24,7 @@ export const UsersScreen = React.memo(() => {
   const navigation = useNavigation();
   const {safeArea, container, button} = styles;
   const onModal = () => navigation.navigate('Modal');
-  const {error, isLoading, success} = useSelector<
+  const {error, isLoading, isSuccess} = useSelector<
     AppRootStateType,
     InitialAppStateType
   >(state => state.appStore);
@@ -34,23 +34,25 @@ export const UsersScreen = React.memo(() => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (success) {
+    if (isSuccess) {
       showMessage({
         type: 'success',
         message: 'Success',
       });
     }
     dispatch(setSuccessAC(false));
-  }, [dispatch, success]);
+  }, [dispatch, isSuccess]);
 
   return (
     <SafeAreaView style={safeArea}>
       <View style={container}>
-        {isLoading ? <Loading /> : null}
         <Users />
         <TouchableOpacity style={button} onPress={onModal}>
           <Icon name="user-plus" size={20} color={WHITE} />
         </TouchableOpacity>
+        {isLoading ? (
+          <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+        ) : null}
         {error ? <ErrorImage /> : null}
       </View>
       <FlashMessage position="top" />

@@ -2,23 +2,28 @@ import React from 'react';
 import {
   Text,
   View,
+  Image,
   Button,
-  ScrollView,
   TextInput,
   StyleSheet,
-  ActivityIndicator,
+  ScrollView,
   SafeAreaView,
-  Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import {Formik, FormikHelpers} from 'formik';
 import {validation} from './validation';
+import {Formik, FormikHelpers} from 'formik';
 import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {setEditedUserTC, setLocalUserTC} from '../../../redux/thunks';
+import {
+  setLocalUserTC,
+  setEditedUserTC,
+  cameraPermission,
+  readStoragePermission,
+} from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
 
@@ -88,7 +93,8 @@ export const CreateAndEditScreen = ({route}: routeType) => {
             const errorFirstName = errors.first_name && touched.first_name;
             const textInputStyle = errorFirstName ? errorInput : input;
 
-            const takePhotoFromCamera = async () => {
+            const handlePhotoTake = async () => {
+              await dispatch(cameraPermission());
               launchCamera(
                 {
                   quality: 1,
@@ -104,7 +110,8 @@ export const CreateAndEditScreen = ({route}: routeType) => {
               );
             };
 
-            const choosePhotoFromLibrary = async () => {
+            const handleSelectFromLibrary = async () => {
+              await dispatch(readStoragePermission());
               launchImageLibrary(
                 {
                   quality: 1,
@@ -136,14 +143,12 @@ export const CreateAndEditScreen = ({route}: routeType) => {
                 <View style={editView}>
                   <TouchableOpacity
                     style={editBtn}
-                    onPress={choosePhotoFromLibrary}>
+                    onPress={handleSelectFromLibrary}>
                     <Text style={removeText}>Choose photo</Text>
                     <Icon name="images" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
 
-                  <TouchableOpacity
-                    style={editBtn}
-                    onPress={takePhotoFromCamera}>
+                  <TouchableOpacity style={editBtn} onPress={handlePhotoTake}>
                     <Text style={removeText}>Take Photo</Text>
                     <Icon name="camera" size={25} color={CERULEAN_BLUE} />
                   </TouchableOpacity>
