@@ -89,9 +89,11 @@ const Content = (props: {user: UsersType | undefined}) => {
   //Controlling the visibility of windows
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
+  const [openAvatarZoom, setOpenAvatarZoom] = useState<boolean>(false);
 
   //Buttons onPress handler
   const modalVisibleOpen = () => setModalVisible(true);
+  const avatarZoom = () => setOpenAvatarZoom(!openAvatarZoom);
   const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
   const onModalHandler = () => navigation.navigate('Edit', {user: props.user});
   const handleAdToGroup = () => {
@@ -127,16 +129,23 @@ const Content = (props: {user: UsersType | undefined}) => {
     removeText,
     contentArea,
     touchableArea,
+    zoomImg,
+    touchImg,
+    touchImgZoom,
     touchAreaActive,
   } = styles;
 
   const PersonAvatar = (
-    <Image
-      style={image}
-      source={{
-        uri: avatar || NO_AVATAR,
-      }}
-    />
+    <TouchableOpacity
+      style={openAvatarZoom ? touchImgZoom : touchImg}
+      onPress={avatarZoom}>
+      <Image
+        style={openAvatarZoom ? zoomImg : image}
+        source={{
+          uri: avatar || NO_AVATAR,
+        }}
+      />
+    </TouchableOpacity>
   );
 
   return (
@@ -281,6 +290,31 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
   },
+  zoomImg: {
+    zIndex: 1,
+    width: 250,
+    height: 250,
+    borderRadius: 10,
+    position: 'absolute',
+  },
+  touchImgZoom: {
+    top: 5,
+    zIndex: 1,
+    width: 250,
+    height: 250,
+    borderRadius: 10,
+    position: 'absolute',
+    alignItems: 'center',
+    backgroundColor: SOLITUDE,
+  },
+  touchImg: {
+    top: 70,
+    zIndex: 1,
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    position: 'absolute',
+  },
   manageView: {
     top: 55,
     zIndex: 1,
@@ -331,7 +365,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   image: {
-    top: 70,
     zIndex: 1,
     width: 150,
     height: 150,
