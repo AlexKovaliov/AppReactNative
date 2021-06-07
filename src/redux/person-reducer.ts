@@ -1,5 +1,5 @@
-import {ChosenPersonACType} from './actions';
 import {UsersType} from '../api/users-api';
+import {ChosenPersonACType} from './actions/person-actions';
 
 type ActionsType = ChosenPersonACType;
 
@@ -15,7 +15,7 @@ export const personReducer = (
 ): PersonStateType => {
   switch (action.type) {
     case 'PERSON/CHOSEN_PERSON':
-      return {person: action.person};
+      return {...state, person: action.person};
 
     default:
       return state;

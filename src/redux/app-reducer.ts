@@ -3,7 +3,7 @@ import {
   SetReadStorageACType,
   SetStatusSetErrorACType,
   SuccessACType,
-} from './actions';
+} from './actions/app-actions';
 
 type ActionsType =
   | SetStatusSetErrorACType

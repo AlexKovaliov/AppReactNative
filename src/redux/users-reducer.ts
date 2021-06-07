@@ -1,13 +1,16 @@
 import {UsersType} from '../api/users-api';
 import {
   FetchUsersACType,
-  SetSearchBarValueACType,
+  SetUserGroupACType,
+  GetUserGroupACType,
   AddLocalUserACType,
+  SetEditedUserACType,
   SetRefreshingACType,
   RemoveLocalUserACType,
-  SetEditedUserACType,
+  SetSearchBarValueACType,
   SetRefreshingUsersACType,
-} from './actions';
+  RemoveUserFromGroupACType,
+} from './actions/users-actions';
 
 type ActionsType =
   | FetchUsersACType
@@ -16,7 +19,10 @@ type ActionsType =
   | SetEditedUserACType
   | RemoveLocalUserACType
   | SetRefreshingACType
-  | SetRefreshingUsersACType;
+  | SetRefreshingUsersACType
+  | SetUserGroupACType
+  | RemoveUserFromGroupACType
+  | GetUserGroupACType;
 
 export type InitialStateUserReducerType = typeof initialState;
 
@@ -25,6 +31,7 @@ const initialState = {
   filterValue: '',
   isRefreshing: false,
   users: [] as Array<UsersType>,
+  groupUsers: [] as Array<UsersType>,
   total_pages: null as null | number,
 };
 
@@ -75,6 +82,27 @@ export const usersReducer = (
         users: state.users.map(user =>
           user.id === action.editedUser.id ? action.editedUser : user,
         ),
+      };
+
+    case 'USERS/ADD_USER_TO_GROUP':
+      return {
+        ...state,
+        groupUsers: [
+          ...state.groupUsers,
+          ...state.users.filter(user => user.id === action.groupUser.id),
+        ],
+      };
+
+    case 'USERS/REMOVE_USER_FROM_GROUP':
+      return {
+        ...state,
+        groupUsers: state.groupUsers.filter(user => user.id !== action.id),
+      };
+
+    case 'USERS/GET_USER_GROUP':
+      return {
+        ...state,
+        groupUsers: action.groupUser,
       };
 
     default:

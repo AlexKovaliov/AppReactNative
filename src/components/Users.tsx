@@ -3,7 +3,7 @@ import {UsersList} from './UsersList';
 import {AppRootStateType} from '../store';
 import {UsersType} from '../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
-import {fetchUsersTC, onRefreshTC} from '../redux/thunks';
+import {fetchUsersTC, onRefreshTC} from '../redux/thunk/users-thunks';
 import {FlatList, RefreshControl} from 'react-native';
 import {InitialStateUserReducerType} from '../redux/users-reducer';
 

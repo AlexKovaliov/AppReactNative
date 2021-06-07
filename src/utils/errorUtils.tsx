@@ -2,7 +2,7 @@ import React from 'react';
 import {ERROR_IMG} from './images';
 import {AppRootStateType} from '../store';
 import {useDispatch, useSelector} from 'react-redux';
-import {setStatusSetErrorAC} from '../redux/actions';
+import {setStatusSetErrorAC} from '../redux/actions/app-actions';
 import {useNavigation} from '@react-navigation/native';
 import {Image, StyleSheet, Text, View, Button} from 'react-native';
 import FlashMessage, {showMessage} from 'react-native-flash-message';

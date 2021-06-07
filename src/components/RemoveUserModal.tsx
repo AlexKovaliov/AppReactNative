@@ -1,23 +1,24 @@
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {removeLocalUserAC} from '../redux/actions';
-import {useNavigation} from '@react-navigation/native';
-import {removeLocalUsersTC} from '../redux/thunks';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {BLACK, WHITE} from '../utils/colors';
+import {useNavigation} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {removeLocalUsersTC} from '../redux/thunk/users-thunks';
+import {removeLocalUserAC} from '../redux/actions/users-actions';
+import {Modal, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 
 type PropsRemoveModalType = {
+  id: number;
   modalVisible: boolean;
   setModalVisible: (modalVisible: boolean) => void;
-  id: number;
 };
 
 export const RemoveUserModal = (props: PropsRemoveModalType) => {
-  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const {modalVisible, setModalVisible, id} = props;
   const {centeredView, modalView, modalText, btnArea, touchableArea} = styles;
+
   //Buttons onPress handler
   const closeModalHandler = () => setModalVisible(false);
   const modalVisibleHandler = () => setModalVisible(!modalVisible);

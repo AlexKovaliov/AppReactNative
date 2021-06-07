@@ -21,9 +21,20 @@ import {BACK_IMG, NO_AVATAR} from '../../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {PersonStateType} from '../../redux/person-reducer';
 import {InitialAppStateType} from '../../redux/app-reducer';
-import {chosenPersonTC, refreshPersonTC} from '../../redux/thunks';
 import {InitialStateUserReducerType} from '../../redux/users-reducer';
-import {BLACK, CERULEAN_BLUE, GREY, SOLITUDE, WHITE} from '../../utils/colors';
+import {chosenPersonTC, refreshPersonTC} from '../../redux/thunk/person-thunks';
+import {
+  BLACK,
+  CERULEAN_BLUE,
+  DARK_GOLDENROD,
+  GREY,
+  SOLITUDE,
+  WHITE,
+} from '../../utils/colors';
+import {
+  removeUserFromGroupTC,
+  saveGroupUsersTC,
+} from '../../redux/thunk/users-thunks';
 
 type routeType = {route: {params: {user: UsersType}}};
 
@@ -62,39 +73,56 @@ const Content = (props: {user: UsersType | undefined}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
+
+  const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
+
+  const {isRefreshing, groupUsers} = useSelector<
+    AppRootStateType,
+    InitialStateUserReducerType
+  >(state => state.usersStore);
+
+  //Checking if the user is in the group
+  const isInGroup = groupUsers.some(el => el.id === id);
+
   //Controlling the visibility of windows
-  const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
+
   //Buttons onPress handler
-  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
   const modalVisibleOpen = () => setModalVisible(true);
   const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
-
+  const onModalHandler = () => navigation.navigate('Edit', {user: props.user});
+  const handleAdToGroup = () => {
+    dispatch(saveGroupUsersTC(props.user));
+  };
+  const removeFromGroupHandler = () => {
+    if (id) {
+      dispatch(removeUserFromGroupTC(id));
+    }
+  };
   const onRefreshHandler = useCallback(() => {
     if (!local && id) {
       dispatch(refreshPersonTC(id));
     }
   }, [dispatch, id, local]);
 
-  const {error, isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
-    state => state.appStore,
-  );
-  const {isRefreshing} = useSelector<
-    AppRootStateType,
-    InitialStateUserReducerType
-  >(state => state.usersStore);
-
   const {
     wrap,
     text,
+    infoText,
     image,
     emailSt,
     backImg,
+    infoItem,
     manageView,
     iconArea,
+    content,
     detailsView,
     container,
-    emailView,
+    groupTouch,
+    infoView,
     manageBtn,
     removeText,
     contentArea,
@@ -132,9 +160,11 @@ const Content = (props: {user: UsersType | undefined}) => {
               setModalVisible={setModalVisible}
             />
           ) : null}
+
           <ImageBackground source={BACK_IMG} style={backImg}>
             {PersonAvatar}
           </ImageBackground>
+
           <View style={detailsView}>
             <View style={contentArea}>
               {local ? (
@@ -170,9 +200,46 @@ const Content = (props: {user: UsersType | undefined}) => {
               <Text style={text}>
                 {first_name} {last_name}
               </Text>
-              <View style={emailView}>
-                <Icon name="envelope" size={25} color={GREY} />
-                <Text style={emailSt}>{email}</Text>
+
+              <View style={content}>
+                {!isInGroup ? (
+                  <TouchableOpacity
+                    style={groupTouch}
+                    onPress={handleAdToGroup}>
+                    <Icon name="folder-plus" size={25} color={GREY} />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={groupTouch}
+                    onPress={removeFromGroupHandler}>
+                    <Icon
+                      name="folder-minus"
+                      size={25}
+                      color={DARK_GOLDENROD}
+                    />
+                  </TouchableOpacity>
+                )}
+
+                {!isInGroup ? (
+                  <Text style={emailSt}>Press to add user to group</Text>
+                ) : (
+                  <Text style={emailSt}>Press to remove user from group</Text>
+                )}
+              </View>
+
+              <Text style={infoText}>Info</Text>
+              <View style={infoView}>
+                <View style={infoItem}>
+                  <Icon name="envelope" size={25} color={GREY} />
+                  <Text style={emailSt}>{email}</Text>
+                </View>
+
+                {isInGroup ? (
+                  <View style={infoItem}>
+                    <Icon name="users" size={25} color={GREY} />
+                    <Text style={emailSt}>member of the group</Text>
+                  </View>
+                ) : null}
               </View>
             </View>
           </View>
@@ -274,11 +341,18 @@ const styles = StyleSheet.create({
     borderColor: SOLITUDE,
     backgroundColor: WHITE,
   },
-  emailView: {
+  infoView: {
     paddingLeft: 15,
     paddingVertical: 15,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  infoItem: {
+    marginTop: 10,
+    paddingBottom: 5,
     flexDirection: 'row',
-    alignItems: 'center',
+    borderBottomWidth: 2,
+    borderColor: SOLITUDE,
   },
   text: {
     fontSize: 26,
@@ -318,6 +392,28 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     position: 'relative',
     paddingHorizontal: 20,
+    backgroundColor: SOLITUDE,
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  groupTouch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: SOLITUDE,
+  },
+  infoText: {
+    fontSize: 20,
+    marginTop: 15,
+    marginHorizontal: 5,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    color: CERULEAN_BLUE,
     backgroundColor: SOLITUDE,
   },
 });
