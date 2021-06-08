@@ -7,6 +7,7 @@ import {
   StyleSheet,
   SafeAreaView,
   TouchableOpacity,
+  Vibration,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {GroupType} from './ValidationGroup';
@@ -53,7 +54,10 @@ const Group = (props: PropsType) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   //Buttons onPress handler
-  const modalVisibleOpen = () => setModalVisible(true);
+  const modalVisibleOpen = () => {
+    Vibration.vibrate();
+    setModalVisible(true);
+  };
 
   return (
     <View style={viewGroup}>
