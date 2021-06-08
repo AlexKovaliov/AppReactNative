@@ -5,7 +5,7 @@ import {
   AddLocalUserACType,
   SetRefreshingACType,
   RemoveLocalUserACType,
-  setEditedUserACType,
+  SetEditedUserACType,
   SetRefreshingUsersACType,
 } from './actions';
 
@@ -13,7 +13,7 @@ type ActionsType =
   | FetchUsersACType
   | SetSearchBarValueACType
   | AddLocalUserACType
-  | setEditedUserACType
+  | SetEditedUserACType
   | RemoveLocalUserACType
   | SetRefreshingACType
   | SetRefreshingUsersACType;
@@ -22,7 +22,6 @@ export type InitialStateUserReducerType = typeof initialState;
 
 const initialState = {
   page: 1,
-  success: false,
   filterValue: '',
   isRefreshing: false,
   users: [] as Array<UsersType>,
