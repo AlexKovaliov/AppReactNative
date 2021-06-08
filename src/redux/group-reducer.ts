@@ -1,7 +1,7 @@
-import {AddGroupACType} from './actions/group-action';
+import {AddGroupACType, RemoveGroupACType} from './actions/group-action';
 import {GroupType} from '../components/screens/GroupScreen/ValidationGroup';
 
-type ActionsType = AddGroupACType;
+type ActionsType = AddGroupACType | RemoveGroupACType;
 
 export type InitialStateGroupReducerType = typeof initialState;
 
@@ -18,6 +18,12 @@ export const groupReducer = (
       return {
         ...state,
         group: [...state.group, action.group],
+      };
+
+    case 'GROUP/REMOVE_GROUP':
+      return {
+        ...state,
+        group: state.group.filter(item => item.id !== action.id),
       };
 
     default:

@@ -42,7 +42,7 @@ export const CreateGroup = () => {
       initialValues={{
         title: '',
         avatarGroup: '',
-        id: Math.random().toString(),
+        id: Math.random(),
       }}
       onSubmit={(values, actions: FormikHelpers<GroupType>) => {
         dispatch(createGroupTC(values, actions.resetForm, navigation.navigate));

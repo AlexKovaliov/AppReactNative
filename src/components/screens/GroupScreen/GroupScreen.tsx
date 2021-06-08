@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   Image,
@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {EGYPTIAN_BLUE, GREY, SOLITUDE} from '../../../utils/colors';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
+import {RemoveGroupModal} from './RemoveGroupModal';
 
 export const GroupScreen = React.memo(() => {
   const navigation = useNavigation();
@@ -47,18 +48,31 @@ type PropsType = {
 };
 
 const Group = (props: PropsType) => {
-  const {viewGroup, img, text, goArrow} = styles;
-  const {avatarGroup, title} = props.group;
+  const {viewGroup, img, text, goArrow, removeTouch} = styles;
+  const {avatarGroup, title, id} = props.group;
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
+  //Buttons onPress handler
+  const modalVisibleOpen = () => setModalVisible(true);
 
   return (
     <View style={viewGroup}>
+      {modalVisible ? (
+        <RemoveGroupModal
+          id={id}
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      ) : null}
       <Image
         source={{
           uri: avatarGroup || NO_AVATAR_GROUP,
         }}
         style={img}
       />
-      <Text style={text}>{title}</Text>
+      <TouchableOpacity style={removeTouch} onLongPress={modalVisibleOpen}>
+        <Text style={text}>{title}</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={goArrow} onPress={() => {}}>
         <Icon name="chevron-right" size={20} color={'#000'} />
       </TouchableOpacity>
@@ -110,6 +124,12 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     backgroundColor: GREY,
+    justifyContent: 'center',
+  },
+  removeTouch: {
+    width: 150,
+    height: '100%',
+    alignItems: 'center',
     justifyContent: 'center',
   },
 });

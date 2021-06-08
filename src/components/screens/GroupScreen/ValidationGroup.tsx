@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 
 export type GroupType = {
-  id: string;
+  id: number;
   title: string;
   avatarGroup: string;
 };
