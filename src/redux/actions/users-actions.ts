@@ -1,39 +1,4 @@
-import {UsersType} from '../api/users-api';
-
-// app-reducer /////
-export type SetStatusSetErrorACType = ReturnType<typeof setStatusSetErrorAC>;
-export const setStatusSetErrorAC = (isLoading: boolean, error: null | string) =>
-  ({
-    type: 'APP/SET_STATUS_SET_ERROR',
-    isLoading,
-    error,
-  } as const);
-
-export type SuccessACType = ReturnType<typeof setSuccessAC>;
-export const setSuccessAC = (isSuccess: boolean) =>
-  ({
-    type: 'APP/SET_SUCCESS',
-    isSuccess,
-  } as const);
-
-export type SetCameraGrantedACType = ReturnType<typeof setCameraGrantedAC>;
-export const setCameraGrantedAC = (isCameraGranted: boolean) =>
-  ({type: 'APP/CAMERA_GRANTED', isCameraGranted} as const);
-
-export type SetReadStorageACType = ReturnType<typeof setReadStorageAC>;
-export const setReadStorageAC = (isRead: boolean) =>
-  ({type: 'APP/READ_STORAGE', isRead} as const);
-
-// person-reducer /////
-export type ChosenPersonACType = ReturnType<typeof chosenPersonAC>;
-export const chosenPersonAC = (person: UsersType) => {
-  return {type: 'PERSON/CHOSEN_PERSON', person};
-};
-
-export type SetErrorPersonACType = ReturnType<typeof setErrorPersonAC>;
-export const setErrorPersonAC = (isLoading: boolean, error: null | string) => {
-  return {type: 'PERSON/ERROR_PERSON', isLoading, error};
-};
+import {UsersType} from '../../api/users-api';
 
 // users-reducer /////
 export type FetchUsersACType = ReturnType<typeof fetchUsersAC>;

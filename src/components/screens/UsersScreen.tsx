@@ -8,16 +8,16 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Users} from '../Users';
-import {getAllUsers} from '../../redux/thunks';
 import {ErrorImage} from '../../utils/errorUtils';
 import {AppRootStateType} from '../../store';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {InitialAppStateType} from '../../redux/app-reducer';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
-import {setSuccessAC} from '../../redux/actions';
 import {CERULEAN_BLUE, WHITE} from '../../utils/colors';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {getAllUsers} from '../../redux/thunk/users-thunks';
+import {InitialAppStateType} from '../../redux/app-reducer';
+import {setSuccessAC} from '../../redux/actions/app-actions';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();

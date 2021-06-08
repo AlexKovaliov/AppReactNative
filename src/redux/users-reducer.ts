@@ -1,13 +1,13 @@
 import {UsersType} from '../api/users-api';
 import {
   FetchUsersACType,
-  SetSearchBarValueACType,
   AddLocalUserACType,
+  SetEditedUserACType,
   SetRefreshingACType,
   RemoveLocalUserACType,
-  SetEditedUserACType,
+  SetSearchBarValueACType,
   SetRefreshingUsersACType,
-} from './actions';
+} from './actions/users-actions';
 
 type ActionsType =
   | FetchUsersACType

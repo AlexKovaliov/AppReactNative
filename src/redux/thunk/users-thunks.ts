@@ -1,106 +1,33 @@
 import {Dispatch} from 'redux';
+import {ThunkDispatch} from 'redux-thunk';
+import {AppRootStateType} from '../../store';
+import {usersAPI, UsersType} from '../../api/users-api';
+import {SetErrorPersonACType} from '../actions/person-actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   fetchUsersAC,
-  setSuccessAC,
   addLocalUserAC,
-  chosenPersonAC,
-  setEditedUserAC,
   setRefreshingAC,
-  setErrorPersonAC,
+  setEditedUserAC,
+  SetRefreshingACType,
+  SetEditedUserACType,
+  setRefreshingUsersAC,
+  SetRefreshingUsersACType,
+} from '../actions/users-actions';
+import {
+  setSuccessAC,
   SuccessACType,
   setStatusSetErrorAC,
-  setRefreshingUsersAC,
-  SetEditedUserACType,
-  SetRefreshingACType,
-  SetErrorPersonACType,
   SetStatusSetErrorACType,
-  SetRefreshingUsersACType,
-  setCameraGrantedAC,
-  setReadStorageAC,
-} from './actions';
-import {ThunkDispatch} from 'redux-thunk';
-import {AppRootStateType} from '../store';
-import {usersAPI, UsersType} from '../api/users-api';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
-
-//app
-export const cameraPermission = () => async (dispatch: Dispatch) => {
-  try {
-    const result = await check(PERMISSIONS.ANDROID.CAMERA);
-    if (result === RESULTS.GRANTED) {
-      dispatch(setCameraGrantedAC(true));
-    } else if (result === RESULTS.DENIED) {
-      const requestResult = await request(PERMISSIONS.ANDROID.CAMERA);
-      requestResult === RESULTS.GRANTED
-        ? dispatch(setCameraGrantedAC(true))
-        : dispatch(setCameraGrantedAC(false));
-    }
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
-
-export const readStoragePermission = () => async (dispatch: Dispatch) => {
-  try {
-    const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
-    if (result === RESULTS.GRANTED) {
-      dispatch(setReadStorageAC(true));
-    } else if (result === RESULTS.DENIED) {
-      const requestResult = await request(
-        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      );
-      requestResult === RESULTS.GRANTED
-        ? dispatch(setReadStorageAC(true))
-        : dispatch(setReadStorageAC(false));
-    }
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
-
-//person
-export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
-  dispatch(setErrorPersonAC(true, null));
-  try {
-    const response = await usersAPI.chosenPerson(id);
-    if (response.data) {
-      dispatch(chosenPersonAC(response.data));
-    }
-    dispatch(setErrorPersonAC(false, null));
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
-
-export const refreshPersonTC = (id: number) => async (
-  dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
-) => {
-  dispatch(setRefreshingAC(true));
-  dispatch(setErrorPersonAC(true, null));
-  try {
-    await dispatch(chosenPersonTC(id));
-    dispatch(setErrorPersonAC(false, null));
-    dispatch(setRefreshingAC(false));
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
+} from '../actions/app-actions';
 
 //users
-type dispatchActionType =
-  | SetErrorPersonACType
-  | SetRefreshingACType
-  | SetRefreshingUsersACType;
-
-export const onRefreshTC = () => async (
-  dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
-) => {
+export const onRefreshTC = () => async (dispatch: onRefreshDispatchType) => {
   dispatch(setStatusSetErrorAC(true, null));
   dispatch(setRefreshingAC(true));
   try {
     dispatch(setRefreshingUsersAC([], 1));
-    await dispatch(getLocalUsersTC());
+    await dispatch(getAllUsers());
     dispatch(setRefreshingAC(false));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
@@ -129,6 +56,7 @@ export const fetchUsersTC = () => async (
       dispatch(setStatusSetErrorAC(false, null));
     }
   } catch (error) {
+    console.log(error.message);
     dispatch(setStatusSetErrorAC(false, error.message));
   }
 };
@@ -137,13 +65,7 @@ export const setEditedUserTC = (
   values: UsersType,
   resetForm: () => void,
   navigate: (link: string) => void,
-) => async (
-  dispatch: ThunkDispatch<
-    AppRootStateType,
-    {},
-    SetStatusSetErrorACType | SetEditedUserACType | SuccessACType
-  >,
-) => {
+) => async (dispatch: setEditedUserDispatchType) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
     dispatch(setEditedUserAC(values));
@@ -156,9 +78,7 @@ export const setEditedUserTC = (
   }
 };
 
-export const getAllUsers = () => async (
-  dispatch: ThunkDispatch<AppRootStateType, {}, SetStatusSetErrorACType>,
-) => {
+export const getAllUsers = () => async (dispatch: getAllUsersDispatchType) => {
   dispatch(setStatusSetErrorAC(true, null));
   try {
     await dispatch(fetchUsersTC());
@@ -168,6 +88,28 @@ export const getAllUsers = () => async (
     dispatch(setStatusSetErrorAC(false, error.message));
   }
 };
+
+//Dispatch types
+type onRefreshDispatchType = ThunkDispatch<
+  AppRootStateType,
+  {},
+  | SetErrorPersonACType
+  | SetRefreshingACType
+  | SetStatusSetErrorACType
+  | SetRefreshingUsersACType
+>;
+
+type setEditedUserDispatchType = ThunkDispatch<
+  AppRootStateType,
+  {},
+  SetEditedUserACType | SuccessACType | SetStatusSetErrorACType
+>;
+
+type getAllUsersDispatchType = ThunkDispatch<
+  AppRootStateType,
+  {},
+  SetStatusSetErrorACType
+>;
 
 // local (AsyncStorage)
 export const setLocalUserTC = (

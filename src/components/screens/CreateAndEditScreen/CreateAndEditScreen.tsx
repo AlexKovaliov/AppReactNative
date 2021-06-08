@@ -18,14 +18,16 @@ import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {
-  setLocalUserTC,
-  setEditedUserTC,
-  cameraPermission,
-  readStoragePermission,
-} from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
+import {
+  setEditedUserTC,
+  setLocalUserTC,
+} from '../../../redux/thunk/users-thunks';
+import {
+  cameraPermission,
+  readStoragePermission,
+} from '../../../redux/thunk/app-thunks';
 
 type routeType = {
   route: {params?: {user: UsersType}};

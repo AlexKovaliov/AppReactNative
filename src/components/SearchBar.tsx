@@ -2,7 +2,7 @@ import React from 'react';
 import {StyleSheet, TextInput, View} from 'react-native';
 import {WHITE} from '../utils/colors';
 import {useDispatch} from 'react-redux';
-import {setSearchBarValueAC} from '../redux/actions';
+import {setSearchBarValueAC} from '../redux/actions/users-actions';
 
 export const SearchBar = () => {
   const dispatch = useDispatch();
@@ -32,9 +32,9 @@ const styles = StyleSheet.create({
   },
   input: {
     width: 210,
-    backgroundColor: WHITE,
     paddingLeft: 15,
     borderRadius: 20,
+    backgroundColor: WHITE,
   },
   inputView: {
     flexDirection: 'row',

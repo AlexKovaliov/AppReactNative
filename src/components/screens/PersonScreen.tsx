@@ -21,9 +21,9 @@ import {BACK_IMG, NO_AVATAR} from '../../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {PersonStateType} from '../../redux/person-reducer';
 import {InitialAppStateType} from '../../redux/app-reducer';
-import {chosenPersonTC, refreshPersonTC} from '../../redux/thunks';
 import {InitialStateUserReducerType} from '../../redux/users-reducer';
 import {BLACK, CERULEAN_BLUE, GREY, SOLITUDE, WHITE} from '../../utils/colors';
+import {chosenPersonTC, refreshPersonTC} from '../../redux/thunk/person-thunks';
 
 type routeType = {route: {params: {user: UsersType}}};
 
