@@ -23,7 +23,7 @@ export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {safeArea, container, button} = styles;
-  const onModal = () => navigation.navigate('Modal');
+  const onModal = () => navigation.navigate('Management');
   const {error, isLoading, isSuccess} = useSelector<
     AppRootStateType,
     InitialAppStateType
