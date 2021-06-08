@@ -18,9 +18,11 @@ import {
   CERULEAN_BLUE,
   EGYPTIAN_BLUE,
 } from './src/utils/colors';
+import {CreateGroup} from './src/components/screens/GroupScreen/CreateGroup';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
+const GroupStack = createStackNavigator();
 
 export default function App() {
   const {header, searchArea, searchAreaActive, formWrap} = styles;
@@ -40,6 +42,29 @@ export default function App() {
       </View>
     );
   };
+
+  const GroupStackScreen = () => (
+    <GroupStack.Navigator>
+      <GroupStack.Screen
+        name="Group"
+        component={GroupScreen}
+        options={{
+          title: 'Group',
+          headerStyle: header,
+          headerTintColor: WHITE,
+        }}
+      />
+      <GroupStack.Screen
+        name="CreateGroup"
+        component={CreateGroup}
+        options={{
+          title: 'Create group',
+          headerStyle: header,
+          headerTintColor: WHITE,
+        }}
+      />
+    </GroupStack.Navigator>
+  );
 
   const HomeStackScreen = () => (
     <HomeStack.Navigator>
@@ -97,7 +122,7 @@ export default function App() {
             inactiveTintColor: GREY,
           }}>
           <Tab.Screen name="Home" component={HomeStackScreen} />
-          <Tab.Screen name="Group" component={GroupScreen} />
+          <Tab.Screen name="Group" component={GroupStackScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
