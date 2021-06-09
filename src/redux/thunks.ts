@@ -100,7 +100,7 @@ export const onRefreshTC = () => async (
   dispatch(setRefreshingAC(true));
   try {
     dispatch(setRefreshingUsersAC([], 1));
-    await dispatch(getLocalUsersTC());
+    await dispatch(getAllUsers());
     dispatch(setRefreshingAC(false));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
