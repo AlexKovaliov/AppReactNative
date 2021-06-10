@@ -1,35 +1,41 @@
 import React, {useState} from 'react';
 import {
   Text,
-  View,
   Image,
   StyleSheet,
   Vibration,
   TouchableOpacity,
 } from 'react-native';
-import {GroupType} from './ValidationGroup';
 import {RemoveGroupModal} from './RemoveGroupModal';
-import {GREY, SOLITUDE} from '../../../utils/colors';
 import {NO_AVATAR_GROUP} from '../../../utils/images';
+import {useNavigation} from '@react-navigation/native';
+import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {BLACK, GREY, SOLITUDE} from '../../../utils/colors';
 
 type PropsType = {
   group: GroupType;
 };
 
 export const GroupList = (props: PropsType) => {
+  const navigation = useNavigation();
   const {avatarGroup, title, id} = props.group;
-  const {viewGroup, img, text, goArrow, removeTouch} = styles;
+  const {viewGroup, img, text, icon} = styles;
+
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   //Buttons onPress handler
+  const onGroup = () => navigation.navigate('Group', {group: props.group});
   const modalVisibleOpen = () => {
     Vibration.vibrate();
     setModalVisible(true);
   };
 
   return (
-    <View style={viewGroup}>
+    <TouchableOpacity
+      style={viewGroup}
+      onPress={onGroup}
+      onLongPress={modalVisibleOpen}>
       {modalVisible ? (
         <RemoveGroupModal
           id={id}
@@ -43,21 +49,17 @@ export const GroupList = (props: PropsType) => {
         }}
         style={img}
       />
-      <TouchableOpacity style={removeTouch} onLongPress={modalVisibleOpen}>
-        <Text style={text}>{title}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={goArrow} onPress={() => {}}>
-        <Icon name="chevron-right" size={20} color={'#000'} />
-      </TouchableOpacity>
-    </View>
+      <Text style={text}>{title}</Text>
+      <Icon name="chevron-right" style={icon} size={20} color={'#000'} />
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   viewGroup: {
     height: 70,
-    borderRadius: 5,
-    marginVertical: 5,
+    borderBottomWidth: 1,
+    borderColor: BLACK,
     alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: SOLITUDE,
@@ -85,5 +87,8 @@ const styles = StyleSheet.create({
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  icon: {
+    paddingRight: 10,
   },
 });

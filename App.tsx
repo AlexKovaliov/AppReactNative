@@ -18,7 +18,9 @@ import {
   CERULEAN_BLUE,
   EGYPTIAN_BLUE,
 } from './src/utils/colors';
-import {CreateGroup} from './src/components/screens/GroupScreen/CreateGroup';
+import {CreateGroup} from './src/components/screens/GroupScreen/CreateGroup/CreateGroup';
+import {Group} from './src/components/screens/GroupScreen/Group';
+import {ListOfUsers} from './src/components/screens/GroupScreen/ListOfUsers';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -46,10 +48,10 @@ export default function App() {
   const GroupStackScreen = () => (
     <GroupStack.Navigator>
       <GroupStack.Screen
-        name="Group"
+        name="Groups"
         component={GroupScreen}
         options={{
-          title: 'Group',
+          title: 'Groups',
           headerStyle: header,
           headerTintColor: WHITE,
         }}
@@ -59,6 +61,24 @@ export default function App() {
         component={CreateGroup}
         options={{
           title: 'Create group',
+          headerStyle: header,
+          headerTintColor: WHITE,
+        }}
+      />
+      <GroupStack.Screen
+        name="ListUsers"
+        component={ListOfUsers}
+        options={{
+          title: 'List of users',
+          headerStyle: header,
+          headerTintColor: WHITE,
+        }}
+      />
+      <GroupStack.Screen
+        name="Group"
+        component={Group}
+        options={{
+          title: 'Group',
           headerStyle: header,
           headerTintColor: WHITE,
         }}
@@ -108,7 +128,7 @@ export default function App() {
               let iconName;
               if (route.name === 'Home') {
                 iconName = focused ? 'home' : 'home';
-              } else if (route.name === 'Group') {
+              } else if (route.name === 'Groups') {
                 iconName = focused ? 'users' : 'users';
               }
               return (
@@ -122,7 +142,7 @@ export default function App() {
             inactiveTintColor: GREY,
           }}>
           <Tab.Screen name="Home" component={HomeStackScreen} />
-          <Tab.Screen name="Group" component={GroupStackScreen} />
+          <Tab.Screen name="Groups" component={GroupStackScreen} />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>

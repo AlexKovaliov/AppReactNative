@@ -1,9 +1,11 @@
 import * as yup from 'yup';
+import {UsersType} from '../../../../api/users-api';
 
 export type GroupType = {
   id: number;
   title: string;
   avatarGroup: string;
+  members: Array<UsersType>;
 };
 
 export const validationGroup = yup.object().shape({

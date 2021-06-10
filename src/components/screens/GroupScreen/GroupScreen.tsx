@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   FlatList,
   SafeAreaView,
@@ -6,19 +6,25 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {GroupList} from './GroupList';
-import {useSelector} from 'react-redux';
-import {GroupType} from './ValidationGroup';
+import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../../store';
 import {useNavigation} from '@react-navigation/native';
+import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {EGYPTIAN_BLUE, GREY} from '../../../utils/colors';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
+import {getGroupTC} from '../../../redux/thunks/group-thunk';
 
 export const GroupScreen = React.memo(() => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const {container, addGroupTouch} = styles;
 
-  const {group} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
+  useEffect(() => {
+    dispatch(getGroupTC());
+  }, [dispatch]);
+
+  const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
     state => state.groupStore,
   );
 
@@ -28,7 +34,7 @@ export const GroupScreen = React.memo(() => {
   return (
     <SafeAreaView style={container}>
       <FlatList
-        data={group}
+        data={groups}
         keyExtractor={(item: GroupType) => String(item.id)}
         renderItem={({item}) => <GroupList group={item} />}
       />
@@ -43,8 +49,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
     backgroundColor: EGYPTIAN_BLUE,
     justifyContent: 'space-around',
   },

@@ -10,15 +10,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import {GREY} from '../../../utils/colors';
+import {GREY} from '../../../../utils/colors';
 import {Formik, FormikHelpers} from 'formik';
-import {NO_AVATAR_GROUP} from '../../../utils/images';
+import {NO_AVATAR_GROUP} from '../../../../utils/images';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {readStoragePermission} from '../../../redux/thunks';
+import {readStoragePermission} from '../../../../redux/thunks';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {GroupType, validationGroup} from './ValidationGroup';
-import {createGroupTC} from '../../../redux/thunks/group-thunk';
+import {createGroupTC} from '../../../../redux/thunks/group-thunk';
 
 export const CreateGroup = () => {
   const dispatch = useDispatch();
@@ -41,6 +41,7 @@ export const CreateGroup = () => {
     <Formik
       initialValues={{
         title: '',
+        members: [],
         avatarGroup: '',
         id: Math.random(),
       }}
