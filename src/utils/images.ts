@@ -15,3 +15,8 @@ export const NO_AVATAR_GROUP =
 
 export const DEFAULT_AVATAR_GROUP =
   'https://st2.depositphotos.com/2124221/46128/i/600/depositphotos_461289812-stock-photo-minimal-multicolored-polygonal-background.jpg';
+
+export const CREATE_GROUP_BACK = {
+  uri:
+    'https://images.unsplash.com/photo-1507908708918-778587c9e563?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80',
+};

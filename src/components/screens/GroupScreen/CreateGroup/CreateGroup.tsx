@@ -8,11 +8,12 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  ImageBackground,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {GREY} from '../../../../utils/colors';
 import {Formik, FormikHelpers} from 'formik';
-import {NO_AVATAR_GROUP} from '../../../../utils/images';
+import {CREATE_GROUP_BACK, NO_AVATAR_GROUP} from '../../../../utils/images';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {readStoragePermission} from '../../../../redux/thunks';
@@ -34,8 +35,6 @@ export const CreateGroup = () => {
     scrollContent,
     textInputStyle,
   } = styles;
-
-  //Buttons onPress handler
 
   return (
     <Formik
@@ -81,43 +80,45 @@ export const CreateGroup = () => {
         };
 
         return (
-          <ScrollView style={scrollContent}>
-            <View style={contentView}>
-              <TouchableOpacity
-                style={avatarTouch}
-                onPress={handleSelectFromLibrary}>
-                <Icon
-                  size={20}
-                  color="#000"
-                  style={iconImg}
-                  name="plus-circle"
-                />
-                <Image
-                  source={{
-                    uri: avatarGroup || NO_AVATAR_GROUP,
-                  }}
-                  style={avatarImage}
-                />
-              </TouchableOpacity>
+          <ImageBackground source={CREATE_GROUP_BACK} style={contentView}>
+            <ScrollView>
+              <View style={scrollContent}>
+                <TouchableOpacity
+                  style={avatarTouch}
+                  onPress={handleSelectFromLibrary}>
+                  <Icon
+                    size={20}
+                    color="#000"
+                    style={iconImg}
+                    name="plus-circle"
+                  />
+                  <Image
+                    source={{
+                      uri: avatarGroup || NO_AVATAR_GROUP,
+                    }}
+                    style={avatarImage}
+                  />
+                </TouchableOpacity>
 
-              <TextInput
-                value={title}
-                placeholder="Group Title"
-                onBlur={handleBlur('title')}
-                onChangeText={handleChange('title')}
-                style={errorTitle ? errorInput : textInputStyle}
-              />
-              {errorTitle ? (
-                <Text style={errorText}>{errors.title}</Text>
-              ) : null}
+                <TextInput
+                  value={title}
+                  placeholder="Group Title"
+                  onBlur={handleBlur('title')}
+                  onChangeText={handleChange('title')}
+                  style={errorTitle ? errorInput : textInputStyle}
+                />
+                {errorTitle ? (
+                  <Text style={errorText}>{errors.title}</Text>
+                ) : null}
 
-              <Button
-                title="Save group"
-                disabled={!isValid}
-                onPress={handleSubmit}
-              />
-            </View>
-          </ScrollView>
+                <Button
+                  title="Save group"
+                  disabled={!isValid}
+                  onPress={handleSubmit}
+                />
+              </View>
+            </ScrollView>
+          </ImageBackground>
         );
       }}
     </Formik>
@@ -127,8 +128,12 @@ export const CreateGroup = () => {
 const styles = StyleSheet.create({
   scrollContent: {
     flex: 1,
+    alignItems: 'center',
   },
   textInputStyle: {
+    marginTop: 80,
+    marginBottom: 30,
+    backgroundColor: '#fff',
     width: '85%',
     borderWidth: 2,
     paddingLeft: 10,
@@ -137,15 +142,15 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
   },
   avatarImage: {
+    marginTop: 50,
     width: 100,
     height: 100,
-    borderRadius: 50,
+    borderRadius: 10,
+    backgroundColor: '#fff',
   },
   contentView: {
+    resizeMode: 'stretch',
     flex: 1,
-    height: 300,
-    alignItems: 'center',
-    justifyContent: 'space-around',
   },
   buttonView: {
     width: '100%',
@@ -153,6 +158,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   errorInput: {
+    marginTop: 80,
+    marginBottom: 10,
     width: '85%',
     borderWidth: 2,
     paddingLeft: 10,
@@ -162,6 +169,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 14,
+    marginBottom: 20,
     textAlign: 'left',
   },
   avatarTouch: {

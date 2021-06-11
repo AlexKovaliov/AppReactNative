@@ -18,14 +18,12 @@ export type InitialStateGroupReducerType = typeof initialState;
 
 const initialState = {
   groups: [] as Array<GroupType>,
-  //groupUsers: [] as Array<UsersType>,
 };
 
 export const groupReducer = (
   state: InitialStateGroupReducerType = initialState,
   action: ActionsType,
 ): InitialStateGroupReducerType => {
-  console.log('reducer', action);
   switch (action.type) {
     case 'GROUP/ADD_GROUP':
       return {

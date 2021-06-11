@@ -55,7 +55,6 @@ export const GroupUsers = (props: PropsGroupUsersType) => {
 const styles2 = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
     paddingVertical: 10,
     paddingHorizontal: 10,
     backgroundColor: EGYPTIAN_BLUE,

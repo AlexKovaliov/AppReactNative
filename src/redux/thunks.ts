@@ -100,7 +100,7 @@ export const onRefreshTC = () => async (
   dispatch(setRefreshingAC(true));
   try {
     dispatch(setRefreshingUsersAC([], 1));
-    await dispatch(getLocalUsersTC());
+    await dispatch(getAllUsers());
     dispatch(setRefreshingAC(false));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
@@ -186,7 +186,7 @@ export const setLocalUserTC = (
     if (localUser) {
       dispatch(setSuccessAC(true));
       resetForm();
-      navigate('Users');
+      navigate('Home');
     }
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));

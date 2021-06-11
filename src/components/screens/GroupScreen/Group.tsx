@@ -70,9 +70,10 @@ const styles = StyleSheet.create({
     backgroundColor: EGYPTIAN_BLUE,
   },
   touch: {
+    position: 'absolute',
+    right: 20,
     width: 55,
     height: 55,
-    marginRight: 20,
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
@@ -86,7 +87,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleGroup: {
-    fontSize: 35,
+    fontSize: 30,
     marginLeft: 30,
     fontStyle: 'italic',
   },
