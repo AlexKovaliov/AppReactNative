@@ -16,3 +16,9 @@ export const getGroupAC = (group: GroupType[]) =>
 export type SetUserGroupACType = ReturnType<typeof setUserGroupAC>;
 export const setUserGroupAC = (groupId: number, members: UsersType[]) =>
   ({type: 'GROUP/ADD_USER_TO_GROUP', groupId, members} as const);
+
+export type RemoveUserFromGroupACType = ReturnType<
+  typeof removeUserFromGroupAC
+>;
+export const removeUserFromGroupAC = (memberId: number, groupId: number) =>
+  ({type: 'GROUP/REMOVE_USER_FROM_GROUP', groupId, memberId} as const);

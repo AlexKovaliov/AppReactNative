@@ -22,6 +22,7 @@ export const GroupList = (props: PropsType) => {
   const {avatarGroup, title, id} = props.group;
   const {viewGroup, img, text, icon} = styles;
 
+  //Displaying a modal window
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   //Buttons onPress handler

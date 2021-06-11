@@ -1,32 +1,37 @@
 import React from 'react';
 import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  Image,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
 import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {removeUserFromGroupTC} from '../../../redux/thunks/group-thunk';
 import {EGYPTIAN_BLUE, GREY, SOLITUDE, WHITE} from '../../../utils/colors';
 
 type PropsGroupUsersType = {
   groupUser: UsersType;
+  groupId: number;
 };
 
 export const GroupUsers = (props: PropsGroupUsersType) => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {avatar, first_name, last_name} = props.groupUser;
-  console.log('props.groupUser', props.groupUser);
+  const {avatar, first_name, last_name, id} = props.groupUser;
   const {cardView, image, text, touch, removeText, container} = styles2;
 
   //Buttons onPress handler
   const onNavigation = () =>
     navigation.navigate('Person', {user: props.groupUser});
+  const onRemoveMember = () =>
+    dispatch(removeUserFromGroupTC(id, props.groupId));
 
   return (
     <SafeAreaView style={container}>
@@ -38,7 +43,7 @@ export const GroupUsers = (props: PropsGroupUsersType) => {
           <Text style={text}>
             {first_name} {last_name}
           </Text>
-          <TouchableOpacity style={touch} onPress={() => {}}>
+          <TouchableOpacity style={touch} onPress={onRemoveMember}>
             <Icon name="folder-minus" size={20} color={GREY} />
             <Text style={removeText}>Remove</Text>
           </TouchableOpacity>

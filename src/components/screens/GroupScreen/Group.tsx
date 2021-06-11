@@ -57,7 +57,7 @@ export const Group = ({route}: routeType) => {
       <FlatList
         data={members}
         keyExtractor={(item: UsersType) => String(item.id)}
-        renderItem={({item}) => <GroupUsers groupUser={item} />}
+        renderItem={({item}) => <GroupUsers groupId={id} groupUser={item} />}
         numColumns={2}
       />
     </SafeAreaView>

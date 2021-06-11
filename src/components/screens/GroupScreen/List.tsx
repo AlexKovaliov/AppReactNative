@@ -1,8 +1,10 @@
 import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
 import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {removeUserFromGroupTC} from '../../../redux/thunks/group-thunk';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 export type PropsType = {
@@ -13,8 +15,11 @@ export type PropsType = {
 };
 
 export const List = (props: PropsType) => {
+  const dispatch = useDispatch();
   const {avatar, first_name, last_name, id} = props.user;
   const {img, containerView, contentView, checkbox} = styles;
+
+  //Follows user selected or not.
   const [isSelected, setSelection] = useState(false);
 
   //Buttons onPress handler
@@ -27,6 +32,8 @@ export const List = (props: PropsType) => {
       props.removeSelectUserHandler(id);
     }
   };
+  const onRemoveMember = () =>
+    dispatch(removeUserFromGroupTC(id, props.group.id));
 
   //Checking if the user is in the group
   const isAddedMembers = props.group.members.every(user => user.id !== id);
@@ -49,7 +56,9 @@ export const List = (props: PropsType) => {
           <TouchableOpacity style={checkbox} onPress={isCheckBoxSelected} />
         )
       ) : (
-        <Icon name="check" size={20} color={'blue'} />
+        <TouchableOpacity style={checkbox} onPress={onRemoveMember}>
+          <Icon name="times" size={20} color={'blue'} />
+        </TouchableOpacity>
       )}
     </View>
   );
@@ -62,12 +71,12 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   containerView: {
-    flexDirection: 'row',
     paddingTop: 5,
     paddingBottom: 5,
-    borderBottomWidth: 1,
     borderColor: '#000',
+    borderBottomWidth: 1,
     alignItems: 'center',
+    flexDirection: 'row',
     justifyContent: 'space-between',
   },
   contentView: {
@@ -75,11 +84,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkbox: {
+    width: 25,
+    height: 25,
     marginRight: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    height: 25,
-    width: 25,
     backgroundColor: 'pink',
+  },
+  checkedView: {
+    width: 25,
+    height: 25,
+    marginRight: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

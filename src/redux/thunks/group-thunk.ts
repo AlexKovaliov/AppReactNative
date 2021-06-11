@@ -5,6 +5,7 @@ import {
   getGroupAC,
   removeGroupAC,
   setUserGroupAC,
+  removeUserFromGroupAC,
 } from '../actions/group-action';
 import {AppRootStateType} from '../../store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -59,29 +60,21 @@ export const setUserGroupTC = (
   groupUsersId: number[],
   groupId: number,
 ) => async (dispatch: Dispatch, getState: () => AppRootStateType) => {
-  /* const group = getState().groupStore.groups.find(g => g.id === groupId);*/
   let users = getState().usersStore.users;
-  /* const groupUsers = users.map(user => user.id);*/
-  /*console.log('group', group);
-  console.log('groupUsers', groupUsers);*/
-  const filt = users.filter(item => groupUsersId.find(id => id === item.id));
-
+  const member = users.filter(item => groupUsersId.find(id => id === item.id));
   try {
-    console.log('filt', filt);
-    dispatch(setUserGroupAC(groupId, filt));
+    dispatch(setUserGroupAC(groupId, member));
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
 
-    // if (group) {
-    //   let newUser = [] as UsersType[];
-    //   users.forEach(u => {
-    //     for (let i = 0; i < groupUsersId.length; i++) {
-    //       if (u.id === groupUsersId[i]) {
-    //         newUser.push(u);
-    //       }
-    //     }
-    // });
-    // console.log('newUser', newUser);
-    // dispatch(setUserGroupAC(group, newUser));
-    // }
+export const removeUserFromGroupTC = (
+  memberId: number,
+  groupId: number,
+) => async (dispatch: Dispatch) => {
+  try {
+    dispatch(removeUserFromGroupAC(memberId, groupId));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }

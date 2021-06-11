@@ -2,6 +2,7 @@ import {
   AddGroupACType,
   GetGroupACType,
   RemoveGroupACType,
+  RemoveUserFromGroupACType,
   SetUserGroupACType,
 } from './actions/group-action';
 import {GroupType} from '../components/screens/GroupScreen/CreateGroup/ValidationGroup';
@@ -10,7 +11,8 @@ type ActionsType =
   | AddGroupACType
   | RemoveGroupACType
   | GetGroupACType
-  | SetUserGroupACType;
+  | SetUserGroupACType
+  | RemoveUserFromGroupACType;
 
 export type InitialStateGroupReducerType = typeof initialState;
 
@@ -44,7 +46,7 @@ export const groupReducer = (
       };
 
     case 'GROUP/ADD_USER_TO_GROUP':
-      let newMembers = state.groups.map(group => {
+      const newMembers = state.groups.map(group => {
         if (group.id === action.groupId) {
           return {...group, members: [...group.members, ...action.members]};
         } else {
@@ -54,6 +56,25 @@ export const groupReducer = (
       return {
         ...state,
         groups: newMembers,
+      };
+
+    case 'GROUP/REMOVE_USER_FROM_GROUP':
+      const filteredMember = state.groups.map(group => {
+        if (group.id === action.groupId) {
+          return {
+            ...group,
+            members: [
+              ...group.members.filter(member => member.id !== action.memberId),
+            ],
+          };
+        } else {
+          return group;
+        }
+      });
+
+      return {
+        ...state,
+        groups: filteredMember,
       };
 
     default:

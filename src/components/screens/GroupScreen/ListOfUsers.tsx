@@ -4,19 +4,21 @@ import {AppRootStateType} from '../../../store';
 import {UsersType} from '../../../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {GroupType} from './CreateGroup/ValidationGroup';
 import {FlatList, StyleSheet, View, Button} from 'react-native';
 import {setUserGroupTC} from '../../../redux/thunks/group-thunk';
 import {InitialStateUserReducerType} from '../../../redux/users-reducer';
-import {GroupType} from './CreateGroup/ValidationGroup';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
 
-type routeIdGroupType = {route: {params: {group: GroupType}}};
+type routeGroupType = {route: {params: {group: GroupType}}};
 
-export const ListOfUsers = ({route}: routeIdGroupType) => {
+export const ListOfUsers = ({route}: routeGroupType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {container, btn} = styles;
   const idGroup = route.params.group.id;
+
+  //Stores an array of selected users
   const [selectedUsersId, setSelectedUsersId] = useState<Array<number>>([]);
 
   const {users} = useSelector<AppRootStateType, InitialStateUserReducerType>(
@@ -42,7 +44,6 @@ export const ListOfUsers = ({route}: routeIdGroupType) => {
     },
     [selectedUsersId],
   );
-
   const addUsers = () => {
     if (selectedUsersId) {
       dispatch(setUserGroupTC(selectedUsersId, idGroup));
