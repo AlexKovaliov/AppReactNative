@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Vibration,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {RemoveGroupModal} from './RemoveGroupModal';
 import {NO_AVATAR_GROUP} from '../../../utils/images';
@@ -12,6 +13,10 @@ import {useNavigation} from '@react-navigation/native';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {BLACK, GREY, SOLITUDE} from '../../../utils/colors';
+import {useSelector} from 'react-redux';
+import {AppRootStateType} from '../../../store';
+import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
+import Swipeout from 'react-native-swipeout';
 
 type PropsType = {
   group: GroupType;
@@ -19,8 +24,15 @@ type PropsType = {
 
 export const GroupList = (props: PropsType) => {
   const navigation = useNavigation();
-  const {avatarGroup, title, id} = props.group;
-  const {viewGroup, img, text, icon} = styles;
+  const {id} = props.group;
+  const {viewGroup, img, text, amountMembers, viewIcon} = styles;
+
+  const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
+    state => state.groupStore,
+  );
+  const filteredGroup = groups.find(gr => gr.id === id);
+  const {avatarGroup, title} = filteredGroup!;
+  const amountOfGroupMembers = filteredGroup!.members.length;
 
   //Displaying a modal window
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -33,26 +45,31 @@ export const GroupList = (props: PropsType) => {
   };
 
   return (
-    <TouchableOpacity
-      style={viewGroup}
-      onPress={onGroup}
-      onLongPress={modalVisibleOpen}>
-      {modalVisible ? (
-        <RemoveGroupModal
-          id={id}
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
+    <Swipeout
+      autoClose={true}
+      close={modalVisible}
+      right={[{onPress: modalVisibleOpen, type: 'delete', text: 'Delete'}]}>
+      <TouchableOpacity style={viewGroup} onPress={onGroup}>
+        {modalVisible ? (
+          <RemoveGroupModal
+            id={id}
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+          />
+        ) : null}
+        <Image
+          source={{
+            uri: avatarGroup || NO_AVATAR_GROUP,
+          }}
+          style={img}
         />
-      ) : null}
-      <Image
-        source={{
-          uri: avatarGroup || NO_AVATAR_GROUP,
-        }}
-        style={img}
-      />
-      <Text style={text}>{title}</Text>
-      <Icon name="chevron-right" style={icon} size={20} color={'#000'} />
-    </TouchableOpacity>
+        <Text style={text}>{title}</Text>
+        <View style={viewIcon}>
+          <Text style={amountMembers}>{amountOfGroupMembers}</Text>
+          <Icon name="users" size={20} color={'#000'} />
+        </View>
+      </TouchableOpacity>
+    </Swipeout>
   );
 };
 
@@ -89,7 +106,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  icon: {
-    paddingRight: 10,
+  amountMembers: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  viewIcon: {
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    height: '100%',
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
 });
