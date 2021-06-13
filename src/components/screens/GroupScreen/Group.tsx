@@ -16,7 +16,7 @@ import {useSelector} from 'react-redux';
 import {GroupUsers} from './GroupUsers';
 import {AppRootStateType} from '../../../store';
 import {UsersType} from '../../../api/users-api';
-import {DEFAULT_AVATAR_GROUP} from '../../../utils/images';
+import {CREATE_GROUP_BACK} from '../../../utils/images';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
 
 type routeType = {route: {params: {group: GroupType}}};
@@ -47,7 +47,7 @@ export const Group = ({route}: routeType) => {
       <View>
         <ImageBackground
           style={imgBack}
-          source={{uri: avatarGroup || DEFAULT_AVATAR_GROUP}}>
+          source={{uri: avatarGroup || CREATE_GROUP_BACK}}>
           <Text style={titleGroup}>{title}</Text>
           <TouchableOpacity style={touch} onPress={onList}>
             <Icon name="user-plus" size={20} color={GREY} />

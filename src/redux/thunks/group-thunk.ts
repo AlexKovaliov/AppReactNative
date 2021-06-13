@@ -1,14 +1,15 @@
 import {Dispatch} from 'redux';
 import {
+  setSuccessAC,
   setStatusSetErrorAC,
   SetStatusSetErrorACType,
-  setSuccessAC,
 } from '../actions';
 import {
   addGroupAC,
   getGroupAC,
   removeGroupAC,
   setUserGroupAC,
+  setEditedGroupAC,
   SetUserGroupACType,
   removeUserFromGroupAC,
   RemoveUserFromGroupACType,
@@ -62,6 +63,28 @@ export const removeGroupTC = (id: number) => async (dispatch: Dispatch) => {
     const group: Array<GroupType> = arrayGroup ? JSON.parse(arrayGroup) : [];
     const filteredGroup = group.filter(item => item.id !== id);
     await AsyncStorage.setItem('group', JSON.stringify(filteredGroup));
+  } catch (error) {
+    dispatch(setStatusSetErrorAC(false, error.message));
+  }
+};
+
+//Editing a group
+export const editingGroupTC = (
+  editedGroup: GroupType,
+  resetForm: () => void,
+  navigate: (link: string) => void,
+) => async (dispatch: Dispatch) => {
+  try {
+    const arrayGroup = await AsyncStorage.getItem('group');
+    const group: Array<GroupType> = arrayGroup ? JSON.parse(arrayGroup) : [];
+    const updatedGroups = group.map(el =>
+      el.id === editedGroup.id ? editedGroup : el,
+    );
+    dispatch(setEditedGroupAC(updatedGroups));
+    await AsyncStorage.setItem('group', JSON.stringify(updatedGroups));
+    dispatch(setSuccessAC(true));
+    resetForm();
+    navigate('Groups');
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }

@@ -9,28 +9,34 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  SafeAreaView,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import {GREY} from '../../../../utils/colors';
+import {GREY, SOLITUDE} from '../../../../utils/colors';
 import {Formik, FormikHelpers} from 'formik';
-import {CREATE_GROUP_BACK, NO_AVATAR_GROUP} from '../../../../utils/images';
+import {CREATE_GROUP_BACK} from '../../../../utils/images';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import {readStoragePermission} from '../../../../redux/thunks';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {GroupType, validationGroup} from './ValidationGroup';
-import {createGroupTC} from '../../../../redux/thunks/group-thunk';
+import { createGroupTC, editingGroupTC } from "../../../../redux/thunks/group-thunk";
+import { UsersType } from "../../../../api/users-api";
 
-export const CreateGroup = () => {
+type routeType = {
+  route: {params?: {group: GroupType}};
+};
+
+export const CreateGroup = ({route}: routeType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const propsGroup = route.params ? route.params.group : null;
 
   const {
-    iconImg,
+    content,
     errorText,
+    imageBack,
     errorInput,
     avatarImage,
-    contentView,
     avatarTouch,
     scrollContent,
     textInputStyle,
@@ -39,13 +45,17 @@ export const CreateGroup = () => {
   return (
     <Formik
       initialValues={{
-        title: '',
-        members: [],
-        avatarGroup: '',
-        id: Math.random(),
+        title: propsGroup ? propsGroup.title : '',
+        members: propsGroup ? propsGroup.members : [],
+        avatarGroup: propsGroup ? propsGroup.avatarGroup : '',
+        id: propsGroup ? propsGroup.id : Math.random(),
       }}
       onSubmit={(values, actions: FormikHelpers<GroupType>) => {
-        dispatch(createGroupTC(values, actions.resetForm, navigation.navigate));
+        if (propsGroup) {
+          dispatch(editingGroupTC(values, actions.resetForm, navigation.navigate))
+        } else {
+          dispatch(createGroupTC(values, actions.resetForm, navigation.navigate));
+        }
       }}
       validationSchema={validationGroup}>
       {props => {
@@ -80,45 +90,50 @@ export const CreateGroup = () => {
         };
 
         return (
-          <ImageBackground source={CREATE_GROUP_BACK} style={contentView}>
+          <SafeAreaView>
             <ScrollView>
-              <View style={scrollContent}>
-                <TouchableOpacity
-                  style={avatarTouch}
-                  onPress={handleSelectFromLibrary}>
-                  <Icon
-                    size={20}
-                    color="#000"
-                    style={iconImg}
-                    name="plus-circle"
-                  />
-                  <Image
-                    source={{
-                      uri: avatarGroup || NO_AVATAR_GROUP,
-                    }}
-                    style={avatarImage}
-                  />
-                </TouchableOpacity>
+              <ImageBackground blurRadius={40}
+                source={{uri: CREATE_GROUP_BACK}}
+                style={imageBack}>
+                <View style={scrollContent}>
 
-                <TextInput
-                  value={title}
-                  placeholder="Group Title"
-                  onBlur={handleBlur('title')}
-                  onChangeText={handleChange('title')}
-                  style={errorTitle ? errorInput : textInputStyle}
-                />
-                {errorTitle ? (
-                  <Text style={errorText}>{errors.title}</Text>
-                ) : null}
+                  <TouchableOpacity
+                    style={avatarTouch}
+                    onPress={handleSelectFromLibrary}>
+                    {avatarGroup ? (
+                      <Image
+                        source={{
+                          uri: avatarGroup,
+                        }}
+                        style={avatarImage}
+                      />
+                    ) : (
+                      <Text>Tap to download group image</Text>
+                    )}
+                  </TouchableOpacity>
 
-                <Button
-                  title="Save group"
-                  disabled={!isValid}
-                  onPress={handleSubmit}
-                />
-              </View>
+                  <View style={content}>
+                    <TextInput
+                      value={title}
+                      placeholder="Group Title"
+                      onBlur={handleBlur('title')}
+                      onChangeText={handleChange('title')}
+                      style={errorTitle ? errorInput : textInputStyle}
+                    />
+                    {errorTitle ? (
+                      <Text style={errorText}>{errors.title}</Text>
+                    ) : null}
+
+                    <Button
+                      title="Save group"
+                      disabled={!isValid}
+                      onPress={handleSubmit}
+                    />
+                  </View>
+                </View>
+              </ImageBackground>
             </ScrollView>
-          </ImageBackground>
+          </SafeAreaView>
         );
       }}
     </Formik>
@@ -127,30 +142,37 @@ export const CreateGroup = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    flex: 1,
-    alignItems: 'center',
+    width: 250,
+    height: 300,
+    borderWidth: 1,
+    borderColor: SOLITUDE,
+    backgroundColor: '#fff',
+    borderRadius: 15,
+    marginVertical: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    elevation: 10,
+    shadowRadius: 6.27,
+    shadowOpacity: 0.34,
   },
   textInputStyle: {
-    marginTop: 80,
+    marginTop: 30,
     marginBottom: 30,
-    backgroundColor: '#fff',
-    width: '85%',
-    borderWidth: 2,
+    borderBottomWidth: 2,
     paddingLeft: 10,
     borderRadius: 5,
     borderColor: GREY,
     borderStyle: 'solid',
-  },
-  avatarImage: {
-    marginTop: 50,
-    width: 100,
-    height: 100,
-    borderRadius: 10,
     backgroundColor: '#fff',
   },
-  contentView: {
-    resizeMode: 'stretch',
-    flex: 1,
+  imageBack: {
+    height: 520,
+    resizeMode: 'cover',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttonView: {
     width: '100%',
@@ -158,11 +180,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   errorInput: {
-    marginTop: 80,
-    marginBottom: 10,
-    width: '85%',
-    borderWidth: 2,
+    marginTop: 30,
     paddingLeft: 10,
+    marginBottom: 10,
+    borderBottomWidth: 2,
     borderColor: 'red',
     borderStyle: 'solid',
   },
@@ -172,14 +193,25 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: 'left',
   },
-  avatarTouch: {
-    width: 100,
-    height: 100,
+  avatarImage: {
+    height: 80,
+    width: '100%',
+    borderTopRightRadius: 15,
+    borderTopLeftRadius: 15,
   },
-  iconImg: {
-    right: 5,
-    zIndex: 1,
-    bottom: 5,
-    position: 'absolute',
+  avatarTouch: {
+    height: 80,
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    backgroundColor: SOLITUDE,
+  },
+  content: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderBottomLeftRadius: 15,
+    borderBottomRightRadius: 15,
   },
 });

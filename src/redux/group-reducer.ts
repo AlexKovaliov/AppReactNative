@@ -3,15 +3,17 @@ import {
   GetGroupACType,
   RemoveGroupACType,
   RemoveUserFromGroupACType,
+  SetEditedGroupACType,
   SetUserGroupACType,
 } from './actions/group-action';
 import {GroupType} from '../components/screens/GroupScreen/CreateGroup/ValidationGroup';
 
 type ActionsType =
   | AddGroupACType
-  | RemoveGroupACType
   | GetGroupACType
+  | RemoveGroupACType
   | SetUserGroupACType
+  | SetEditedGroupACType
   | RemoveUserFromGroupACType;
 
 export type InitialStateGroupReducerType = typeof initialState;
@@ -41,6 +43,12 @@ export const groupReducer = (
       return {
         ...state,
         groups: action.group,
+      };
+
+    case 'GROUP/ADD_EDITED_GROUP':
+      return {
+        ...state,
+        groups: [...action.updatedGroups],
       };
 
     case 'GROUP/ADD_USER_TO_GROUP':

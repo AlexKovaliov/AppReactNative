@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import {RemoveGroupModal} from './RemoveGroupModal';
-import {NO_AVATAR_GROUP} from '../../../utils/images';
 import {useNavigation} from '@react-navigation/native';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -38,16 +37,28 @@ export const GroupList = (props: PropsType) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   //Buttons onPress handler
+  const onEditHandler = () =>
+    navigation.navigate('CreateGroup', {group: props.group});
   const onGroup = () => navigation.navigate('Group', {group: props.group});
   const modalVisibleOpen = () => {
     Vibration.vibrate();
     setModalVisible(true);
   };
 
+  const randomColor =
+    'rgb(' +
+    Math.floor(Math.random() * 256) +
+    ',' +
+    Math.floor(Math.random() * 256) +
+    ',' +
+    Math.floor(Math.random() * 256) +
+    ')';
+
   return (
     <Swipeout
       autoClose={true}
       close={modalVisible}
+      left={[{onPress: onEditHandler, type: 'secondary', text: 'Edit'}]}
       right={[{onPress: modalVisibleOpen, type: 'delete', text: 'Delete'}]}>
       <TouchableOpacity style={viewGroup} onPress={onGroup}>
         {modalVisible ? (
@@ -57,12 +68,20 @@ export const GroupList = (props: PropsType) => {
             setModalVisible={setModalVisible}
           />
         ) : null}
-        <Image
-          source={{
-            uri: avatarGroup || NO_AVATAR_GROUP,
-          }}
-          style={img}
-        />
+
+        {avatarGroup ? (
+          <Image
+            source={{
+              uri: avatarGroup,
+            }}
+            style={img}
+          />
+        ) : (
+          <View
+            style={{backgroundColor: randomColor, height: '100%', width: 70}}
+          />
+        )}
+
         <Text style={text}>{title}</Text>
         <View style={viewIcon}>
           <Text style={amountMembers}>{amountOfGroupMembers}</Text>
@@ -76,7 +95,7 @@ export const GroupList = (props: PropsType) => {
 const styles = StyleSheet.create({
   viewGroup: {
     height: 70,
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderColor: BLACK,
     alignItems: 'center',
     flexDirection: 'row',
@@ -84,10 +103,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   img: {
-    width: 60,
-    height: 60,
-    marginLeft: 10,
-    borderRadius: 50,
+    height: '100%',
+    width: 70,
   },
   text: {
     fontSize: 20,
