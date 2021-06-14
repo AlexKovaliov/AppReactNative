@@ -11,7 +11,7 @@ import {
   ImageBackground,
   SafeAreaView,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import {GREY, SOLITUDE} from '../../../../utils/colors';
 import {Formik, FormikHelpers} from 'formik';
 import {CREATE_GROUP_BACK} from '../../../../utils/images';
@@ -21,6 +21,8 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {GroupType, validationGroup} from './ValidationGroup';
 import { createGroupTC, editingGroupTC } from "../../../../redux/thunks/group-thunk";
 import { UsersType } from "../../../../api/users-api";
+import { AppRootStateType } from "../../../../store";
+import { InitialStateGroupReducerType } from "../../../../redux/group-reducer";
 
 type routeType = {
   route: {params?: {group: GroupType}};
@@ -29,7 +31,8 @@ type routeType = {
 export const CreateGroup = ({route}: routeType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const propsGroup = route.params ? route.params.group : null;
+
+  const propsGroup = route.params ? route.params?.group : null;
 
   const {
     content,
@@ -125,7 +128,7 @@ export const CreateGroup = ({route}: routeType) => {
                     ) : null}
 
                     <Button
-                      title="Save group"
+                      title= {propsGroup ? 'Save changes' : "Save group"}
                       disabled={!isValid}
                       onPress={handleSubmit}
                     />

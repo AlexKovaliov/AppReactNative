@@ -1,29 +1,20 @@
-import React, {useState} from 'react';
-import {
-  Text,
-  Image,
-  StyleSheet,
-  Vibration,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {RemoveGroupModal} from './RemoveGroupModal';
+import React from 'react';
+import {Text, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {BLACK, GREY, SOLITUDE} from '../../../utils/colors';
 import {useSelector} from 'react-redux';
 import {AppRootStateType} from '../../../store';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
-import Swipeout from 'react-native-swipeout';
+import {CREATE_GROUP_BACK} from '../../../utils/images';
 
 type PropsType = {
-  group: GroupType;
+  id: number;
 };
 
 export const GroupList = (props: PropsType) => {
+  const {id} = props;
   const navigation = useNavigation();
-  const {id} = props.group;
   const {viewGroup, img, text, amountMembers, viewIcon} = styles;
 
   const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
@@ -33,54 +24,18 @@ export const GroupList = (props: PropsType) => {
   const {avatarGroup, title} = filteredGroup!;
   const amountOfGroupMembers = filteredGroup!.members.length;
 
-  //Displaying a modal window
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
-
   //Buttons onPress handler
-  const onEditHandler = () =>
-    navigation.navigate('CreateGroup', {group: props.group});
-  const onGroup = () => navigation.navigate('Group', {group: props.group});
-  const modalVisibleOpen = () => {
-    Vibration.vibrate();
-    setModalVisible(true);
-  };
-
-  const randomColor =
-    'rgb(' +
-    Math.floor(Math.random() * 256) +
-    ',' +
-    Math.floor(Math.random() * 256) +
-    ',' +
-    Math.floor(Math.random() * 256) +
-    ')';
+  const onGroup = () => navigation.navigate('Group', {group: filteredGroup});
 
   return (
-    <Swipeout
-      autoClose={true}
-      close={modalVisible}
-      left={[{onPress: onEditHandler, type: 'secondary', text: 'Edit'}]}
-      right={[{onPress: modalVisibleOpen, type: 'delete', text: 'Delete'}]}>
-      <TouchableOpacity style={viewGroup} onPress={onGroup}>
-        {modalVisible ? (
-          <RemoveGroupModal
-            id={id}
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-          />
-        ) : null}
-
-        {avatarGroup ? (
-          <Image
-            source={{
-              uri: avatarGroup,
-            }}
-            style={img}
-          />
-        ) : (
-          <View
-            style={{backgroundColor: randomColor, height: '100%', width: 70}}
-          />
-        )}
+    <View>
+      <TouchableOpacity activeOpacity={0.5} style={viewGroup} onPress={onGroup}>
+        <Image
+          source={{
+            uri: avatarGroup ? avatarGroup : CREATE_GROUP_BACK,
+          }}
+          style={img}
+        />
 
         <Text style={text}>{title}</Text>
         <View style={viewIcon}>
@@ -88,7 +43,7 @@ export const GroupList = (props: PropsType) => {
           <Icon name="users" size={20} color={'#000'} />
         </View>
       </TouchableOpacity>
-    </Swipeout>
+    </View>
   );
 };
 
@@ -103,8 +58,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   img: {
-    height: '100%',
     width: 70,
+    height: '100%',
   },
   text: {
     fontSize: 20,

@@ -41,6 +41,8 @@ export const Group = ({route}: routeType) => {
   //Buttons onPress handler
   const onList = () =>
     navigation.navigate('ListUsers', {group: route.params.group});
+  const onEditHandler = () =>
+    navigation.navigate('CreateGroup', {group: route.params.group});
 
   return (
     <SafeAreaView style={container}>
@@ -48,12 +50,15 @@ export const Group = ({route}: routeType) => {
         <ImageBackground
           style={imgBack}
           source={{uri: avatarGroup || CREATE_GROUP_BACK}}>
-          <Text style={titleGroup}>{title}</Text>
+          <Text onPress={onEditHandler} style={titleGroup}>
+            {title}
+          </Text>
           <TouchableOpacity style={touch} onPress={onList}>
             <Icon name="user-plus" size={20} color={GREY} />
           </TouchableOpacity>
         </ImageBackground>
       </View>
+
       <FlatList
         data={members}
         keyExtractor={(item: UsersType) => String(item.id)}

@@ -1,24 +1,32 @@
 import React, {useEffect} from 'react';
 import {
-  FlatList,
+  Text,
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from 'react-native';
 import {GroupList} from './GroupList';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../../store';
 import {useNavigation} from '@react-navigation/native';
-import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {EGYPTIAN_BLUE, GREY} from '../../../utils/colors';
+import {BLACK, EGYPTIAN_BLUE, GREY} from '../../../utils/colors';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
-import {getGroupTC} from '../../../redux/thunks/group-thunk';
+import {getGroupTC, removeGroupTC} from '../../../redux/thunks/group-thunk';
+import {SwipeListView} from 'react-native-swipe-list-view';
 
 export const GroupScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const {container, addGroupTouch} = styles;
+  const {
+    text,
+    rowEdit,
+    container,
+    rowDelete,
+    backBtnView,
+    addGroupTouch,
+  } = styles;
 
   useEffect(() => {
     dispatch(getGroupTC());
@@ -33,11 +41,32 @@ export const GroupScreen = React.memo(() => {
 
   return (
     <SafeAreaView style={container}>
-      <FlatList
+      <SwipeListView
         data={groups}
-        keyExtractor={(item: GroupType) => String(item.id)}
-        renderItem={({item}) => <GroupList group={item} />}
+        renderItem={data => <GroupList id={data.item.id} />}
+        renderHiddenItem={data => (
+          <View style={backBtnView}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate('CreateGroup', {group: data.item})
+              }
+              style={rowEdit}>
+              <Icon name="edit" size={20} color={'#fff'} />
+              <Text style={text}>Edit</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => dispatch(removeGroupTC(data.item.id))}
+              style={rowDelete}>
+              <Icon name="trash" size={20} color={'#fff'} />
+              <Text style={text}>Delete</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        leftOpenValue={75}
+        rightOpenValue={-75}
       />
+
       <TouchableOpacity style={addGroupTouch} onPress={handleAdGroup}>
         <Icon name="plus" size={20} color={'#000'} />
       </TouchableOpacity>
@@ -62,5 +91,30 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: GREY,
+  },
+  rowEdit: {
+    width: 75,
+    height: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'orange',
+  },
+  backBtnView: {
+    height: '100%',
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 0.5,
+    borderColor: BLACK,
+  },
+  rowDelete: {
+    width: 75,
+    height: '100%',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: 'red',
+  },
+  text: {
+    color: '#fff',
   },
 });
