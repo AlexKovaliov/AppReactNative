@@ -5,7 +5,7 @@ import {UsersType} from '../../../api/users-api';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {removeUserFromGroupTC} from '../../../redux/thunks/group-thunk';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, StyleSheet, Text, View} from 'react-native';
 
 export type PropsType = {
   group: GroupType;
@@ -14,10 +14,10 @@ export type PropsType = {
   removeSelectUserHandler: (id: number) => void;
 };
 
-export const List = (props: PropsType) => {
+export const ListOfUsersItems = (props: PropsType) => {
   const dispatch = useDispatch();
   const {avatar, first_name, last_name, id} = props.user;
-  const {img, containerView, contentView, checkbox} = styles;
+  const {img, containerView, contentView} = styles;
 
   //Follows user selected or not.
   const [isSelected, setSelection] = useState(false);
@@ -49,16 +49,27 @@ export const List = (props: PropsType) => {
       </View>
       {isAddedMembers ? (
         isSelected ? (
-          <TouchableOpacity style={checkbox} onPress={isCheckBoxSelected}>
-            <Icon name="check" size={20} color={'green'} />
-          </TouchableOpacity>
+          <Icon
+            onPress={isCheckBoxSelected}
+            name="check-square"
+            size={25}
+            color={'green'}
+          />
         ) : (
-          <TouchableOpacity style={checkbox} onPress={isCheckBoxSelected} />
+          <Icon
+            onPress={isCheckBoxSelected}
+            name="square"
+            size={25}
+            color={'blue'}
+          />
         )
       ) : (
-        <TouchableOpacity style={checkbox} onPress={onRemoveMember}>
-          <Icon name="times" size={20} color={'blue'} />
-        </TouchableOpacity>
+        <Icon
+          onPress={onRemoveMember}
+          name="minus-square"
+          size={25}
+          color={'grey'}
+        />
       )}
     </View>
   );
@@ -82,20 +93,5 @@ const styles = StyleSheet.create({
   contentView: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  checkbox: {
-    width: 25,
-    height: 25,
-    marginRight: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'pink',
-  },
-  checkedView: {
-    width: 25,
-    height: 25,
-    marginRight: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });

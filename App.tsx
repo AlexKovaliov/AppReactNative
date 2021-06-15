@@ -21,6 +21,7 @@ import {
 import {CreateGroup} from './src/components/screens/GroupScreen/CreateGroup/CreateGroup';
 import {Group} from './src/components/screens/GroupScreen/Group';
 import {ListOfUsers} from './src/components/screens/GroupScreen/ListOfUsers';
+import FlashMessage from 'react-native-flash-message';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -50,6 +51,7 @@ export default function App() {
       <GroupStack.Screen
         name="Groups"
         component={GroupScreen}
+        // initialParams={groups}
         options={{
           title: 'Groups',
           headerStyle: header,
@@ -124,12 +126,12 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({route}) => ({
-            tabBarIcon: ({focused, color}) => {
+            tabBarIcon: ({color}) => {
               let iconName;
               if (route.name === 'Home') {
-                iconName = focused ? 'home' : 'home';
+                iconName = 'home';
               } else if (route.name === 'Groups') {
-                iconName = focused ? 'users' : 'users';
+                iconName = 'users';
               }
               return (
                 iconName &&
@@ -144,6 +146,7 @@ export default function App() {
           <Tab.Screen name="Home" component={HomeStackScreen} />
           <Tab.Screen name="Groups" component={GroupStackScreen} />
         </Tab.Navigator>
+        <FlashMessage position="top" />
       </NavigationContainer>
     </Provider>
   );

@@ -6,14 +6,19 @@ import {useDispatch, useSelector} from 'react-redux';
 import {fetchUsersTC, onRefreshTC} from '../redux/thunks';
 import {FlatList, RefreshControl} from 'react-native';
 import {InitialStateUserReducerType} from '../redux/users-reducer';
+import {InitialAppStateType} from '../redux/app-reducer';
 
 export const Users = React.memo(() => {
   const dispatch = useDispatch();
 
-  const {isRefreshing, users, filterValue} = useSelector<
+  const {isRefreshing, users} = useSelector<
     AppRootStateType,
     InitialStateUserReducerType
   >(state => state.usersStore);
+
+  const {filterValue} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
 
   const handleLoadMore = useCallback(() => {
     dispatch(fetchUsersTC());

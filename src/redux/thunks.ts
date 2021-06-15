@@ -149,7 +149,8 @@ export const setEditedUserTC = (
     dispatch(setEditedUserAC(values));
     await dispatch(setEditedLocalUserTC(values));
     resetForm();
-    navigate('Users');
+    navigate('Home');
+    dispatch(setSuccessAC(true));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));

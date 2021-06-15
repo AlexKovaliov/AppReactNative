@@ -30,8 +30,10 @@ export const GroupUsers = (props: PropsGroupUsersType) => {
   //Buttons onPress handler
   const onNavigation = () =>
     navigation.navigate('Person', {user: props.groupUser});
-  const onRemoveMember = () =>
+  const onRemoveMember = () => {
     dispatch(removeUserFromGroupTC(id, props.groupId));
+    //navigation.setParams()
+  };
 
   return (
     <SafeAreaView style={container}>

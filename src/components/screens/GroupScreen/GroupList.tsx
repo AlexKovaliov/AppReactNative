@@ -3,29 +3,21 @@ import {Text, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {BLACK, GREY, SOLITUDE} from '../../../utils/colors';
-import {useSelector} from 'react-redux';
-import {AppRootStateType} from '../../../store';
-import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
 import {CREATE_GROUP_BACK} from '../../../utils/images';
+import {GroupType} from './CreateGroup/ValidationGroup';
 
 type PropsType = {
-  id: number;
+  group: GroupType;
 };
 
 export const GroupList = (props: PropsType) => {
-  const {id} = props;
+  const {title, avatarGroup, members} = props.group;
   const navigation = useNavigation();
   const {viewGroup, img, text, amountMembers, viewIcon} = styles;
-
-  const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
-    state => state.groupStore,
-  );
-  const filteredGroup = groups.find(gr => gr.id === id);
-  const {avatarGroup, title} = filteredGroup!;
-  const amountOfGroupMembers = filteredGroup!.members.length;
+  const amountOfGroupMembers = members.length;
 
   //Buttons onPress handler
-  const onGroup = () => navigation.navigate('Group', {group: filteredGroup});
+  const onGroup = () => navigation.navigate('Group', {group: props.group});
 
   return (
     <View>

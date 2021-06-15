@@ -1,8 +1,10 @@
 import {Dispatch} from 'redux';
 import {
   setSuccessAC,
+  SuccessACType,
   setStatusSetErrorAC,
   SetStatusSetErrorACType,
+  SetErrorPersonACType,
 } from '../actions';
 import {
   addGroupAC,
@@ -22,12 +24,15 @@ import {GroupType} from '../../components/screens/GroupScreen/CreateGroup/Valida
 
 //Gets a group from AsyncStorage
 export const getGroupTC = () => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     const groupString = await AsyncStorage.getItem('group');
     const group: GroupType[] = groupString ? JSON.parse(groupString) : [];
+
     if (group) {
       dispatch(getGroupAC(group));
     }
+    dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -39,6 +44,7 @@ export const createGroupTC = (
   resetForm: () => void,
   navigate: (link: string) => void,
 ) => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     const ArrayOldUsers = await AsyncStorage.getItem('group');
     const parsedGroup = ArrayOldUsers ? JSON.parse(ArrayOldUsers) : [];
@@ -46,10 +52,11 @@ export const createGroupTC = (
     await AsyncStorage.setItem('group', jsonValue);
     if (group) {
       dispatch(addGroupAC(group));
-      dispatch(setSuccessAC(true));
       resetForm();
       navigate('Groups');
     }
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -57,12 +64,15 @@ export const createGroupTC = (
 
 //Deleting a group
 export const removeGroupTC = (id: number) => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     dispatch(removeGroupAC(id));
     const arrayGroup = await AsyncStorage.getItem('group');
     const group: Array<GroupType> = arrayGroup ? JSON.parse(arrayGroup) : [];
     const filteredGroup = group.filter(item => item.id !== id);
     await AsyncStorage.setItem('group', JSON.stringify(filteredGroup));
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -74,6 +84,7 @@ export const editingGroupTC = (
   resetForm: () => void,
   navigate: (link: string) => void,
 ) => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     const arrayGroup = await AsyncStorage.getItem('group');
     const group: Array<GroupType> = arrayGroup ? JSON.parse(arrayGroup) : [];
@@ -82,9 +93,10 @@ export const editingGroupTC = (
     );
     dispatch(setEditedGroupAC(updatedGroups));
     await AsyncStorage.setItem('group', JSON.stringify(updatedGroups));
-    dispatch(setSuccessAC(true));
     resetForm();
     navigate('Groups');
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -98,6 +110,7 @@ export const setUserGroupTC = (
   dispatch: setUserGroupTCDispatchType,
   getState: () => AppRootStateType,
 ) => {
+  dispatch(setStatusSetErrorAC(true, null));
   let users = getState().usersStore.users;
   const memberArr = users.filter(item =>
     groupUsersId.find(id => id === item.id),
@@ -105,6 +118,8 @@ export const setUserGroupTC = (
   try {
     dispatch(setUserGroupAC(groupId, memberArr));
     await dispatch(saveGroupUsersTC(groupId, memberArr));
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -115,6 +130,7 @@ export const saveGroupUsersTC = (
   groupId: number,
   membersNew: UsersType[],
 ) => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     const arrayGroups = await AsyncStorage.getItem('group');
     const groups: Array<GroupType> = arrayGroups ? JSON.parse(arrayGroups) : [];
@@ -127,6 +143,7 @@ export const saveGroupUsersTC = (
       }
     });
     await AsyncStorage.setItem('group', JSON.stringify(filteredGroup));
+    dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -137,9 +154,12 @@ export const removeUserFromGroupTC = (
   memberId: number,
   groupId: number,
 ) => async (dispatch: removeUserFromGroupTCDispatchType) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     dispatch(removeUserFromGroupAC(memberId, groupId));
     await dispatch(removeUserFromGroupAsyncStorageTC(memberId, groupId));
+    dispatch(setStatusSetErrorAC(false, null));
+    dispatch(setSuccessAC(true));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -150,6 +170,7 @@ export const removeUserFromGroupAsyncStorageTC = (
   memberId: number,
   groupId: number,
 ) => async (dispatch: Dispatch) => {
+  dispatch(setStatusSetErrorAC(true, null));
   try {
     const arrayGroups = await AsyncStorage.getItem('group');
     const groups: Array<GroupType> = arrayGroups ? JSON.parse(arrayGroups) : [];
@@ -166,6 +187,7 @@ export const removeUserFromGroupAsyncStorageTC = (
     });
 
     await AsyncStorage.setItem('group', JSON.stringify(filteredGroup));
+    dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
   }
@@ -175,11 +197,17 @@ export const removeUserFromGroupAsyncStorageTC = (
 type removeUserFromGroupTCDispatchType = ThunkDispatch<
   AppRootStateType,
   {},
-  RemoveUserFromGroupACType | SetStatusSetErrorACType
+  | RemoveUserFromGroupACType
+  | SetStatusSetErrorACType
+  | SetErrorPersonACType
+  | SuccessACType
 >;
 
 type setUserGroupTCDispatchType = ThunkDispatch<
   AppRootStateType,
   {},
-  SetUserGroupACType | SetStatusSetErrorACType
+  | SetUserGroupACType
+  | SetStatusSetErrorACType
+  | SetErrorPersonACType
+  | SuccessACType
 >;

@@ -95,5 +95,8 @@ const styles = StyleSheet.create({
     fontSize: 30,
     marginLeft: 30,
     fontStyle: 'italic',
+    backgroundColor: '#fff',
+    paddingVertical: 5,
+    paddingHorizontal: 5,
   },
 });

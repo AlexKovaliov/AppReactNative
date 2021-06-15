@@ -48,7 +48,7 @@ export const groupReducer = (
     case 'GROUP/ADD_EDITED_GROUP':
       return {
         ...state,
-        groups: [...action.updatedGroups],
+        groups: action.updatedGroups,
       };
 
     case 'GROUP/ADD_USER_TO_GROUP':

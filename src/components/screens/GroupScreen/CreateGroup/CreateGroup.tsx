@@ -9,10 +9,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  SafeAreaView,
-} from 'react-native';
+  SafeAreaView, ActivityIndicator
+} from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import {GREY, SOLITUDE} from '../../../../utils/colors';
+import { CERULEAN_BLUE, GREY, SOLITUDE } from "../../../../utils/colors";
 import {Formik, FormikHelpers} from 'formik';
 import {CREATE_GROUP_BACK} from '../../../../utils/images';
 import {useNavigation} from '@react-navigation/native';
@@ -23,6 +23,8 @@ import { createGroupTC, editingGroupTC } from "../../../../redux/thunks/group-th
 import { UsersType } from "../../../../api/users-api";
 import { AppRootStateType } from "../../../../store";
 import { InitialStateGroupReducerType } from "../../../../redux/group-reducer";
+import { InitialAppStateType } from "../../../../redux/app-reducer";
+import Loading from "../../../../utils/loadingUtils";
 
 type routeType = {
   route: {params?: {group: GroupType}};
@@ -33,6 +35,10 @@ export const CreateGroup = ({route}: routeType) => {
   const navigation = useNavigation();
 
   const propsGroup = route.params ? route.params?.group : null;
+
+  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
 
   const {
     content,
@@ -127,11 +133,15 @@ export const CreateGroup = ({route}: routeType) => {
                       <Text style={errorText}>{errors.title}</Text>
                     ) : null}
 
-                    <Button
-                      title= {propsGroup ? 'Save changes' : "Save group"}
-                      disabled={!isValid}
-                      onPress={handleSubmit}
-                    />
+                    {isLoading ? (
+                      <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+                    ) : (
+                      <Button
+                        title= {propsGroup ? 'Save changes' : "Save group"}
+                        disabled={!isValid}
+                        onPress={handleSubmit}
+                      />
+                    )}
                   </View>
                 </View>
               </ImageBackground>

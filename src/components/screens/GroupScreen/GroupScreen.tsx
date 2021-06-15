@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  TextInput,
 } from 'react-native';
 import {GroupList} from './GroupList';
 import {useDispatch, useSelector} from 'react-redux';
@@ -15,12 +16,17 @@ import {BLACK, EGYPTIAN_BLUE, GREY} from '../../../utils/colors';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
 import {getGroupTC, removeGroupTC} from '../../../redux/thunks/group-thunk';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import {InitialAppStateType} from '../../../redux/app-reducer';
+import {setSearchBarValueAC, setSuccessAC} from '../../../redux/actions';
+import {showMessage} from 'react-native-flash-message';
+import Loading from '../../../utils/loadingUtils';
 
 export const GroupScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {
     text,
+    input,
     rowEdit,
     container,
     rowDelete,
@@ -28,22 +34,56 @@ export const GroupScreen = React.memo(() => {
     addGroupTouch,
   } = styles;
 
-  useEffect(() => {
-    dispatch(getGroupTC());
-  }, [dispatch]);
+  const {filterValue, isLoading, isSuccess} = useSelector<
+    AppRootStateType,
+    InitialAppStateType
+  >(state => state.appStore);
 
   const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
     state => state.groupStore,
   );
 
+  useEffect(() => {
+    dispatch(getGroupTC());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      showMessage({
+        type: 'success',
+        message: 'Success',
+      });
+    }
+    dispatch(setSuccessAC(false));
+  }, [dispatch, isSuccess]);
+
   //Buttons onPress handler
   const handleAdGroup = () => navigation.navigate('CreateGroup');
 
+  const onSearchHandle = (value: string) =>
+    dispatch(setSearchBarValueAC(value));
+
+  const filteredGroup = groups.filter(group =>
+    group.title.toLowerCase().includes(filterValue.toLowerCase()),
+  );
+
+  const groupsData = filterValue ? filteredGroup : groups;
+
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <SafeAreaView style={container}>
+      <TextInput
+        placeholder="Search..."
+        style={input}
+        onChangeText={onSearchHandle}
+        placeholderTextColor={'#fff'}
+      />
+
       <SwipeListView
-        data={groups}
-        renderItem={data => <GroupList id={data.item.id} />}
+        data={groupsData}
+        renderItem={data => <GroupList group={data.item} />}
         renderHiddenItem={data => (
           <View style={backBtnView}>
             <TouchableOpacity
@@ -66,7 +106,6 @@ export const GroupScreen = React.memo(() => {
         leftOpenValue={75}
         rightOpenValue={-75}
       />
-
       <TouchableOpacity style={addGroupTouch} onPress={handleAdGroup}>
         <Icon name="plus" size={20} color={'#000'} />
       </TouchableOpacity>
@@ -77,7 +116,7 @@ export const GroupScreen = React.memo(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
     backgroundColor: EGYPTIAN_BLUE,
     justifyContent: 'space-around',
   },
@@ -116,5 +155,14 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
+  },
+  input: {
+    paddingLeft: 10,
+    color: '#fff',
+    borderBottomWidth: 0.5,
+    borderColor: '#fff',
+  },
+  toast: {
+    zIndex: 1,
   },
 });

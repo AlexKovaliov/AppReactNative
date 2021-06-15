@@ -15,7 +15,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {InitialAppStateType} from '../../redux/app-reducer';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 import {setSuccessAC} from '../../redux/actions';
 import {CERULEAN_BLUE, WHITE} from '../../utils/colors';
 
@@ -55,7 +55,6 @@ export const UsersScreen = React.memo(() => {
         ) : null}
         {error ? <ErrorImage /> : null}
       </View>
-      <FlashMessage position="top" />
     </SafeAreaView>
   );
 });

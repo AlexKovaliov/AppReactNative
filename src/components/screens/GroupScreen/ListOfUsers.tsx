@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react';
-import {List} from './List';
+import React, {useCallback, useEffect, useState} from 'react';
+import {ListOfUsersItems} from './ListOfUsersItems';
 import {AppRootStateType} from '../../../store';
 import {UsersType} from '../../../api/users-api';
 import {useDispatch, useSelector} from 'react-redux';
@@ -9,6 +9,7 @@ import {FlatList, StyleSheet, View, Button} from 'react-native';
 import {setUserGroupTC} from '../../../redux/thunks/group-thunk';
 import {InitialStateUserReducerType} from '../../../redux/users-reducer';
 import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
+import {getAllUsers} from '../../../redux/thunks';
 
 type routeGroupType = {route: {params: {group: GroupType}}};
 
@@ -16,10 +17,14 @@ export const ListOfUsers = ({route}: routeGroupType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {container, btn} = styles;
-  const idGroup = route.params.group.id;
+  const propsGroup = route.params.group;
 
   //Stores an array of selected users
   const [selectedUsersId, setSelectedUsersId] = useState<Array<number>>([]);
+
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   const {users} = useSelector<AppRootStateType, InitialStateUserReducerType>(
     state => state.usersStore,
@@ -29,7 +34,7 @@ export const ListOfUsers = ({route}: routeGroupType) => {
     state => state.groupStore,
   );
 
-  const group = groups.find(el => el.id === idGroup);
+  const group = groups.find(el => el.id === propsGroup.id);
 
   //Buttons onPress handler
   const selectUserHandler = useCallback(
@@ -44,9 +49,10 @@ export const ListOfUsers = ({route}: routeGroupType) => {
     },
     [selectedUsersId],
   );
+
   const addUsers = () => {
-    if (selectedUsersId) {
-      dispatch(setUserGroupTC(selectedUsersId, idGroup));
+    if (selectedUsersId && group) {
+      dispatch(setUserGroupTC(selectedUsersId, group!.id));
       navigation.goBack();
     }
   };
@@ -59,7 +65,7 @@ export const ListOfUsers = ({route}: routeGroupType) => {
         data={users}
         keyExtractor={(item: UsersType) => String(item.id)}
         renderItem={({item}) => (
-          <List
+          <ListOfUsersItems
             group={group!}
             user={item}
             selectUserHandler={selectUserHandler}
