@@ -1,15 +1,6 @@
-import {
-  SetCameraGrantedACType,
-  SetReadStorageACType,
-  SetStatusSetErrorACType,
-  SuccessACType,
-} from './actions';
+import {SetStatusSetErrorACType, SuccessACType} from './actions';
 
-type ActionsType =
-  | SetStatusSetErrorACType
-  | SuccessACType
-  | SetCameraGrantedACType
-  | SetReadStorageACType;
+type ActionsType = SetStatusSetErrorACType | SuccessACType;
 
 export type InitialAppStateType = typeof initialState;
 
@@ -17,8 +8,6 @@ const initialState = {
   error: null as null | string,
   isLoading: false,
   isSuccess: false,
-  isRead: false,
-  isCameraGranted: false,
 };
 
 export const appReducer = (
@@ -31,12 +20,6 @@ export const appReducer = (
 
     case 'APP/SET_SUCCESS':
       return {...state, isSuccess: action.isSuccess};
-
-    case 'APP/CAMERA_GRANTED':
-      return {...state, isCameraGranted: action.isCameraGranted};
-
-    case 'APP/READ_STORAGE':
-      return {...state, isRead: action.isRead};
 
     default:
       return state;
