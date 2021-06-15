@@ -11,21 +11,23 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {validation} from './validation';
 import {Formik, FormikHelpers} from 'formik';
 import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {
-  setLocalUserTC,
-  setEditedUserTC,
-  cameraPermission,
-  readStoragePermission,
-} from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
+import {InitialAppStateType} from '../../../redux/app-reducer';
+import {AppRootStateType} from '../../../store';
+import {
+  requestExternalWritePermission,
+  requestCameraPermission,
+} from '../../../utils/permisions';
+import {showMessage} from 'react-native-flash-message';
+import {setEditedUserTC, setLocalUserTC} from '../../../redux/thunks';
 
 type routeType = {
   route: {params?: {user: UsersType}};
@@ -36,21 +38,25 @@ export const CreateAndEditScreen = ({route}: routeType) => {
   const navigation = useNavigation();
   const propsUser = route.params ? route.params.user : null;
 
+  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
+
   const {
     wrap,
     input,
-    errorText,
-    viewBtn,
-    removeText,
-    editView,
-    editBtn,
     content,
-    avatarImage,
-    errorInput,
+    viewBtn,
+    editBtn,
+    editView,
     inputArea,
     container,
     textTitle,
+    errorText,
+    removeText,
     avatarArea,
+    errorInput,
+    avatarImage,
   } = styles;
 
   return (
@@ -88,58 +94,88 @@ export const CreateAndEditScreen = ({route}: routeType) => {
             } = props;
 
             const {first_name, last_name, email} = props.values;
+            //Input values error
             const errorEmail = errors.email && touched.email;
             const errorLastName = errors.last_name && touched.last_name;
             const errorFirstName = errors.first_name && touched.first_name;
             const textInputStyle = errorFirstName ? errorInput : input;
 
             const handlePhotoTake = async () => {
-              await dispatch(cameraPermission());
-              launchCamera(
-                {
-                  quality: 1,
-                  mediaType: 'photo',
-                  saveToPhotos: true,
-                  includeBase64: true,
-                },
-                response => {
-                  if (response.uri) {
-                    handleChange('avatar')(response.uri);
-                  }
-                },
-              );
+              const isCameraPermitted = await requestCameraPermission();
+              if (isCameraPermitted) {
+                launchCamera(
+                  {
+                    mediaType: 'photo',
+                    saveToPhotos: true,
+                    quality: 1,
+                  },
+                  response => {
+                    switch (response.errorCode) {
+                      case 'camera_unavailable':
+                        showMessage({
+                          type: 'info',
+                          message: 'Camera unavailable',
+                        });
+                        break;
+                      case 'permission':
+                        showMessage({
+                          type: 'info',
+                          message: 'No access to the camera',
+                        });
+                        break;
+                    }
+                    if (response.uri) {
+                      handleChange('avatar')(response.uri);
+                    }
+                  },
+                );
+              }
             };
 
             const handleSelectFromLibrary = async () => {
-              await dispatch(readStoragePermission());
-              launchImageLibrary(
-                {
-                  quality: 1,
-                  mediaType: 'photo',
-                  includeBase64: true,
-                },
-                response => {
-                  if (response.uri) {
-                    handleChange('avatar')(response.uri);
-                  }
-                },
-              );
+              const isStoragePermitted = await requestExternalWritePermission();
+              if (isStoragePermitted) {
+                launchImageLibrary(
+                  {
+                    mediaType: 'photo',
+                    quality: 1,
+                  },
+                  response => {
+                    switch (response.errorCode) {
+                      case 'camera_unavailable':
+                        showMessage({
+                          type: 'info',
+                          message: 'Gallery unavailable',
+                        });
+
+                        break;
+                      case 'permission':
+                        showMessage({
+                          type: 'info',
+                          message: 'No access to the gallery',
+                        });
+
+                        break;
+                    }
+                    if (response.uri) {
+                      handleChange('avatar')(response.uri);
+                    }
+                  },
+                );
+              }
             };
 
             return (
               <ScrollView style={wrap}>
                 <View style={avatarArea}>
-                  {props.isSubmitting ? (
-                    <ActivityIndicator color={CERULEAN_BLUE} size="large" />
-                  ) : (
-                    <Image
-                      source={{
-                        uri: props.values.avatar || NO_AVATAR,
-                      }}
-                      style={avatarImage}
-                    />
-                  )}
+                  <Image
+                    source={{
+                      uri: props.values.avatar || NO_AVATAR,
+                    }}
+                    style={avatarImage}
+                  />
                 </View>
+
                 <View style={editView}>
                   <TouchableOpacity
                     style={editBtn}
@@ -192,11 +228,15 @@ export const CreateAndEditScreen = ({route}: routeType) => {
                   ) : null}
 
                   <View style={viewBtn}>
-                    <Button
-                      onPress={handleSubmit}
-                      disabled={!isValid}
-                      title="save"
-                    />
+                    {isLoading ? (
+                      <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+                    ) : (
+                      <Button
+                        onPress={handleSubmit}
+                        disabled={!isValid}
+                        title="save"
+                      />
+                    )}
                   </View>
                 </View>
               </ScrollView>
@@ -289,7 +329,7 @@ const styles = StyleSheet.create({
     backgroundColor: BLACK,
   },
   wrap: {
-    height: 580,
+    height: '100%',
   },
   inputArea: {
     height: 380,
