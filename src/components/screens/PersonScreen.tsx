@@ -62,13 +62,17 @@ const Content = (props: {user: UsersType | undefined}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
+
   //Controlling the visibility of windows
-  const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
+  const [openAvatarZoom, setOpenAvatarZoom] = useState<boolean>(false);
+
   //Buttons onPress handler
-  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
   const modalVisibleOpen = () => setModalVisible(true);
+  const avatarZoom = () => setOpenAvatarZoom(!openAvatarZoom);
   const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
+  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
 
   const onRefreshHandler = useCallback(() => {
     if (!local && id) {
@@ -100,15 +104,22 @@ const Content = (props: {user: UsersType | undefined}) => {
     contentArea,
     touchableArea,
     touchAreaActive,
+    touchImgZoom,
+    touchImg,
+    zoomImg,
   } = styles;
 
   const PersonAvatar = (
-    <Image
-      style={image}
-      source={{
-        uri: avatar || NO_AVATAR,
-      }}
-    />
+    <TouchableOpacity
+      style={openAvatarZoom ? touchImgZoom : touchImg}
+      onPress={avatarZoom}>
+      <Image
+        style={openAvatarZoom ? zoomImg : image}
+        source={{
+          uri: avatar || NO_AVATAR,
+        }}
+      />
+    </TouchableOpacity>
   );
 
   return (
@@ -264,7 +275,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   image: {
-    top: 70,
     zIndex: 1,
     width: 150,
     height: 150,
@@ -319,5 +329,30 @@ const styles = StyleSheet.create({
     position: 'relative',
     paddingHorizontal: 20,
     backgroundColor: SOLITUDE,
+  },
+  zoomImg: {
+    zIndex: 1,
+    width: 250,
+    height: 250,
+    borderRadius: 10,
+    position: 'absolute',
+  },
+  touchImgZoom: {
+    top: 5,
+    zIndex: 1,
+    width: 250,
+    height: 250,
+    borderRadius: 10,
+    position: 'absolute',
+    alignItems: 'center',
+    backgroundColor: SOLITUDE,
+  },
+  touchImg: {
+    top: 70,
+    zIndex: 1,
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    position: 'absolute',
   },
 });
