@@ -1,14 +1,9 @@
-import {SetStatusSetErrorACType, SuccessACType} from './actions';
-
-type ActionsType = SetStatusSetErrorACType | SuccessACType;
-
 export type InitialAppStateType = typeof initialState;
 
 const initialState = {
   error: null as null | string,
   isLoading: false,
   isSuccess: false,
-};
 
 export const appReducer = (
   state: InitialAppStateType = initialState,

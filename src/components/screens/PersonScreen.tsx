@@ -2,7 +2,6 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {
   Text,
   View,
-  Image,
   StyleSheet,
   ScrollView,
   SafeAreaView,
@@ -14,6 +13,8 @@ import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
+import {ControlElement} from '../../utils/ControlElement';
+import {AnimationAvatar} from '../AnimationAvatar';
 import {RemoveUserModal} from '../RemoveUserModal';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
@@ -64,15 +65,13 @@ const Content = (props: {user: UsersType | undefined}) => {
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
 
   //Controlling the visibility of windows
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
-  const [openAvatarZoom, setOpenAvatarZoom] = useState<boolean>(false);
 
   //Buttons onPress handler
+  const onModalHandler = () =>
+    navigation.navigate('Management', {user: props.user});
   const modalVisibleOpen = () => setModalVisible(true);
-  const avatarZoom = () => setOpenAvatarZoom(!openAvatarZoom);
   const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
-  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
 
   const onRefreshHandler = useCallback(() => {
     if (!local && id) {
@@ -91,36 +90,17 @@ const Content = (props: {user: UsersType | undefined}) => {
   const {
     wrap,
     text,
-    image,
     emailSt,
     backImg,
-    manageView,
     iconArea,
-    detailsView,
     container,
     emailView,
-    manageBtn,
-    removeText,
+    manageView,
     contentArea,
+    detailsView,
     touchableArea,
     touchAreaActive,
-    touchImgZoom,
-    touchImg,
-    zoomImg,
   } = styles;
-
-  const PersonAvatar = (
-    <TouchableOpacity
-      style={openAvatarZoom ? touchImgZoom : touchImg}
-      onPress={avatarZoom}>
-      <Image
-        style={openAvatarZoom ? zoomImg : image}
-        source={{
-          uri: avatar || NO_AVATAR,
-        }}
-      />
-    </TouchableOpacity>
-  );
 
   return (
     <SafeAreaView style={container}>
@@ -144,7 +124,7 @@ const Content = (props: {user: UsersType | undefined}) => {
             />
           ) : null}
           <ImageBackground source={BACK_IMG} style={backImg}>
-            {PersonAvatar}
+            <AnimationAvatar avatar={avatar ? avatar : NO_AVATAR} />
           </ImageBackground>
           <View style={detailsView}>
             <View style={contentArea}>
@@ -164,17 +144,17 @@ const Content = (props: {user: UsersType | undefined}) => {
 
               {openEditWindow ? (
                 <View style={manageView}>
-                  <TouchableOpacity style={manageBtn} onPress={onModalHandler}>
-                    <Text style={removeText}>Edit user</Text>
-                    <Icon name="user-edit" size={25} color={CERULEAN_BLUE} />
-                  </TouchableOpacity>
+                  <ControlElement
+                    onModalHandler={onModalHandler}
+                    textTitle={'Edit user'}
+                    iconName={'user-edit'}
+                  />
 
-                  <TouchableOpacity
-                    style={manageBtn}
-                    onPress={modalVisibleOpen}>
-                    <Text style={removeText}>Remove user</Text>
-                    <Icon name="user-minus" size={25} color={CERULEAN_BLUE} />
-                  </TouchableOpacity>
+                  <ControlElement
+                    modalVisibleOpen={modalVisibleOpen}
+                    textTitle={'Remove user'}
+                    iconName={'user-minus'}
+                  />
                 </View>
               ) : null}
 
@@ -209,22 +189,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  wrapImg: {
-    top: 70,
-    zIndex: 1,
-    width: 150,
-    height: 150,
-    borderRadius: 10,
-    shadowColor: BLACK,
-    position: 'absolute',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    elevation: 5,
-    shadowRadius: 3.84,
-    shadowOpacity: 0.25,
-  },
   manageView: {
     top: 55,
     zIndex: 1,
@@ -240,19 +204,6 @@ const styles = StyleSheet.create({
     elevation: 5,
     shadowRadius: 3.84,
     shadowOpacity: 0.25,
-  },
-  manageBtn: {
-    borderWidth: 1,
-    borderColor: WHITE,
-    paddingVertical: 10,
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    backgroundColor: SOLITUDE,
-    justifyContent: 'flex-end',
-  },
-  removeText: {
-    fontSize: 18,
-    paddingRight: 15,
   },
   touchableArea: {
     width: 40,
@@ -273,16 +224,6 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingRight: 5,
     alignItems: 'flex-end',
-  },
-  image: {
-    zIndex: 1,
-    width: 150,
-    height: 150,
-    borderWidth: 3,
-    borderRadius: 10,
-    position: 'absolute',
-    borderColor: SOLITUDE,
-    backgroundColor: WHITE,
   },
   emailView: {
     paddingLeft: 15,
@@ -305,16 +246,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingLeft: 10,
   },
-  button: {
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    width: 50,
-    height: 50,
-  },
   contentArea: {
     height: 450,
     width: '100%',
@@ -329,30 +260,5 @@ const styles = StyleSheet.create({
     position: 'relative',
     paddingHorizontal: 20,
     backgroundColor: SOLITUDE,
-  },
-  zoomImg: {
-    zIndex: 1,
-    width: 250,
-    height: 250,
-    borderRadius: 10,
-    position: 'absolute',
-  },
-  touchImgZoom: {
-    top: 5,
-    zIndex: 1,
-    width: 250,
-    height: 250,
-    borderRadius: 10,
-    position: 'absolute',
-    alignItems: 'center',
-    backgroundColor: SOLITUDE,
-  },
-  touchImg: {
-    top: 70,
-    zIndex: 1,
-    width: 150,
-    height: 150,
-    borderRadius: 10,
-    position: 'absolute',
   },
 });

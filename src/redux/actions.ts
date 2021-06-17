@@ -35,10 +35,6 @@ export const fetchUsersAC = (
   total_pages: number | null,
 ) => ({type: 'USERS/FETCH_USERS', users, page, total_pages} as const);
 
-export type SetSearchBarValueACType = ReturnType<typeof setSearchBarValueAC>;
-export const setSearchBarValueAC = (filterValue: string) =>
-  ({type: 'USERS/SET_FILTER', filterValue} as const);
-
 export type SetRefreshingACType = ReturnType<typeof setRefreshingAC>;
 export const setRefreshingAC = (isRefreshing: boolean) =>
   ({type: 'USERS/SET_REFRESHING', isRefreshing} as const);

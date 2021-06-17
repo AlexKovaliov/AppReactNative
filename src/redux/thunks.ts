@@ -111,7 +111,8 @@ export const setEditedUserTC = (
     dispatch(setEditedUserAC(values));
     await dispatch(setEditedLocalUserTC(values));
     resetForm();
-    navigate('Users');
+    navigate('Home');
+    dispatch(setSuccessAC(true));
     dispatch(setStatusSetErrorAC(false, null));
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));
@@ -148,7 +149,7 @@ export const setLocalUserTC = (
     if (localUser) {
       dispatch(setSuccessAC(true));
       resetForm();
-      navigate('Users');
+      navigate('Home');
     }
   } catch (error) {
     dispatch(setStatusSetErrorAC(false, error.message));

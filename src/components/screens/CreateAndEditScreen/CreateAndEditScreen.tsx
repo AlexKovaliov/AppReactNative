@@ -20,14 +20,6 @@ import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
-import {InitialAppStateType} from '../../../redux/app-reducer';
-import {AppRootStateType} from '../../../store';
-import {
-  requestExternalWritePermission,
-  requestCameraPermission,
-} from '../../../utils/permisions';
-import {showMessage} from 'react-native-flash-message';
-import {setEditedUserTC, setLocalUserTC} from '../../../redux/thunks';
 
 type routeType = {
   route: {params?: {user: UsersType}};

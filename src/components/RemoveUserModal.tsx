@@ -25,7 +25,7 @@ export const RemoveUserModal = (props: PropsRemoveModalType) => {
     dispatch(removeLocalUserAC(id));
     dispatch(removeLocalUsersTC(id));
     setModalVisible(false);
-    navigation.navigate('Users');
+    navigation.navigate('Home');
   };
 
   return (

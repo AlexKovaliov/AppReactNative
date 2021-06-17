@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, TextInput, View} from 'react-native';
 import {WHITE} from '../utils/colors';
 import {useDispatch} from 'react-redux';
 import {setSearchBarValueAC} from '../redux/actions';
+import {StyleSheet, TextInput, View} from 'react-native';
 
 export const SearchBar = () => {
   const dispatch = useDispatch();
