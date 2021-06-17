@@ -7,8 +7,6 @@ import {useNavigation} from '@react-navigation/native';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import {FlatList, StyleSheet, View, Button} from 'react-native';
 import {setUserGroupTC} from '../../../redux/thunks/group-thunk';
-import {InitialStateUserReducerType} from '../../../redux/users-reducer';
-import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
 import {getAllUsers} from '../../../redux/thunks';
 
 type routeGroupType = {route: {params: {group: GroupType}}};
@@ -26,12 +24,12 @@ export const ListOfUsers = ({route}: routeGroupType) => {
     dispatch(getAllUsers());
   }, [dispatch]);
 
-  const {users} = useSelector<AppRootStateType, InitialStateUserReducerType>(
-    state => state.usersStore,
+  const users = useSelector<AppRootStateType, Array<UsersType>>(
+    state => state.usersStore.users,
   );
 
-  const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
-    state => state.groupStore,
+  const groups = useSelector<AppRootStateType, Array<GroupType>>(
+    state => state.groupStore.groups,
   );
 
   const group = groups.find(el => el.id === propsGroup.id);

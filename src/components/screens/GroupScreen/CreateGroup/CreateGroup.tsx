@@ -9,22 +9,23 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  SafeAreaView, ActivityIndicator
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { CERULEAN_BLUE, GREY, SOLITUDE } from "../../../../utils/colors";
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {CERULEAN_BLUE, GREY, SOLITUDE} from '../../../../utils/colors';
 import {Formik, FormikHelpers} from 'formik';
 import {CREATE_GROUP_BACK} from '../../../../utils/images';
 import {useNavigation} from '@react-navigation/native';
 import {readStoragePermission} from '../../../../redux/thunks';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {GroupType, validationGroup} from './ValidationGroup';
-import { createGroupTC, editingGroupTC } from "../../../../redux/thunks/group-thunk";
-import { UsersType } from "../../../../api/users-api";
-import { AppRootStateType } from "../../../../store";
-import { InitialStateGroupReducerType } from "../../../../redux/group-reducer";
-import { InitialAppStateType } from "../../../../redux/app-reducer";
-import Loading from "../../../../utils/loadingUtils";
+import {
+  createGroupTC,
+  editingGroupTC,
+} from '../../../../redux/thunks/group-thunk';
+import {AppRootStateType} from '../../../../store';
+import {InitialAppStateType} from '../../../../redux/app-reducer';
 
 type routeType = {
   route: {params?: {group: GroupType}};
@@ -61,9 +62,13 @@ export const CreateGroup = ({route}: routeType) => {
       }}
       onSubmit={(values, actions: FormikHelpers<GroupType>) => {
         if (propsGroup) {
-          dispatch(editingGroupTC(values, actions.resetForm, navigation.navigate))
+          dispatch(
+            editingGroupTC(values, actions.resetForm, navigation.navigate),
+          );
         } else {
-          dispatch(createGroupTC(values, actions.resetForm, navigation.navigate));
+          dispatch(
+            createGroupTC(values, actions.resetForm, navigation.navigate),
+          );
         }
       }}
       validationSchema={validationGroup}>
@@ -101,11 +106,11 @@ export const CreateGroup = ({route}: routeType) => {
         return (
           <SafeAreaView>
             <ScrollView>
-              <ImageBackground blurRadius={40}
+              <ImageBackground
+                blurRadius={40}
                 source={{uri: CREATE_GROUP_BACK}}
                 style={imageBack}>
                 <View style={scrollContent}>
-
                   <TouchableOpacity
                     style={avatarTouch}
                     onPress={handleSelectFromLibrary}>
@@ -137,7 +142,7 @@ export const CreateGroup = ({route}: routeType) => {
                       <ActivityIndicator color={CERULEAN_BLUE} size="large" />
                     ) : (
                       <Button
-                        title= {propsGroup ? 'Save changes' : "Save group"}
+                        title={propsGroup ? 'Save changes' : 'Save group'}
                         disabled={!isValid}
                         onPress={handleSubmit}
                       />

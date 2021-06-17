@@ -51,7 +51,6 @@ export default function App() {
       <GroupStack.Screen
         name="Groups"
         component={GroupScreen}
-        // initialParams={groups}
         options={{
           title: 'Groups',
           headerStyle: header,

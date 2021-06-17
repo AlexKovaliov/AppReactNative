@@ -17,7 +17,6 @@ import {GroupUsers} from './GroupUsers';
 import {AppRootStateType} from '../../../store';
 import {UsersType} from '../../../api/users-api';
 import {CREATE_GROUP_BACK} from '../../../utils/images';
-import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
 
 type routeType = {route: {params: {group: GroupType}}};
 
@@ -27,8 +26,8 @@ export const Group = ({route}: routeType) => {
 
   const {container, touch, imgBack, titleGroup} = styles;
 
-  const {groups} = useSelector<AppRootStateType, InitialStateGroupReducerType>(
-    state => state.groupStore,
+  const groups = useSelector<AppRootStateType, Array<GroupType>>(
+    state => state.groupStore.groups,
   );
 
   const filteredGroup = groups.find(gr => gr.id === id);
@@ -98,5 +97,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingVertical: 5,
     paddingHorizontal: 5,
+    borderRadius: 5,
   },
 });

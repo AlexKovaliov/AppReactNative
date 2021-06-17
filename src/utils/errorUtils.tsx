@@ -5,7 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setStatusSetErrorAC} from '../redux/actions';
 import {useNavigation} from '@react-navigation/native';
 import {Image, StyleSheet, Text, View, Button} from 'react-native';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 import {SOLITUDE, WHITE} from './colors';
 
 export function ErrorImage() {
@@ -36,7 +36,6 @@ export function ErrorImage() {
       <Text style={textError}>Oops! Something went wrong!</Text>
       <Text style={textError}>{error}</Text>
       <Button title={'come home'} onPress={onComeHome} />
-      <FlashMessage position="top" />
     </View>
   );
 }
