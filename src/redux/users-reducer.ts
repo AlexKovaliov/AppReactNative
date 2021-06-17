@@ -1,7 +1,6 @@
 import {UsersType} from '../api/users-api';
 import {
   FetchUsersACType,
-  SetSearchBarValueACType,
   AddLocalUserACType,
   SetRefreshingACType,
   RemoveLocalUserACType,
@@ -11,7 +10,6 @@ import {
 
 type ActionsType =
   | FetchUsersACType
-  | SetSearchBarValueACType
   | AddLocalUserACType
   | SetEditedUserACType
   | RemoveLocalUserACType
@@ -46,12 +44,6 @@ export const usersReducer = (
         ...state,
         users: action.users,
         page: action.page,
-      };
-
-    case 'USERS/SET_FILTER':
-      return {
-        ...state,
-        filterValue: action.filterValue,
       };
 
     case 'USERS/SET_REFRESHING':

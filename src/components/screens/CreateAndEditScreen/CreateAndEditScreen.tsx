@@ -11,7 +11,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {validation} from './validation';
 import {Formik, FormikHelpers} from 'formik';
 import {NO_AVATAR} from '../../../utils/images';
@@ -26,6 +26,8 @@ import {
 } from '../../../redux/thunks';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
+import {AppRootStateType} from '../../../store';
+import {InitialAppStateType} from '../../../redux/app-reducer';
 
 type routeType = {
   route: {params?: {user: UsersType}};
@@ -35,6 +37,10 @@ export const CreateAndEditScreen = ({route}: routeType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const propsUser = route.params ? route.params.user : null;
+
+  const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
+    state => state.appStore,
+  );
 
   const {
     wrap,
@@ -129,16 +135,12 @@ export const CreateAndEditScreen = ({route}: routeType) => {
             return (
               <ScrollView style={wrap}>
                 <View style={avatarArea}>
-                  {props.isSubmitting ? (
-                    <ActivityIndicator color={CERULEAN_BLUE} size="large" />
-                  ) : (
-                    <Image
-                      source={{
-                        uri: props.values.avatar || NO_AVATAR,
-                      }}
-                      style={avatarImage}
-                    />
-                  )}
+                  <Image
+                    source={{
+                      uri: props.values.avatar || NO_AVATAR,
+                    }}
+                    style={avatarImage}
+                  />
                 </View>
                 <View style={editView}>
                   <TouchableOpacity
@@ -192,11 +194,15 @@ export const CreateAndEditScreen = ({route}: routeType) => {
                   ) : null}
 
                   <View style={viewBtn}>
-                    <Button
-                      onPress={handleSubmit}
-                      disabled={!isValid}
-                      title="save"
-                    />
+                    {isLoading ? (
+                      <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+                    ) : (
+                      <Button
+                        onPress={handleSubmit}
+                        disabled={!isValid}
+                        title="save"
+                      />
+                    )}
                   </View>
                 </View>
               </ScrollView>

@@ -65,13 +65,13 @@ const Content = (props: {user: UsersType | undefined}) => {
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
 
   //Controlling the visibility of windows
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
 
   //Buttons onPress handler
+  const onModalHandler = () =>
+    navigation.navigate('Management', {user: props.user});
   const modalVisibleOpen = () => setModalVisible(true);
   const editWindowVisible = () => setOpenEditWindow(!openEditWindow);
-  const onModalHandler = () => navigation.navigate('Modal', {user: props.user});
 
   const onRefreshHandler = useCallback(() => {
     if (!local && id) {

@@ -1,6 +1,7 @@
 import {
   SetCameraGrantedACType,
   SetReadStorageACType,
+  SetSearchBarValueACType,
   SetStatusSetErrorACType,
   SuccessACType,
 } from './actions';
@@ -9,6 +10,7 @@ type ActionsType =
   | SetStatusSetErrorACType
   | SuccessACType
   | SetCameraGrantedACType
+  | SetSearchBarValueACType
   | SetReadStorageACType;
 
 export type InitialAppStateType = typeof initialState;
@@ -19,6 +21,7 @@ const initialState = {
   isSuccess: false,
   isRead: false,
   isCameraGranted: false,
+  filterValue: '',
 };
 
 export const appReducer = (
@@ -37,6 +40,9 @@ export const appReducer = (
 
     case 'APP/READ_STORAGE':
       return {...state, isRead: action.isRead};
+
+    case 'APP/SET_FILTER':
+      return {...state, filterValue: action.filterValue};
 
     default:
       return state;

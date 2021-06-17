@@ -24,6 +24,10 @@ export type SetReadStorageACType = ReturnType<typeof setReadStorageAC>;
 export const setReadStorageAC = (isRead: boolean) =>
   ({type: 'APP/READ_STORAGE', isRead} as const);
 
+export type SetSearchBarValueACType = ReturnType<typeof setSearchBarValueAC>;
+export const setSearchBarValueAC = (filterValue: string) =>
+  ({type: 'APP/SET_FILTER', filterValue} as const);
+
 // person-reducer /////
 export type ChosenPersonACType = ReturnType<typeof chosenPersonAC>;
 export const chosenPersonAC = (person: UsersType) => {
@@ -42,10 +46,6 @@ export const fetchUsersAC = (
   page: number,
   total_pages: number | null,
 ) => ({type: 'USERS/FETCH_USERS', users, page, total_pages} as const);
-
-export type SetSearchBarValueACType = ReturnType<typeof setSearchBarValueAC>;
-export const setSearchBarValueAC = (filterValue: string) =>
-  ({type: 'USERS/SET_FILTER', filterValue} as const);
 
 export type SetRefreshingACType = ReturnType<typeof setRefreshingAC>;
 export const setRefreshingAC = (isRefreshing: boolean) =>
