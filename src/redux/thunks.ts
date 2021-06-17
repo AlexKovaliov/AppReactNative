@@ -15,49 +15,11 @@ import {
   SetErrorPersonACType,
   SetStatusSetErrorACType,
   SetRefreshingUsersACType,
-  setCameraGrantedAC,
-  setReadStorageAC,
 } from './actions';
 import {ThunkDispatch} from 'redux-thunk';
 import {AppRootStateType} from '../store';
 import {usersAPI, UsersType} from '../api/users-api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {PERMISSIONS, RESULTS, check, request} from 'react-native-permissions';
-
-//app
-export const cameraPermission = () => async (dispatch: Dispatch) => {
-  try {
-    const result = await check(PERMISSIONS.ANDROID.CAMERA);
-    if (result === RESULTS.GRANTED) {
-      dispatch(setCameraGrantedAC(true));
-    } else if (result === RESULTS.DENIED) {
-      const requestResult = await request(PERMISSIONS.ANDROID.CAMERA);
-      requestResult === RESULTS.GRANTED
-        ? dispatch(setCameraGrantedAC(true))
-        : dispatch(setCameraGrantedAC(false));
-    }
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
-
-export const readStoragePermission = () => async (dispatch: Dispatch) => {
-  try {
-    const result = await check(PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE);
-    if (result === RESULTS.GRANTED) {
-      dispatch(setReadStorageAC(true));
-    } else if (result === RESULTS.DENIED) {
-      const requestResult = await request(
-        PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
-      );
-      requestResult === RESULTS.GRANTED
-        ? dispatch(setReadStorageAC(true))
-        : dispatch(setReadStorageAC(false));
-    }
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
 
 //person
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {

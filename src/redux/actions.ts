@@ -16,18 +16,6 @@ export const setSuccessAC = (isSuccess: boolean) =>
     isSuccess,
   } as const);
 
-export type SetCameraGrantedACType = ReturnType<typeof setCameraGrantedAC>;
-export const setCameraGrantedAC = (isCameraGranted: boolean) =>
-  ({type: 'APP/CAMERA_GRANTED', isCameraGranted} as const);
-
-export type SetReadStorageACType = ReturnType<typeof setReadStorageAC>;
-export const setReadStorageAC = (isRead: boolean) =>
-  ({type: 'APP/READ_STORAGE', isRead} as const);
-
-export type SetSearchBarValueACType = ReturnType<typeof setSearchBarValueAC>;
-export const setSearchBarValueAC = (filterValue: string) =>
-  ({type: 'APP/SET_FILTER', filterValue} as const);
-
 // person-reducer /////
 export type ChosenPersonACType = ReturnType<typeof chosenPersonAC>;
 export const chosenPersonAC = (person: UsersType) => {
