@@ -2,9 +2,9 @@ import {
   AddGroupACType,
   GetGroupACType,
   RemoveGroupACType,
-  RemoveUserFromGroupACType,
-  SetEditedGroupACType,
   SetUserGroupACType,
+  SetEditedGroupACType,
+  RemoveUserFromGroupACType,
 } from './actions/group-action';
 import {GroupType} from '../components/screens/GroupScreen/CreateGroup/ValidationGroup';
 

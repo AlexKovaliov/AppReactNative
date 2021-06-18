@@ -1,19 +1,34 @@
 import React from 'react';
-import {Text, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-import {BLACK, GREY, SOLITUDE} from '../../../utils/colors';
-import {CREATE_GROUP_BACK} from '../../../utils/images';
 import {GroupType} from './CreateGroup/ValidationGroup';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {Text, Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  GREY,
+  BLACK,
+  WHITE,
+  SOLITUDE,
+  VIVID_VIOLET,
+} from '../../../utils/colors';
 
 type PropsType = {
   group: GroupType;
 };
 
 export const GroupList = (props: PropsType) => {
-  const {title, avatarGroup, members} = props.group;
   const navigation = useNavigation();
-  const {viewGroup, img, text, amountMembers, viewIcon} = styles;
+
+  const {title, avatarGroup, members} = props.group;
+
+  const {
+    img,
+    text,
+    viewIcon,
+    viewGroup,
+    amountMembers,
+    defaultImgText,
+  } = styles;
+
   const amountOfGroupMembers = members.length;
 
   //Buttons onPress handler
@@ -22,17 +37,16 @@ export const GroupList = (props: PropsType) => {
   return (
     <View>
       <TouchableOpacity activeOpacity={0.5} style={viewGroup} onPress={onGroup}>
-        <Image
-          source={{
-            uri: avatarGroup ? avatarGroup : CREATE_GROUP_BACK,
-          }}
-          style={img}
-        />
+        {avatarGroup ? (
+          <Image source={{uri: avatarGroup}} style={img} />
+        ) : (
+          <Text style={defaultImgText}>{title[0]}</Text>
+        )}
 
         <Text style={text}>{title}</Text>
         <View style={viewIcon}>
           <Text style={amountMembers}>{amountOfGroupMembers}</Text>
-          <Icon name="users" size={20} color={'#000'} />
+          <Icon name="users" size={20} color={BLACK} />
         </View>
       </TouchableOpacity>
     </View>
@@ -42,10 +56,10 @@ export const GroupList = (props: PropsType) => {
 const styles = StyleSheet.create({
   viewGroup: {
     height: 70,
-    borderBottomWidth: 0.5,
     borderColor: BLACK,
     alignItems: 'center',
     flexDirection: 'row',
+    borderBottomWidth: 0.5,
     backgroundColor: SOLITUDE,
     justifyContent: 'space-between',
   },
@@ -81,5 +95,14 @@ const styles = StyleSheet.create({
     width: 70,
     alignItems: 'center',
     justifyContent: 'space-around',
+  },
+  defaultImgText: {
+    width: 70,
+    fontSize: 20,
+    color: WHITE,
+    height: '100%',
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    backgroundColor: VIVID_VIOLET,
   },
 });

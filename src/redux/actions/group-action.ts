@@ -1,5 +1,5 @@
-import {GroupType} from '../../components/screens/GroupScreen/CreateGroup/ValidationGroup';
 import {UsersType} from '../../api/users-api';
+import {GroupType} from '../../components/screens/GroupScreen/CreateGroup/ValidationGroup';
 
 //Adding a group
 export type AddGroupACType = ReturnType<typeof addGroupAC>;

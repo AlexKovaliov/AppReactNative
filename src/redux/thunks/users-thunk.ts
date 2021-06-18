@@ -1,60 +1,26 @@
-import {Dispatch} from 'redux';
 import {
   fetchUsersAC,
-  setSuccessAC,
   addLocalUserAC,
-  chosenPersonAC,
-  setEditedUserAC,
   setRefreshingAC,
-  setErrorPersonAC,
-  SuccessACType,
-  setStatusSetErrorAC,
-  setRefreshingUsersAC,
+  setEditedUserAC,
   SetEditedUserACType,
   SetRefreshingACType,
-  SetErrorPersonACType,
-  SetStatusSetErrorACType,
+  setRefreshingUsersAC,
   SetRefreshingUsersACType,
-} from './actions';
+} from '../actions/users-actions';
+import {
+  setSuccessAC,
+  SuccessACType,
+  setStatusSetErrorAC,
+  SetStatusSetErrorACType,
+} from '../actions/app-actions';
+import {Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';
-import {AppRootStateType} from '../store';
-import {usersAPI, UsersType} from '../api/users-api';
+import {AppRootStateType} from '../../store';
+import {usersAPI, UsersType} from '../../api/users-api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//person
-export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {
-  dispatch(setErrorPersonAC(true, null));
-  try {
-    const response = await usersAPI.chosenPerson(id);
-    if (response.data) {
-      dispatch(chosenPersonAC(response.data));
-    }
-    dispatch(setErrorPersonAC(false, null));
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
-
-export const refreshPersonTC = (id: number) => async (
-  dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
-) => {
-  dispatch(setRefreshingAC(true));
-  dispatch(setErrorPersonAC(true, null));
-  try {
-    await dispatch(chosenPersonTC(id));
-    dispatch(setErrorPersonAC(false, null));
-    dispatch(setRefreshingAC(false));
-  } catch (error) {
-    dispatch(setErrorPersonAC(false, error.message));
-  }
-};
-
-//users
-type dispatchActionType =
-  | SetErrorPersonACType
-  | SetRefreshingACType
-  | SetRefreshingUsersACType;
-
+//Refresh users
 export const onRefreshTC = () => async (
   dispatch: ThunkDispatch<AppRootStateType, {}, dispatchActionType>,
 ) => {
@@ -71,6 +37,7 @@ export const onRefreshTC = () => async (
   }
 };
 
+//Users request
 export const fetchUsersTC = () => async (
   dispatch: Dispatch,
   getState: () => AppRootStateType,
@@ -95,6 +62,7 @@ export const fetchUsersTC = () => async (
   }
 };
 
+//Adding an edited user
 export const setEditedUserTC = (
   values: UsersType,
   resetForm: () => void,
@@ -119,6 +87,7 @@ export const setEditedUserTC = (
   }
 };
 
+//Getting users from the server and AsyncStorage
 export const getAllUsers = () => async (
   dispatch: ThunkDispatch<AppRootStateType, {}, SetStatusSetErrorACType>,
 ) => {
@@ -132,7 +101,9 @@ export const getAllUsers = () => async (
   }
 };
 
-// local (AsyncStorage)
+// local (AsyncStorage)////
+
+//Adding a local user
 export const setLocalUserTC = (
   localUser: UsersType,
   resetForm: () => void,
@@ -156,6 +127,7 @@ export const setLocalUserTC = (
   }
 };
 
+//Add edited local user
 export const setEditedLocalUserTC = (editedUser: UsersType) => async (
   dispatch: Dispatch,
 ) => {
@@ -179,6 +151,7 @@ export const setEditedLocalUserTC = (editedUser: UsersType) => async (
   }
 };
 
+//Removing a local user
 export const removeLocalUsersTC = (id: number) => async (
   dispatch: Dispatch,
 ) => {
@@ -201,6 +174,7 @@ export const removeLocalUsersTC = (id: number) => async (
   }
 };
 
+//Getting local users
 export const getLocalUsersTC = () => async (
   dispatch: Dispatch,
   getState: () => AppRootStateType,
@@ -226,3 +200,9 @@ export const getLocalUsersTC = () => async (
     dispatch(setStatusSetErrorAC(false, error.message));
   }
 };
+
+//Thunk types
+type dispatchActionType =
+  | SetRefreshingACType
+  | SetStatusSetErrorACType
+  | SetRefreshingUsersACType;

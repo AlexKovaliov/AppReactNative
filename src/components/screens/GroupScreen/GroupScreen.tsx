@@ -1,29 +1,33 @@
 import React, {useEffect} from 'react';
 import {
   Text,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
   View,
   TextInput,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
 } from 'react-native';
+import {
+  setSuccessAC,
+  setSearchBarValueAC,
+} from '../../../redux/actions/app-actions';
 import {GroupList} from './GroupList';
-import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../../../store';
+import Loading from '../../../utils/loadingUtils';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {BLACK, EGYPTIAN_BLUE, GREY} from '../../../utils/colors';
-import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
-import {getGroupTC, removeGroupTC} from '../../../redux/thunks/group-thunk';
 import {SwipeListView} from 'react-native-swipe-list-view';
 import {InitialAppStateType} from '../../../redux/app-reducer';
-import {setSearchBarValueAC, setSuccessAC} from '../../../redux/actions';
-import {showMessage} from 'react-native-flash-message';
-import Loading from '../../../utils/loadingUtils';
+import {BLACK, TEAL, IRIS_BLUE, WHITE} from '../../../utils/colors';
+import {InitialStateGroupReducerType} from '../../../redux/group-reducer';
+import {getGroupTC, removeGroupTC} from '../../../redux/thunks/group-thunk';
 
 export const GroupScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const {
     text,
     input,
@@ -91,14 +95,14 @@ export const GroupScreen = React.memo(() => {
                 navigation.navigate('CreateGroup', {group: data.item})
               }
               style={rowEdit}>
-              <Icon name="edit" size={20} color={'#fff'} />
+              <Icon name="edit" size={20} color={WHITE} />
               <Text style={text}>Edit</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               onPress={() => dispatch(removeGroupTC(data.item.id))}
               style={rowDelete}>
-              <Icon name="trash" size={20} color={'#fff'} />
+              <Icon name="trash" size={20} color={WHITE} />
               <Text style={text}>Delete</Text>
             </TouchableOpacity>
           </View>
@@ -107,7 +111,7 @@ export const GroupScreen = React.memo(() => {
         rightOpenValue={-75}
       />
       <TouchableOpacity style={addGroupTouch} onPress={handleAdGroup}>
-        <Icon name="plus" size={20} color={'#000'} />
+        <Icon name="plus" size={20} color={WHITE} />
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -116,8 +120,8 @@ export const GroupScreen = React.memo(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: TEAL,
     flexDirection: 'column',
-    backgroundColor: EGYPTIAN_BLUE,
     justifyContent: 'space-around',
   },
   addGroupTouch: {
@@ -129,38 +133,38 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: GREY,
+    backgroundColor: IRIS_BLUE,
   },
   rowEdit: {
     width: 75,
     height: '100%',
-    justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'orange',
+    justifyContent: 'space-around',
   },
   backBtnView: {
-    height: '100%',
     width: '100%',
+    height: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomWidth: 0.5,
     borderColor: BLACK,
+    borderBottomWidth: 0.5,
   },
   rowDelete: {
     width: 75,
     height: '100%',
-    justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: 'red',
+    justifyContent: 'space-around',
   },
   text: {
-    color: '#fff',
+    color: WHITE,
   },
   input: {
+    color: WHITE,
     paddingLeft: 10,
-    color: '#fff',
-    borderBottomWidth: 0.5,
-    borderColor: '#fff',
+    borderColor: WHITE,
+    borderBottomWidth: 1,
   },
   toast: {
     zIndex: 1,

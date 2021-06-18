@@ -1,3 +1,4 @@
+import {showMessage} from 'react-native-flash-message';
 import {PermissionsAndroid, Platform} from 'react-native';
 
 export const requestCameraPermission = async () => {
@@ -8,7 +9,11 @@ export const requestCameraPermission = async () => {
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (err) {
-      console.warn(err);
+      showMessage({
+        type: 'danger',
+        message: 'Error',
+        description: err.toString(),
+      });
       return false;
     }
   } else {
@@ -24,7 +29,11 @@ export const requestExternalWritePermission = async () => {
       );
       return granted === PermissionsAndroid.RESULTS.GRANTED;
     } catch (err) {
-      console.log(err);
+      showMessage({
+        type: 'danger',
+        message: 'Error',
+        description: err.toString(),
+      });
       return false;
     }
   }

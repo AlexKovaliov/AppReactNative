@@ -8,22 +8,25 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Users} from '../Users';
-import {getAllUsers} from '../../redux/thunks';
-import {ErrorImage} from '../../utils/errorUtils';
 import {AppRootStateType} from '../../store';
+import {ErrorImage} from '../../utils/errorUtils';
+import {IRIS_BLUE, WHITE} from '../../utils/colors';
 import {useDispatch, useSelector} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {getAllUsers} from '../../redux/thunks/users-thunk';
 import {InitialAppStateType} from '../../redux/app-reducer';
-import {showMessage} from 'react-native-flash-message';
-import {setSuccessAC} from '../../redux/actions';
-import {CERULEAN_BLUE, WHITE} from '../../utils/colors';
+import {setSuccessAC} from '../../redux/actions/app-actions';
 
 export const UsersScreen = React.memo(() => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const {safeArea, container, button} = styles;
+
   const onModal = () => navigation.navigate('Management');
+
   const {error, isLoading, isSuccess} = useSelector<
     AppRootStateType,
     InitialAppStateType
@@ -47,12 +50,15 @@ export const UsersScreen = React.memo(() => {
     <SafeAreaView style={safeArea}>
       <View style={container}>
         <Users />
+
         <TouchableOpacity style={button} onPress={onModal}>
           <Icon name="user-plus" size={20} color={WHITE} />
         </TouchableOpacity>
+
         {isLoading ? (
-          <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+          <ActivityIndicator color={IRIS_BLUE} size="large" />
         ) : null}
+
         {error ? <ErrorImage /> : null}
       </View>
     </SafeAreaView>
@@ -78,7 +84,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: CERULEAN_BLUE,
+    backgroundColor: IRIS_BLUE,
   },
   image: {
     width: 50,

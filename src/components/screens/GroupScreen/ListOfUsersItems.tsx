@@ -4,8 +4,9 @@ import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {removeUserFromGroupTC} from '../../../redux/thunks/group-thunk';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {GREY, GREEN, BONDI_BLUE, BLACK} from '../../../utils/colors';
+import {removeUserFromGroupTC} from '../../../redux/thunks/group-thunk';
 
 export type PropsType = {
   group: GroupType;
@@ -16,6 +17,7 @@ export type PropsType = {
 
 export const ListOfUsersItems = (props: PropsType) => {
   const dispatch = useDispatch();
+
   const {avatar, first_name, last_name, id} = props.user;
   const {img, containerView, contentView} = styles;
 
@@ -53,14 +55,14 @@ export const ListOfUsersItems = (props: PropsType) => {
             onPress={isCheckBoxSelected}
             name="check-square"
             size={25}
-            color={'green'}
+            color={GREEN}
           />
         ) : (
           <Icon
             onPress={isCheckBoxSelected}
             name="square"
             size={25}
-            color={'blue'}
+            color={BONDI_BLUE}
           />
         )
       ) : (
@@ -68,7 +70,7 @@ export const ListOfUsersItems = (props: PropsType) => {
           onPress={onRemoveMember}
           name="minus-square"
           size={25}
-          color={'grey'}
+          color={GREY}
         />
       )}
     </View>
@@ -84,7 +86,7 @@ const styles = StyleSheet.create({
   containerView: {
     paddingTop: 5,
     paddingBottom: 5,
-    borderColor: '#000',
+    borderColor: BLACK,
     borderBottomWidth: 1,
     alignItems: 'center',
     flexDirection: 'row',

@@ -1,13 +1,13 @@
 import React from 'react';
-import {CERULEAN_BLUE, SOLITUDE, WHITE} from './colors';
+import {IRIS_BLUE, SOLITUDE, WHITE} from './colors';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 
 type ControlElementProps = {
+  iconName: string;
+  textTitle: string;
   onModalHandler?: () => void;
   modalVisibleOpen?: () => void;
-  textTitle: string;
-  iconName: string;
 };
 
 export const ControlElement = (props: ControlElementProps) => {
@@ -19,7 +19,7 @@ export const ControlElement = (props: ControlElementProps) => {
       style={touch}
       onPress={onModalHandler || modalVisibleOpen}>
       <Text style={text}>{textTitle}</Text>
-      <Icon name={iconName} size={25} color={CERULEAN_BLUE} />
+      <Icon name={iconName} size={25} color={IRIS_BLUE} />
     </TouchableOpacity>
   );
 };

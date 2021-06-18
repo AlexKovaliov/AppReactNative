@@ -1,12 +1,12 @@
 import React from 'react';
 import {ERROR_IMG} from './images';
+import {SOLITUDE, WHITE} from './colors';
 import {AppRootStateType} from '../store';
 import {useDispatch, useSelector} from 'react-redux';
-import {setStatusSetErrorAC} from '../redux/actions';
 import {useNavigation} from '@react-navigation/native';
-import {Image, StyleSheet, Text, View, Button} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
-import {SOLITUDE, WHITE} from './colors';
+import {setStatusSetErrorAC} from '../redux/actions/app-actions';
+import {Image, StyleSheet, Text, View, Button} from 'react-native';
 
 export function ErrorImage() {
   const dispatch = useDispatch();

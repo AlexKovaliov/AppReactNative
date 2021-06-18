@@ -2,26 +2,20 @@ import React, {useState} from 'react';
 import {store} from './src/store';
 import {Provider} from 'react-redux';
 import {SearchBar} from './src/components/SearchBar';
+import FlashMessage from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {GroupScreen} from './src/components/screens/GroupScreen/GroupScreen';
+import {Group} from './src/components/screens/GroupScreen/Group';
 import {UsersScreen} from './src/components/screens/UsersScreen';
 import {PersonScreen} from './src/components/screens/PersonScreen';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {CreateAndEditScreen} from './src/components/screens/CreateAndEditScreen/CreateAndEditScreen';
-import {
-  GREY,
-  WHITE,
-  TORY_BLUE,
-  CERULEAN_BLUE,
-  EGYPTIAN_BLUE,
-} from './src/utils/colors';
-import {CreateGroup} from './src/components/screens/GroupScreen/CreateGroup/CreateGroup';
-import {Group} from './src/components/screens/GroupScreen/Group';
+import {WHITE, BONDI_BLUE, IRIS_BLUE, TEAL, GORSE} from './src/utils/colors';
+import {GroupScreen} from './src/components/screens/GroupScreen/GroupScreen';
 import {ListOfUsers} from './src/components/screens/GroupScreen/ListOfUsers';
-import FlashMessage from 'react-native-flash-message';
+import {CreateGroup} from './src/components/screens/GroupScreen/CreateGroup/CreateGroup';
+import {CreateAndEditScreen} from './src/components/screens/CreateAndEditScreen/CreateAndEditScreen';
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
@@ -29,6 +23,7 @@ const GroupStack = createStackNavigator();
 
 export default function App() {
   const {header, searchArea, searchAreaActive, formWrap} = styles;
+
   const [openInput, setOpenInput] = useState<boolean>(false);
 
   //Buttons onPress handler
@@ -139,8 +134,10 @@ export default function App() {
             },
           })}
           tabBarOptions={{
-            activeTintColor: CERULEAN_BLUE,
-            inactiveTintColor: GREY,
+            inactiveBackgroundColor: IRIS_BLUE,
+            activeBackgroundColor: IRIS_BLUE,
+            activeTintColor: GORSE,
+            inactiveTintColor: WHITE,
           }}>
           <Tab.Screen name="Home" component={HomeStackScreen} />
           <Tab.Screen name="Groups" component={GroupStackScreen} />
@@ -153,21 +150,21 @@ export default function App() {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: CERULEAN_BLUE,
+    backgroundColor: IRIS_BLUE,
   },
   searchArea: {
     width: 50,
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: TORY_BLUE,
+    backgroundColor: BONDI_BLUE,
   },
   searchAreaActive: {
     width: 50,
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: EGYPTIAN_BLUE,
+    backgroundColor: TEAL,
   },
   formWrap: {
     height: '100%',

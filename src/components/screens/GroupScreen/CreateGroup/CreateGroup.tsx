@@ -12,20 +12,28 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {CERULEAN_BLUE, GREY, SOLITUDE} from '../../../../utils/colors';
-import {Formik, FormikHelpers} from 'formik';
-import {CREATE_GROUP_BACK} from '../../../../utils/images';
-import {useNavigation} from '@react-navigation/native';
-import {readStoragePermission} from '../../../../redux/thunks';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {GroupType, validationGroup} from './ValidationGroup';
 import {
   createGroupTC,
   editingGroupTC,
 } from '../../../../redux/thunks/group-thunk';
+import {
+  GREY,
+  WHITE,
+  BLACK,
+  SOLITUDE,
+  IRIS_BLUE,
+  BONDI_BLUE,
+} from '../../../../utils/colors';
+import {Formik, FormikHelpers} from 'formik';
 import {AppRootStateType} from '../../../../store';
+import {useDispatch, useSelector} from 'react-redux';
+import {showMessage} from 'react-native-flash-message';
+import {useNavigation} from '@react-navigation/native';
+import {CREATE_GROUP_BACK} from '../../../../utils/images';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {GroupType, validationGroup} from './ValidationGroup';
 import {InitialAppStateType} from '../../../../redux/app-reducer';
+import {requestExternalWritePermission} from '../../../../utils/permisions';
 
 type routeType = {
   route: {params?: {group: GroupType}};
@@ -88,19 +96,36 @@ export const CreateGroup = ({route}: routeType) => {
         const errorTitle = errors.title && touched.title;
 
         const handleSelectFromLibrary = async () => {
-          await dispatch(readStoragePermission());
-          launchImageLibrary(
-            {
-              quality: 1,
-              mediaType: 'photo',
-              includeBase64: true,
-            },
-            response => {
-              if (response.uri) {
-                handleChange('avatarGroup')(response.uri);
-              }
-            },
-          );
+          const isStoragePermitted = await requestExternalWritePermission();
+          if (isStoragePermitted) {
+            launchImageLibrary(
+              {
+                mediaType: 'photo',
+                quality: 1,
+              },
+              response => {
+                switch (response.errorCode) {
+                  case 'camera_unavailable':
+                    showMessage({
+                      type: 'info',
+                      message: 'Gallery unavailable',
+                    });
+
+                    break;
+                  case 'permission':
+                    showMessage({
+                      type: 'info',
+                      message: 'No access to the gallery',
+                    });
+
+                    break;
+                }
+                if (response.uri) {
+                  handleChange('avatarGroup')(response.uri);
+                }
+              },
+            );
+          }
         };
 
         return (
@@ -139,12 +164,13 @@ export const CreateGroup = ({route}: routeType) => {
                     ) : null}
 
                     {isLoading ? (
-                      <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+                      <ActivityIndicator color={IRIS_BLUE} size="large" />
                     ) : (
                       <Button
-                        title={propsGroup ? 'Save changes' : 'Save group'}
+                        color={BONDI_BLUE}
                         disabled={!isValid}
                         onPress={handleSubmit}
+                        title={propsGroup ? 'Save changes' : 'Save group'}
                       />
                     )}
                   </View>
@@ -164,10 +190,10 @@ const styles = StyleSheet.create({
     height: 300,
     borderWidth: 1,
     borderColor: SOLITUDE,
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
     borderRadius: 15,
     marginVertical: 20,
-    shadowColor: '#000',
+    shadowColor: BLACK,
     shadowOffset: {
       width: 0,
       height: 5,
@@ -184,7 +210,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: GREY,
     borderStyle: 'solid',
-    backgroundColor: '#fff',
+    backgroundColor: WHITE,
   },
   imageBack: {
     height: 520,

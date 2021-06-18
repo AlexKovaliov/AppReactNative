@@ -1,5 +1,5 @@
-import {ChosenPersonACType} from './actions';
 import {UsersType} from '../api/users-api';
+import {ChosenPersonACType} from './actions/person-actions';
 
 type ActionsType = ChosenPersonACType;
 

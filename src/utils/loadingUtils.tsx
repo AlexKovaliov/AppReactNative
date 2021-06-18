@@ -1,8 +1,8 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {AppRootStateType} from '../store';
+import {IRIS_BLUE, SOLITUDE} from './colors';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import {CERULEAN_BLUE, SOLITUDE} from './colors';
 
 type MapStatePropsType = {
   isLoading: boolean;
@@ -20,7 +20,7 @@ class Loading extends React.PureComponent<PropsType> {
 
     return (
       <View style={container}>
-        <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+        <ActivityIndicator color={IRIS_BLUE} size="large" />
         <Text style={text}>Loading...</Text>
       </View>
     );
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     marginTop: 10,
-    color: CERULEAN_BLUE,
+    color: IRIS_BLUE,
     fontStyle: 'italic',
   },
 });

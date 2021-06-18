@@ -13,23 +13,34 @@ import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
 import Loading from '../../utils/loadingUtils';
 import {ErrorImage} from '../../utils/errorUtils';
-import {ControlElement} from '../../utils/ControlElement';
 import {AnimationAvatar} from '../AnimationAvatar';
 import {RemoveUserModal} from '../RemoveUserModal';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {BACK_IMG, NO_AVATAR} from '../../utils/images';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {ControlElement} from '../../utils/ControlElement';
 import {PersonStateType} from '../../redux/person-reducer';
 import {InitialAppStateType} from '../../redux/app-reducer';
-import {chosenPersonTC, refreshPersonTC} from '../../redux/thunks';
 import {InitialStateUserReducerType} from '../../redux/users-reducer';
-import {BLACK, CERULEAN_BLUE, GREY, SOLITUDE, WHITE} from '../../utils/colors';
+import {
+  GREY,
+  BLACK,
+  WHITE,
+  SOLITUDE,
+  IRIS_BLUE,
+  VIVID_VIOLET,
+} from '../../utils/colors';
+import {
+  chosenPersonTC,
+  refreshPersonTC,
+} from '../../redux/thunks/person-thunks';
 
 type routeType = {route: {params: {user: UsersType}}};
 
 export const PersonScreen = ({route}: routeType) => {
   const dispatch = useDispatch();
+
   const propsUser = route.params.user;
   const {local} = route.params.user;
 
@@ -59,12 +70,15 @@ export const PersonScreen = ({route}: routeType) => {
   return <Content user={user} />;
 };
 
+//Content of Person Screen
 const Content = (props: {user: UsersType | undefined}) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const {avatar, first_name, last_name, email, id, local} = props.user || {};
 
   //Controlling the visibility of windows
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [openEditWindow, setOpenEditWindow] = useState<boolean>(false);
 
   //Buttons onPress handler
@@ -162,7 +176,7 @@ const Content = (props: {user: UsersType | undefined}) => {
                 {first_name} {last_name}
               </Text>
               <View style={emailView}>
-                <Icon name="envelope" size={25} color={GREY} />
+                <Icon name="envelope" size={25} color={VIVID_VIOLET} />
                 <Text style={emailSt}>{email}</Text>
               </View>
             </View>
@@ -196,7 +210,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     shadowColor: BLACK,
-    backgroundColor: CERULEAN_BLUE,
+    backgroundColor: IRIS_BLUE,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -240,7 +254,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     borderBottomWidth: 1,
     marginHorizontal: 30,
-    color: CERULEAN_BLUE,
+    color: IRIS_BLUE,
   },
   emailSt: {
     fontSize: 16,
@@ -251,6 +265,14 @@ const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 20,
     backgroundColor: WHITE,
+    shadowColor: BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
   },
   detailsView: {
     zIndex: -1,

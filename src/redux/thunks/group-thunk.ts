@@ -1,12 +1,5 @@
 import {Dispatch} from 'redux';
 import {
-  setSuccessAC,
-  SuccessACType,
-  setStatusSetErrorAC,
-  SetStatusSetErrorACType,
-  SetErrorPersonACType,
-} from '../actions';
-import {
   addGroupAC,
   getGroupAC,
   removeGroupAC,
@@ -21,6 +14,13 @@ import {AppRootStateType} from '../../store';
 import {UsersType} from '../../api/users-api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GroupType} from '../../components/screens/GroupScreen/CreateGroup/ValidationGroup';
+import {
+  setSuccessAC,
+  SuccessACType,
+  setStatusSetErrorAC,
+  SetStatusSetErrorACType,
+} from '../actions/app-actions';
+import {SetErrorPersonACType} from '../actions/person-actions';
 
 //Gets a group from AsyncStorage
 export const getGroupTC = () => async (dispatch: Dispatch) => {

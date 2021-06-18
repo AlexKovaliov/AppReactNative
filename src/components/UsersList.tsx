@@ -1,9 +1,9 @@
 import React from 'react';
 import {UsersType} from '../api/users-api';
 import {Avatar} from '../utils/avatarUtils';
+import {GREY, SOLITUDE} from '../utils/colors';
 import {useNavigation} from '@react-navigation/native';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import {GREY, SOLITUDE} from '../utils/colors';
 
 export type PropsType = {
   user: UsersType;

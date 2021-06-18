@@ -1,19 +1,21 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {ListOfUsersItems} from './ListOfUsersItems';
 import {AppRootStateType} from '../../../store';
 import {UsersType} from '../../../api/users-api';
+import {IRIS_BLUE} from '../../../utils/colors';
+import {ListOfUsersItems} from './ListOfUsersItems';
 import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import {GroupType} from './CreateGroup/ValidationGroup';
+import {getAllUsers} from '../../../redux/thunks/users-thunk';
 import {FlatList, StyleSheet, View, Button} from 'react-native';
 import {setUserGroupTC} from '../../../redux/thunks/group-thunk';
-import {getAllUsers} from '../../../redux/thunks';
 
 type routeGroupType = {route: {params: {group: GroupType}}};
 
 export const ListOfUsers = ({route}: routeGroupType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const {container, btn} = styles;
   const propsGroup = route.params.group;
 
@@ -72,7 +74,12 @@ export const ListOfUsers = ({route}: routeGroupType) => {
         )}
       />
       <View style={btn}>
-        <Button title={'Add'} disabled={disabledBtn} onPress={addUsers} />
+        <Button
+          title={'Add'}
+          color={IRIS_BLUE}
+          disabled={disabledBtn}
+          onPress={addUsers}
+        />
       </View>
     </View>
   );

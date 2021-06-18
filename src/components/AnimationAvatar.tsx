@@ -1,6 +1,6 @@
 import React, {useRef} from 'react';
+import {BLACK, SOLITUDE, WHITE} from '../utils/colors';
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
-import {SOLITUDE, WHITE} from '../utils/colors';
 
 type AnimationPropsType = {
   avatar: string;
@@ -8,6 +8,7 @@ type AnimationPropsType = {
 
 export const AnimationAvatar = (props: AnimationPropsType) => {
   const {touchImg} = styles;
+
   const animationValue = useRef(new Animated.Value(0)).current;
   const scaleValue = useRef(0);
 
@@ -54,5 +55,13 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 10,
     position: 'absolute',
+    shadowColor: BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    elevation: 5,
+    shadowRadius: 3.84,
+    shadowOpacity: 0.25,
   },
 });

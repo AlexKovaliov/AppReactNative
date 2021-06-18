@@ -1,12 +1,12 @@
-import {UsersType} from '../api/users-api';
 import {
   FetchUsersACType,
   AddLocalUserACType,
   SetRefreshingACType,
-  RemoveLocalUserACType,
   SetEditedUserACType,
+  RemoveLocalUserACType,
   SetRefreshingUsersACType,
-} from './actions';
+} from './actions/users-actions';
+import {UsersType} from '../api/users-api';
 
 type ActionsType =
   | FetchUsersACType

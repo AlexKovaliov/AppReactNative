@@ -11,15 +11,32 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import {
+  requestCameraPermission,
+  requestExternalWritePermission,
+} from '../../../utils/permisions';
+import {
+  WHITE,
+  BLACK,
+  SOLITUDE,
+  IRIS_BLUE,
+  BONDI_BLUE,
+} from '../../../utils/colors';
+import {
+  setLocalUserTC,
+  setEditedUserTC,
+} from '../../../redux/thunks/users-thunk';
 import {validation} from './validation';
 import {Formik, FormikHelpers} from 'formik';
 import {NO_AVATAR} from '../../../utils/images';
+import {AppRootStateType} from '../../../store';
 import {UsersType} from '../../../api/users-api';
+import {useDispatch, useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {InitialAppStateType} from '../../../redux/app-reducer';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {CERULEAN_BLUE, SOLITUDE, WHITE, BLACK} from '../../../utils/colors';
 
 type routeType = {
   route: {params?: {user: UsersType}};
@@ -28,6 +45,7 @@ type routeType = {
 export const CreateAndEditScreen = ({route}: routeType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const propsUser = route.params ? route.params.user : null;
 
   const {isLoading} = useSelector<AppRootStateType, InitialAppStateType>(
@@ -86,6 +104,7 @@ export const CreateAndEditScreen = ({route}: routeType) => {
             } = props;
 
             const {first_name, last_name, email} = props.values;
+
             //Input values error
             const errorEmail = errors.email && touched.email;
             const errorLastName = errors.last_name && touched.last_name;
@@ -173,12 +192,12 @@ export const CreateAndEditScreen = ({route}: routeType) => {
                     style={editBtn}
                     onPress={handleSelectFromLibrary}>
                     <Text style={removeText}>Choose photo</Text>
-                    <Icon name="images" size={25} color={CERULEAN_BLUE} />
+                    <Icon name="images" size={25} color={BONDI_BLUE} />
                   </TouchableOpacity>
 
                   <TouchableOpacity style={editBtn} onPress={handlePhotoTake}>
                     <Text style={removeText}>Take Photo</Text>
-                    <Icon name="camera" size={25} color={CERULEAN_BLUE} />
+                    <Icon name="camera" size={25} color={BONDI_BLUE} />
                   </TouchableOpacity>
                 </View>
 
@@ -221,12 +240,13 @@ export const CreateAndEditScreen = ({route}: routeType) => {
 
                   <View style={viewBtn}>
                     {isLoading ? (
-                      <ActivityIndicator color={CERULEAN_BLUE} size="large" />
+                      <ActivityIndicator color={IRIS_BLUE} size="large" />
                     ) : (
                       <Button
-                        onPress={handleSubmit}
+                        color={BONDI_BLUE}
                         disabled={!isValid}
-                        title="save"
+                        onPress={handleSubmit}
+                        title={propsUser ? 'Save changes' : 'Save'}
                       />
                     )}
                   </View>
@@ -261,7 +281,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'column',
     justifyContent: 'center',
-    backgroundColor: CERULEAN_BLUE,
+    backgroundColor: IRIS_BLUE,
   },
   avatarImage: {
     width: 130,
@@ -273,7 +293,7 @@ const styles = StyleSheet.create({
     height: 60,
     width: '100%',
     flexDirection: 'row',
-    backgroundColor: CERULEAN_BLUE,
+    backgroundColor: IRIS_BLUE,
     justifyContent: 'space-around',
   },
   editBtn: {
@@ -333,7 +353,7 @@ const styles = StyleSheet.create({
   },
   textTitle: {
     fontSize: 18,
-    color: CERULEAN_BLUE,
+    color: IRIS_BLUE,
     textAlign: 'center',
     fontStyle: 'italic',
     paddingVertical: 10,

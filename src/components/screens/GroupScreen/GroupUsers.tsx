@@ -13,26 +13,26 @@ import {NO_AVATAR} from '../../../utils/images';
 import {UsersType} from '../../../api/users-api';
 import {useNavigation} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {TEAL, SOLITUDE, GORSE, BLACK} from '../../../utils/colors';
 import {removeUserFromGroupTC} from '../../../redux/thunks/group-thunk';
-import {EGYPTIAN_BLUE, GREY, SOLITUDE, WHITE} from '../../../utils/colors';
 
 type PropsGroupUsersType = {
-  groupUser: UsersType;
   groupId: number;
+  groupUser: UsersType;
 };
 
 export const GroupUsers = (props: PropsGroupUsersType) => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
+
   const {avatar, first_name, last_name, id} = props.groupUser;
-  const {cardView, image, text, touch, removeText, container} = styles2;
+  const {cardView, image, text, touch, removeText, container} = styles;
 
   //Buttons onPress handler
   const onNavigation = () =>
     navigation.navigate('Person', {user: props.groupUser});
   const onRemoveMember = () => {
     dispatch(removeUserFromGroupTC(id, props.groupId));
-    //navigation.setParams()
   };
 
   return (
@@ -42,11 +42,13 @@ export const GroupUsers = (props: PropsGroupUsersType) => {
           <TouchableOpacity style={image} onPress={onNavigation}>
             <Image style={image} source={{uri: avatar || NO_AVATAR}} />
           </TouchableOpacity>
+
           <Text style={text}>
             {first_name} {last_name}
           </Text>
+
           <TouchableOpacity style={touch} onPress={onRemoveMember}>
-            <Icon name="folder-minus" size={20} color={GREY} />
+            <Icon name="folder-minus" size={20} color={BLACK} />
             <Text style={removeText}>Remove</Text>
           </TouchableOpacity>
         </View>
@@ -54,12 +56,13 @@ export const GroupUsers = (props: PropsGroupUsersType) => {
     </SafeAreaView>
   );
 };
-const styles2 = StyleSheet.create({
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 10,
-    backgroundColor: EGYPTIAN_BLUE,
+    backgroundColor: TEAL,
   },
   image: {
     height: 110,
@@ -88,12 +91,12 @@ const styles2 = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 10,
     flexDirection: 'row',
-    backgroundColor: WHITE,
+    backgroundColor: GORSE,
     justifyContent: 'space-around',
   },
   removeText: {
     fontSize: 16,
-    color: GREY,
+    color: BLACK,
     fontWeight: '400',
   },
 });

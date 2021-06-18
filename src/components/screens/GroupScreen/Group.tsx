@@ -2,15 +2,15 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {GroupType} from './CreateGroup/ValidationGroup';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {EGYPTIAN_BLUE, GREY, WHITE} from '../../../utils/colors';
+import {TEAL, WHITE, IRIS_BLUE} from '../../../utils/colors';
 import {
-  FlatList,
-  ImageBackground,
-  SafeAreaView,
-  StyleSheet,
   Text,
-  TouchableOpacity,
   View,
+  FlatList,
+  StyleSheet,
+  SafeAreaView,
+  ImageBackground,
+  TouchableOpacity,
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {GroupUsers} from './GroupUsers';
@@ -22,6 +22,7 @@ type routeType = {route: {params: {group: GroupType}}};
 
 export const Group = ({route}: routeType) => {
   const navigation = useNavigation();
+
   const {id} = route.params.group;
 
   const {container, touch, imgBack, titleGroup} = styles;
@@ -53,7 +54,7 @@ export const Group = ({route}: routeType) => {
             {title}
           </Text>
           <TouchableOpacity style={touch} onPress={onList}>
-            <Icon name="user-plus" size={20} color={GREY} />
+            <Icon name="user-plus" size={20} color={WHITE} />
           </TouchableOpacity>
         </ImageBackground>
       </View>
@@ -71,7 +72,7 @@ export const Group = ({route}: routeType) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: EGYPTIAN_BLUE,
+    backgroundColor: TEAL,
   },
   touch: {
     position: 'absolute',
@@ -81,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: WHITE,
+    backgroundColor: IRIS_BLUE,
   },
   imgBack: {
     height: 80,
@@ -91,12 +92,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   titleGroup: {
+    color: WHITE,
     fontSize: 30,
     marginLeft: 30,
     fontStyle: 'italic',
-    backgroundColor: '#fff',
+    borderRadius: 5,
     paddingVertical: 5,
     paddingHorizontal: 5,
-    borderRadius: 5,
   },
 });
