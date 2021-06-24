@@ -1,6 +1,7 @@
 import {compose} from 'redux';
 import thunk from 'redux-thunk';
 import {appReducer} from './redux/app-reducer';
+import {jokesReducer} from './redux/jokes-reducer';
 import {usersReducer} from './redux/users-reducer';
 import {groupReducer} from './redux/group-reducer';
 import {personReducer} from './redux/person-reducer';
@@ -8,6 +9,7 @@ import {applyMiddleware, combineReducers, createStore} from 'redux';
 
 const rootReducer = combineReducers({
   appStore: appReducer,
+  jokesStore: jokesReducer,
   usersStore: usersReducer,
   groupStore: groupReducer,
   personStore: personReducer,

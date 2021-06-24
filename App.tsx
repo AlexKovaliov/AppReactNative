@@ -10,7 +10,9 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Group} from './src/components/screens/GroupScreen/Group';
 import {UsersScreen} from './src/components/screens/UsersScreen';
 import {PersonScreen} from './src/components/screens/PersonScreen';
+import {Jokes} from './src/components/screens/ClubScreen/Jokes/Jokes';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {ClubScreen} from './src/components/screens/ClubScreen/ClubScreen';
 import {WHITE, BONDI_BLUE, IRIS_BLUE, TEAL, GORSE} from './src/utils/colors';
 import {GroupScreen} from './src/components/screens/GroupScreen/GroupScreen';
 import {ListOfUsers} from './src/components/screens/GroupScreen/ListOfUsers';
@@ -20,6 +22,7 @@ import {CreateAndEditScreen} from './src/components/screens/CreateAndEditScreen/
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 const GroupStack = createStackNavigator();
+const ClubStack = createStackNavigator();
 
 export default function App() {
   const {header, searchArea, searchAreaActive, formWrap} = styles;
@@ -40,6 +43,29 @@ export default function App() {
       </View>
     );
   };
+
+  const ClubStackScreen = () => (
+    <ClubStack.Navigator>
+      <ClubStack.Screen
+        name="Club"
+        component={ClubScreen}
+        options={{
+          title: 'Club',
+          headerStyle: header,
+          headerTintColor: WHITE,
+        }}
+      />
+      <ClubStack.Screen
+        name="Jokes"
+        component={Jokes}
+        options={{
+          title: 'Jokes',
+          headerStyle: header,
+          headerTintColor: WHITE,
+        }}
+      />
+    </ClubStack.Navigator>
+  );
 
   const GroupStackScreen = () => (
     <GroupStack.Navigator>
@@ -124,6 +150,9 @@ export default function App() {
               let iconName;
               if (route.name === 'Home') {
                 iconName = 'home';
+              }
+              if (route.name === 'Club') {
+                iconName = 'book-reader';
               } else if (route.name === 'Groups') {
                 iconName = 'users';
               }
@@ -141,6 +170,7 @@ export default function App() {
           }}>
           <Tab.Screen name="Home" component={HomeStackScreen} />
           <Tab.Screen name="Groups" component={GroupStackScreen} />
+          <Tab.Screen name="Club" component={ClubStackScreen} />
         </Tab.Navigator>
         <FlashMessage position="top" />
       </NavigationContainer>

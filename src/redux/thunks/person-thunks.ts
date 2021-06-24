@@ -7,7 +7,7 @@ import {
 import {ThunkDispatch} from 'redux-thunk';
 import {usersAPI} from '../../api/users-api';
 import {AppRootStateType} from '../../store';
-import {setRefreshingAC, SetRefreshingACType} from '../actions/users-actions';
+import {setRefreshingAC, SetRefreshingACType} from '../actions/app-actions';
 
 //Selected user request.
 export const chosenPersonTC = (id: number) => async (dispatch: Dispatch) => {

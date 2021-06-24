@@ -1,7 +1,6 @@
 import {
   FetchUsersACType,
   AddLocalUserACType,
-  SetRefreshingACType,
   SetEditedUserACType,
   RemoveLocalUserACType,
   SetRefreshingUsersACType,
@@ -13,7 +12,6 @@ type ActionsType =
   | AddLocalUserACType
   | SetEditedUserACType
   | RemoveLocalUserACType
-  | SetRefreshingACType
   | SetRefreshingUsersACType;
 
 export type InitialStateUserReducerType = typeof initialState;
@@ -45,9 +43,6 @@ export const usersReducer = (
         users: action.users,
         page: action.page,
       };
-
-    case 'USERS/SET_REFRESHING':
-      return {...state, isRefreshing: action.isRefreshing};
 
     case 'USERS/ADD_LOCAL_USER':
       return {

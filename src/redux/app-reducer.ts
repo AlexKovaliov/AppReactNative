@@ -1,21 +1,24 @@
 import {
   SuccessACType,
+  SetRefreshingACType,
   SetSearchBarValueACType,
   SetStatusSetErrorACType,
 } from './actions/app-actions';
 
 type ActionsType =
   | SuccessACType
+  | SetRefreshingACType
   | SetStatusSetErrorACType
   | SetSearchBarValueACType;
 
 export type InitialAppStateType = typeof initialState;
 
 const initialState = {
-  error: null as null | string,
+  filterValue: '',
   isLoading: false,
   isSuccess: false,
-  filterValue: '',
+  isRefreshing: false,
+  error: null as null | string,
 };
 
 export const appReducer = (
@@ -31,6 +34,9 @@ export const appReducer = (
 
     case 'APP/SET_FILTER':
       return {...state, filterValue: action.filterValue};
+
+    case 'APP/SET_REFRESHING':
+      return {...state, isRefreshing: action.isRefreshing};
 
     default:
       return state;
