@@ -1,18 +1,18 @@
 import {
   fetchUsersAC,
   addLocalUserAC,
-  setRefreshingAC,
   setEditedUserAC,
   SetEditedUserACType,
-  SetRefreshingACType,
   setRefreshingUsersAC,
   SetRefreshingUsersACType,
 } from '../actions/users-actions';
 import {
   setSuccessAC,
   SuccessACType,
+  setRefreshingAC,
   setStatusSetErrorAC,
   SetStatusSetErrorACType,
+  SetRefreshingACType,
 } from '../actions/app-actions';
 import {Dispatch} from 'redux';
 import {ThunkDispatch} from 'redux-thunk';

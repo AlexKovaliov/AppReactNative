@@ -19,3 +19,8 @@ export const setSuccessAC = (isSuccess: boolean) =>
 export type SetSearchBarValueACType = ReturnType<typeof setSearchBarValueAC>;
 export const setSearchBarValueAC = (filterValue: string) =>
   ({type: 'APP/SET_FILTER', filterValue} as const);
+
+//Refreshing
+export type SetRefreshingACType = ReturnType<typeof setRefreshingAC>;
+export const setRefreshingAC = (isRefreshing: boolean) =>
+  ({type: 'APP/SET_REFRESHING', isRefreshing} as const);

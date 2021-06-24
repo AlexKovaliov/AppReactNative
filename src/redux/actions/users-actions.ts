@@ -8,11 +8,6 @@ export const fetchUsersAC = (
   total_pages: number | null,
 ) => ({type: 'USERS/FETCH_USERS', users, page, total_pages} as const);
 
-//Refreshing
-export type SetRefreshingACType = ReturnType<typeof setRefreshingAC>;
-export const setRefreshingAC = (isRefreshing: boolean) =>
-  ({type: 'USERS/SET_REFRESHING', isRefreshing} as const);
-
 //Refreshing users
 export type SetRefreshingUsersACType = ReturnType<typeof setRefreshingUsersAC>;
 export const setRefreshingUsersAC = (users: Array<UsersType>, page: number) =>
